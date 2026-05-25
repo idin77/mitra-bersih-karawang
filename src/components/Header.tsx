@@ -26,9 +26,9 @@ export default function Header({ whatsappNumber }: HeaderProps) {
     { name: "Beranda", href: "#beranda" },
     { name: "Tentang Kami", href: "#tentang-kami" },
     { name: "Layanan", href: "#layanan" },
-    { name: "Keunggulan", href: "#keunggulan" },
     { name: "Galeri", href: "#galeri" },
-    { name: "Testimoni", href: "#testimoni" },
+    { name: "Edukasi", href: "#artikel-edu" },
+    { name: "FAQ", href: "#faq" },
     { name: "Hubungi Kami", href: "#kontak" },
   ];
 
@@ -116,6 +116,7 @@ export default function Header({ whatsappNumber }: HeaderProps) {
               <button
                 id="btn-hamburger"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                aria-label={isMobileMenuOpen ? "Tutup Menu" : "Buka Menu"}
                 className={`p-2 rounded-lg transition-colors ${
                   isScrolled
                     ? "text-slate-700 hover:bg-slate-100"

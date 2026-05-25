@@ -1,84 +1,183 @@
-import { MapPin, CheckCircle, Navigation } from "lucide-react";
-import { motion } from "motion/react";
+import { useState } from "react";
+import { MapPin, CheckCircle, Navigation, Search, Check, AlertCircle, Info } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
 
 export default function ServiceAreas() {
+  const [searchQuery, setSearchQuery] = useState("");
+
   const primaryAreas = [
     {
-      name: "Karawang Kota",
-      suburbs: "Karawang Barat, Karawang Timur, Adiarsa, Nagasari, Galuh Mas, Johar",
-      highlight: "Hub Utama"
+      name: "Karawang Barat",
+      highlight: "Kantor Pusat / Respon < 1 Jam",
+      suburbs: "Nagasari, Karangpawitan, Adiarsa Barat, Tanjungmekar, Tanjungpura, Tunggilis",
+      delivery: "Gratis Ongkir Transportasi Serta Kunjungan",
+      response: "15 - 30 Menit Layanan Kilat"
     },
     {
-      name: "Telukjambe",
-      suburbs: "Telukjambe Timur, Telukjambe Barat, KIIC, Perumnas, WADAS, Sukaluyu",
-      highlight: "Siaga Armada"
+      name: "Karawang Timur",
+      highlight: "Respon Cepat < 1 Jam",
+      suburbs: "Adiarsa Timur, Karawang Wetan, Plawad, Kondangjaya, Tegalsawah, Margasari",
+      delivery: "Gratis Ongkir Transportasi Serta Kunjungan",
+      response: "20 - 45 Menit"
+    },
+    {
+      name: "Telukjambe Timur",
+      highlight: "Kawasan Siaga Utama",
+      suburbs: "Galuh Mas, Sukaluyu, Sirnabakti, Sukaharja, Pinayungan, Wadas, Telukjambe",
+      delivery: "Gratis Ongkir Transportasi Serta Kunjungan",
+      response: "15 - 35 Menit"
+    },
+    {
+      name: "Telukjambe Barat",
+      highlight: "Kawasan Industri Terintegrasi",
+      suburbs: "KIIC, Wanamulya, Parungsari, Margamulya, Karangmulya, Karangligar",
+      delivery: "Gratis Ongkir Transportasi / Khusus Industri & Pabrik",
+      response: "30 - 50 Menit"
     },
     {
       name: "Klari",
-      suburbs: "Klari, Kosambi, Majalaya, Curug, Pancawati, Gintungkerta",
-      highlight: "Respon Kilat"
+      highlight: "Armada Pos Siaga",
+      suburbs: "Duren, Kosambi, Pancawati, Gintungkerta, Curug, Cimahi, Walahar, Majalaya",
+      delivery: "Gratis Ongkir Transportasi Serta Kunjungan",
+      response: "25 - 45 Menit"
     },
     {
       name: "Cikampek",
-      suburbs: "Cikampek Kota, Kotabaru, Dawuan, Jatisari, Purwasari, Cikampek Pusaka",
-      highlight: "Siaga Armada"
+      highlight: "Cabang Khusus Cikampek",
+      suburbs: "Cikampek Kota, Cikampek Pusaka, Dawuan Barat, Dawuan Timur, Kamojing, Jatisari",
+      delivery: "Gratis Ongkir Transportasi Serta Kunjungan",
+      response: "30 - 55 Menit"
     },
     {
-      name: "Purwakarta",
-      suburbs: "Purwakarta Kota, Campaka, Sadang, Jatiluhur, Babakancikao, Cibatu",
-      highlight: "Cabang Siaga"
+      name: "Purwakarta Kota",
+      highlight: "Pos Cabang Utama Purwakarta",
+      suburbs: "Sadang, Nagrikaler, Nagriwetan, Cipaisan, Sindangkasih, Jatiluhur, Babakancikao",
+      delivery: "Bebas Biaya Transportasi Wilayah Jangkauan",
+      response: "35 - 55 Menit"
     },
     {
-      name: "Surrounding Areas",
-      suburbs: "Rengasdengklok, Tempuran, Cilamaya, Pangkalan, Kutawaluya, Rawamerta",
-      highlight: "Batas Layanan"
+      name: "Kotabaru & Purwasari",
+      highlight: "Jalur Penghubung Karawang - Cikampek",
+      suburbs: "Pangulah, Purwasari, Sukasari, Tamelang, Sukaseuri, Jariwangi",
+      delivery: "Bebas Biaya Kunjungan Tim Lapangan",
+      response: "30 - 50 Menit"
+    },
+    {
+      name: "Kawasan Industri Karawang",
+      highlight: "Spesialis Limbah STP & Lemak",
+      suburbs: "Kawasan KIIC, KIM, Suryacipta, Kujang Cikampek, Indotaisei, Artha Industrial",
+      delivery: "Gratis Transportasi, Siap Kontrak Kerja Sama",
+      response: "Sesuai Jadwal Booking / Prioritas Khusus"
+    },
+    {
+      name: "Surrounding Areas (Pesisir & Selatan)",
+      highlight: "Area Terjauh - Tetap Terlayani",
+      suburbs: "Rengasdengklok, Tempuran, Cilamaya, Pangkalan, Kutawaluya, Rawamerta, Pedes, Batujaya, Pakisjaya",
+      delivery: "Surcharge Jarak Terjangkau Maks. 50rb",
+      response: "Sesuai Jadwal Booking (Pagi / Sore)"
     }
   ];
 
   const benefits = [
-    "Bebas Biaya Transportasi Tambahan untuk Area Utama",
-    "Armada Siaga Tersebar di Masing-Masing Pos Cabang",
-    "Kunjungan Survey Pelokasian Tangki atau Saluran Gratis",
-    "Est. Tim Sampai di Lokasi Sesuai Jadwal Janji Temu"
+    "Bebas Biaya Transportasi Tambahan untuk Seluruh Area Utama Karawang & Purwakarta Kota",
+    "Armada Siaga disebar di 5 Posko Kecamatan Utama agar cepat sampai di lokasi rumah Anda",
+    "Uji kelayakan penyedotan sebelum membongkar, ditarik bersih tuntas menggunakan mesin vacuum modern",
+    "Pengerjaan higienis dengan sistem penutupan lubang yang rapat, anti bocor & bergaransi selama 1 bulan"
   ];
 
+  // Search filter
+  const filteredAreas = primaryAreas.filter((area) => {
+    const term = searchQuery.toLowerCase();
+    return (
+      area.name.toLowerCase().includes(term) ||
+      area.suburbs.toLowerCase().includes(term) ||
+      area.highlight.toLowerCase().includes(term)
+    );
+  });
+
   return (
-    <section id="area-layanan" className="py-24 bg-brand-blue-50/50 relative overflow-hidden">
+    <section id="area-layanan" className="py-24 bg-slate-50 relative overflow-hidden">
       {/* Visual background decorations */}
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-100/30 rounded-full blur-[120px] -z-10"></div>
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] bg-blue-100/30 rounded-full blur-[130px] -z-10"></div>
+      <div className="absolute -top-10 -right-10 w-64 h-64 bg-yellow-100/30 rounded-full blur-[100px] -z-10"></div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        {/* Section Header */}
+        <div className="max-w-3xl mx-auto text-center mb-16 space-y-4">
+          <span className="text-blue-600 font-bold uppercase tracking-widest text-sm block">
+            JANGKAUAN AREA LAYANAN
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-blue-950 tracking-tight leading-tight">
+            Wilayah Jasa Sedot WC Karawang &amp; Purwakarta
+          </h2>
+          <div className="w-20 h-1.5 bg-amber-400 mx-auto rounded-full"></div>
+          <p className="text-slate-600 leading-relaxed text-base">
+            Kami melayani daerah perumahan, perkampungan, kost-an, ruko, restoran, mall, gedung instansi pemerintah, hingga kawasan industri secara sigap 24 jam penuh.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           
-          {/* Left Text Detail */}
+          {/* Left Side: General Info & Interactive Search Feature */}
           <motion.div 
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="lg:col-span-5 space-y-6"
+            className="lg:col-span-5 space-y-8"
           >
-            <span className="text-blue-600 font-bold uppercase tracking-widest text-sm block">
-              JANGKAUAN LAYANAN
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-blue-950 tracking-tight leading-tight">
-              Melayani Seluruh Area Karawang & Purwakarta
-            </h2>
-            <div className="w-20 h-1.5 bg-amber-400 rounded-full"></div>
-            
-            <p className="text-slate-600 leading-relaxed text-sm sm:text-base">
-              Kami berkomitmen menjangkau setiap wilayah dengan cepat dan efisien. Di setiap pos kecamatan utama, telah bersiaga armada tangki vacuum kami untuk mempercepat pengerjaan sesaat setelah pesanan terkonfirmasi.
-            </p>
+            {/* Header Description */}
+            <div className="space-y-4">
+              <h3 className="font-display font-extrabold text-blue-950 text-2xl">
+                Cek Ketersediaan Area Terdekat Anda
+              </h3>
+              <p className="text-slate-600 leading-relaxed text-sm sm:text-base">
+                Ketik nama kecamatan atau perumahan Anda di bawah ini untuk melihat perkiraan durasi perjalanan armada kami serta informasi jaminan bebas biaya transport.
+              </p>
+            </div>
 
-            <div className="space-y-4 pt-2">
+            {/* Interactive Search Tool */}
+            <div className="bg-white p-6 rounded-3xl shadow-xl border border-blue-50/50 space-y-4">
+              <div className="relative">
+                <Search className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  placeholder="Ketik lokasi Anda (misal: Galuh Mas, Klari, Sadang...)"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all text-slate-800 placeholder:text-slate-400 font-medium"
+                />
+              </div>
+
+              {/* Real-time search feedback status */}
+              <div className="text-xs">
+                {searchQuery === "" ? (
+                  <p className="text-slate-450 flex items-center gap-1.5">
+                    <Info className="w-3.5 h-3.5" /> Menunjukkan semua 10 area layanan terdekat.
+                  </p>
+                ) : filteredAreas.length > 0 ? (
+                  <p className="text-emerald-600 font-bold flex items-center gap-1.5">
+                    <Check className="w-3.5 h-3.5" /> Ditemukan {filteredAreas.length} area terdaftar sebagai Zona Sigap Terlayani.
+                  </p>
+                ) : (
+                  <p className="text-rose-500 font-semibold flex items-center gap-1.5">
+                    <AlertCircle className="w-3.5 h-3.5" /> Area tidak spesifik dalam daftar, tetap hubungi CS untuk verifikasi manual.
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Benefit Checkpoints list */}
+            <div className="space-y-4">
               <h4 className="font-semibold text-slate-800 text-sm uppercase tracking-wider">
-                Ketentuan Layanan Wilayah:
+                Keutamaan Pelayanan Wilayah:
               </h4>
               <ul className="space-y-3">
                 {benefits.map((benefit, index) => (
                   <li key={index} className="flex items-start space-x-3 text-sm text-slate-600">
-                    <div className="mt-0.5 text-emerald-600">
-                      <CheckCircle className="w-4 h-4" />
+                    <div className="mt-0.5 text-emerald-600 shrink-0">
+                      <CheckCircle className="w-4.5 h-4.5" />
                     </div>
                     <span>{benefit}</span>
                   </li>
@@ -86,47 +185,80 @@ export default function ServiceAreas() {
               </ul>
             </div>
 
-            <div className="pt-4">
-              <div className="bg-amber-400 text-blue-950 p-5 rounded-2xl flex items-center space-x-4 shadow-lg border border-amber-300">
-                <Navigation className="w-10 h-10 shrink-0 fill-current animate-bounce" />
+            {/* Help Call to action banner */}
+            <div>
+              <div className="bg-amber-400 text-blue-950 p-6 rounded-3xl flex items-center space-x-4 shadow-lg border border-amber-300">
+                <Navigation className="w-10 h-10 shrink-0 fill-current animate-bounce text-blue-950" />
                 <div>
-                  <h4 className="font-display font-extrabold text-sm sm:text-base">Mencari area spesifik Anda?</h4>
-                  <p className="text-xs font-semibold text-blue-900 mt-0.5">Hubungi customer service kami jika wilayah Anda belum tertera</p>
+                  <h4 className="font-display font-extrabold text-sm sm:text-base leading-snug">
+                    Hubungi WhatsApp Support
+                  </h4>
+                  <p className="text-xs font-semibold text-blue-900 mt-1 leading-snug">
+                    Armada kami tersebar di lapangan. Tanya lokasi armada terdekat dari tempat Anda gratis!
+                  </p>
                 </div>
               </div>
             </div>
           </motion.div>
 
-          {/* Right Areas Grid */}
-          <div className="lg:col-span-7">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {primaryAreas.map((area, index) => (
+          {/* Right Side: Render dynamically filtered Area Cards */}
+          <div className="lg:col-span-7 h-[680px] overflow-y-auto pr-2 space-y-4 scrollbar-thin scrollbar-thumb-slate-200">
+            <AnimatePresence mode="popLayout">
+              {filteredAreas.map((area, index) => (
                 <motion.div
-                  key={index}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
-                  className="bg-white border border-slate-100 p-6 rounded-2xl shadow-sm hover:shadow-md hover:border-blue-200 transition-all group"
+                  key={area.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.3 }}
+                  className="bg-white border border-slate-100 p-6 rounded-2xl shadow-sm hover:shadow-md hover:border-blue-200 transition-all group relative overflow-hidden"
                 >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="bg-blue-50 p-2.5 rounded-xl text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all">
-                      <MapPin className="w-5 h-5 fill-current" />
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                    <div className="flex items-center space-x-3">
+                      <div className="bg-blue-50 p-2.5 rounded-xl text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all shrink-0">
+                        <MapPin className="w-5 h-5 fill-current" />
+                      </div>
+                      <div>
+                        <h3 className="font-display font-extrabold text-lg text-blue-950">
+                          {area.name}
+                        </h3>
+                        <span className="text-[10px] font-extrabold uppercase text-blue-500 tracking-wide">
+                          {area.highlight}
+                        </span>
+                      </div>
                     </div>
-                    <span className="text-[10px] font-extrabold uppercase bg-amber-100 text-amber-950 px-2.5 py-1 rounded-full border border-amber-200">
-                      {area.highlight}
-                    </span>
+                    
+                    <div className="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider self-start sm:self-center border border-emerald-100 text-center">
+                      ⏱ Est: {area.response}
+                    </div>
                   </div>
                   
-                  <h3 className="font-display font-extrabold text-lg text-blue-950 mb-2">
-                    {area.name}
-                  </h3>
-                  <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">
-                    {area.suburbs}
-                  </p>
+                  <div className="space-y-2 border-t border-slate-50 pt-3">
+                    <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">
+                      <strong className="text-slate-700 font-semibold mb-1 block">Kelurahan/Sub-area Terlayani:</strong>
+                      {area.suburbs}
+                    </p>
+                    <div className="text-[11px] font-bold text-amber-600 bg-amber-50/70 inline-block px-2.5 py-1 rounded-lg">
+                      🛡️ {area.delivery}
+                    </div>
+                  </div>
                 </motion.div>
               ))}
-            </div>
+
+              {filteredAreas.length === 0 && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-center py-12 bg-white rounded-3xl border border-slate-100 p-8 space-y-4"
+                >
+                  <AlertCircle className="w-12 h-12 text-slate-400 mx-auto" />
+                  <h4 className="font-display font-extrabold text-lg text-blue-950">Area Tidak Ditemukan</h4>
+                  <p className="text-sm text-slate-500 max-w-md mx-auto">
+                    Kecamatan atau wilayah tersebut tidak ada di daftar jangkauan utama. Tapi jangan khawatir! Kami menjangkau seluruh kelurahan di kawasan Karawang dan Purwakarta. Silakan komunikasikan lewat chat WhatsApp.
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
         </div>

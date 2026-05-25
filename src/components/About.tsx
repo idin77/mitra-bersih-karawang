@@ -65,6 +65,16 @@ export default function About() {
                 <span>Tanpa Bongkar Paksa</span>
               </div>
             </div>
+
+            <div className="pt-2">
+              <a
+                href="#kontak"
+                className="inline-flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-md cursor-pointer transition-all hover:-translate-y-0.5 text-sm"
+              >
+                <span>Konsultasi Penanganan Gratis</span>
+                <span className="text-amber-300 font-extrabold">&rarr;</span>
+              </a>
+            </div>
           </motion.div>
 
           {/* Right Cards/Sectors Column */}

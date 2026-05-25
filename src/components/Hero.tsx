@@ -59,11 +59,11 @@ export default function Hero({ whatsappNumber, imageSrc }: HeroProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.1]"
+                className="font-display text-4xl sm:text-5xl lg:text-6.5xl font-extrabold text-white tracking-tight leading-[1.1]"
               >
-                JASA SEDOT WC PROFESIONAL{" "}
-                <span className="text-amber-300 block sm:inline">
-                  MITRA BERSIH KARAWANG
+                Sedot WC Karawang{" "}
+                <span className="text-amber-300 block">
+                  Jasa Sedot WC Murah &amp; 24 Jam
                 </span>
               </motion.h1>
 
@@ -72,9 +72,9 @@ export default function Hero({ whatsappNumber, imageSrc }: HeroProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-slate-300 text-lg sm:text-xl font-light leading-relaxed max-w-2xl"
+                className="text-slate-300 text-sm sm:text-base md:text-lg font-normal leading-relaxed max-w-2xl"
               >
-                Layanan sedot WC terpercaya, cepat, bersih, harga terjangkau melayani Karawang dan sekitarnya.
+                Butuh layanan <strong className="text-white font-extrabold">Sedot Septic Tank Karawang</strong> cepat? Mitra Bersih Karawang adalah solusi sigap, bersih tuntas, dan tanpa bongkar paksa. Kami siap siaga meluncur 24 jam dengan tim profesional berpengalaman dan peralatan vacuum mutakhir.
               </motion.p>
             </div>
 
@@ -110,14 +110,14 @@ export default function Hero({ whatsappNumber, imageSrc }: HeroProps) {
                 className="flex items-center justify-center space-x-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 px-8 rounded-xl shadow-xl shadow-emerald-600/20 active:scale-95 transition-all text-base cursor-pointer"
               >
                 <PhoneCall className="w-5 h-5 animate-bounce" />
-                <span>Hubungi WhatsApp</span>
+                <span>Hubungi WhatsApp (0858-8244-8632)</span>
               </button>
 
               <a
-                href="#estimasi-harga"
+                href="#kontak"
                 className="flex items-center justify-center space-x-2 bg-transparent hover:bg-white/10 text-white font-bold py-4 px-8 rounded-xl border-2 border-slate-700 hover:border-white active:scale-95 transition-all text-base"
               >
-                <span>Pesan Sekarang</span>
+                <span>Hitung Estimasi &amp; Pesan</span>
               </a>
             </motion.div>
           </div>

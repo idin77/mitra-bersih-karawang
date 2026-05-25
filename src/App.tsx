@@ -9,6 +9,8 @@ import ServiceAreas from "./components/ServiceAreas";
 import ContactForm from "./components/ContactForm";
 import Footer from "./components/Footer";
 import FloatingWhatsApp from "./components/FloatingWhatsApp";
+import FAQ from "./components/FAQ";
+import SEOArticles from "./components/SEOArticles";
 
 import { CheckSquare, ShieldCheck, HeartPulse, Award } from "lucide-react";
 import { motion } from "motion/react";
@@ -21,9 +23,9 @@ export default function App() {
   return (
     <div id="mitra-bersih-karawang-app" className="relative text-slate-800">
       <Helmet>
-        <title>MITRA BERSIH KARAWANG | Jasa Sedot WC Profesional Terpercaya</title>
-        <meta name="description" content="Satu-satunya jasa sedot WC profesional premium di Karawang & Purwakarta. Layanan 24 Jam Non-stop, bersih, aman, hemat biaya, dan bergaransi resmi." />
-        <meta name="keywords" content="sedot wc karawang, wc mampet tanpa bongkar, pipa mampet telukjambe, septic tank kuras klari" />
+        <title>Sedot WC Karawang Murah &amp; 24 Jam Terpercaya | Mitra Bersih</title>
+        <meta name="description" content="Jasa sedot WC Karawang profesional &amp; bergaransi. Layanan sedot septic tank Karawang, pelancaran saluran air WC mampet murah cepat siaga 24 jam non-stop." />
+        <meta name="keywords" content="sedot wc karawang, jasa sedot wc murah karawang, sedot septic tank karawang, jasa sedot wc 24 jam karawang, wc mampet karawang, saluran mampet karawang, kuras septic tank, sedot limbah" />
         <link rel="canonical" href="https://mitrabersihkarawang.com" />
       </Helmet>
 
@@ -79,8 +81,14 @@ export default function App() {
       {/* 6b. Galeri Dokumentasi (Gallery) */}
       <Gallery />
 
+      {/* 6c. Artikel SEO & Solusi Edukasi Sanitasi */}
+      <SEOArticles />
+
       {/* 7. Testimoni (Testimonials) */}
       <Testimonials />
+
+      {/* 7b. Pertanyaan Umum / FAQ Terkait Sedot WC */}
+      <FAQ />
 
       {/* 8. Area Layanan (Service Areas) */}
       <ServiceAreas />
