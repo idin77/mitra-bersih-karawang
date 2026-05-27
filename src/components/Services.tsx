@@ -78,7 +78,7 @@ export default function Services({ whatsappNumber }: ServicesProps) {
   };
 
   return (
-    <section id="layanan" className="py-24 bg-brand-blue-50/50 relative overflow-hidden">
+    <section id="layanan" className="py-24 bg-slate-50/50 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
@@ -89,10 +89,10 @@ export default function Services({ whatsappNumber }: ServicesProps) {
           transition={{ duration: 0.5 }}
           className="text-center max-w-3xl mx-auto mb-16 space-y-4"
         >
-          <span className="text-blue-600 font-bold uppercase tracking-widest text-sm">
+          <span className="text-amber-600 font-bold uppercase tracking-widest text-sm">
             LAYANAN UTAMA KAMI
           </span>
-          <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-blue-950 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-zinc-950 tracking-tight">
             Pelayanan Profesional dan Terpadu
           </h2>
           <div className="w-20 h-1.5 bg-amber-400 mx-auto rounded-full"></div>
@@ -118,12 +118,12 @@ export default function Services({ whatsappNumber }: ServicesProps) {
                 onClick={() => setActiveTab(index)}
                 className={`flex items-center space-x-4 p-5 rounded-2xl border text-left transition-all cursor-pointer ${
                   activeTab === index
-                    ? "bg-blue-600 border-blue-600 shadow-lg shadow-blue-600/10 text-white"
-                    : "bg-white border-slate-100 hover:border-blue-300 text-slate-700 hover:bg-slate-50"
+                    ? "bg-zinc-950 border-zinc-950 shadow-lg shadow-zinc-900/15 text-white"
+                    : "bg-white border-slate-100 hover:border-amber-300 text-slate-700 hover:bg-zinc-50/50"
                 }`}
               >
                 <div className={`p-3 rounded-xl transition-colors ${
-                  activeTab === index ? "bg-white/10 text-amber-300" : "bg-blue-50 text-blue-600"
+                  activeTab === index ? "bg-amber-400 text-zinc-950" : "bg-zinc-100 text-amber-600"
                 }`}>
                   {service.icon}
                 </div>
@@ -161,7 +161,7 @@ export default function Services({ whatsappNumber }: ServicesProps) {
                 {/* Heading details */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
                   <div className="space-y-1">
-                    <h3 className="font-display font-extrabold text-2xl sm:text-3xl text-blue-950">
+                    <h3 className="font-display font-extrabold text-2xl sm:text-3xl text-zinc-950">
                       {services[activeTab].title}
                     </h3>
                     <p className="text-slate-500 font-medium text-sm">

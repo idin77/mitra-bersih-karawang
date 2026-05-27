@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
-import { Phone, Menu, X, ShieldCheck } from "lucide-react";
+import { Phone, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+
+const logoUrl = "/src/assets/images/logo_mitra_bersih_1779896054697.png";
 
 interface HeaderProps {
   whatsappNumber: string;
@@ -52,21 +54,26 @@ export default function Header({ whatsappNumber }: HeaderProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <a href="#beranda" className="flex items-center space-x-2 group">
-              <div className="bg-amber-400 p-2 rounded-xl text-blue-900 group-hover:scale-105 transition-transform shadow-md">
-                <ShieldCheck className="w-6 h-6" />
+            <a href="#beranda" className="flex items-center space-x-2.5 group">
+              <div className="w-11 h-11 bg-zinc-950 p-0.5 rounded-full group-hover:scale-105 transition-transform shadow-md overflow-hidden flex items-center justify-center border border-zinc-900">
+                <img 
+                  src={logoUrl} 
+                  alt="Logo Mitra Bersih" 
+                  className="w-full h-full object-contain" 
+                  referrerPolicy="no-referrer" 
+                />
               </div>
               <div className="flex flex-col">
                 <span
                   className={`font-display font-extrabold text-base sm:text-lg tracking-tight leading-none ${
-                    isScrolled ? "text-blue-950" : "text-white"
+                    isScrolled ? "text-zinc-950" : "text-white"
                   }`}
                 >
                   MITRA BERSIH
                 </span>
                 <span
                   className={`text-xs font-bold font-sans tracking-widest ${
-                    isScrolled ? "text-blue-600" : "text-amber-300"
+                    isScrolled ? "text-amber-500" : "text-amber-300"
                   }`}
                 >
                   KARAWANG
@@ -82,7 +89,7 @@ export default function Header({ whatsappNumber }: HeaderProps) {
                   href={item.href}
                   className={`text-sm font-semibold transition-colors relative after:absolute after:bottom-[-6px] after:left-0 after:w-0 after:h-[2px] after:bg-amber-400 after:transition-all hover:after:w-full ${
                     isScrolled
-                      ? "text-slate-600 hover:text-blue-700"
+                      ? "text-zinc-700 hover:text-amber-500"
                       : "text-white/90 hover:text-white"
                   }`}
                 >
@@ -151,7 +158,7 @@ export default function Header({ whatsappNumber }: HeaderProps) {
                   key={item.name}
                   href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block text-base font-semibold text-slate-700 hover:text-blue-700 hover:bg-slate-50 px-3 py-2.5 rounded-lg transition-colors"
+                  className="block text-base font-semibold text-slate-700 hover:text-amber-600 hover:bg-slate-50 px-3 py-2.5 rounded-lg transition-colors"
                 >
                   {item.name}
                 </a>

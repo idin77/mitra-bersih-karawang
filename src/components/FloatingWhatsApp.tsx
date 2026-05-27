@@ -45,7 +45,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             </div>
             
             <div className="flex-1 space-y-1">
-              <h4 className="font-display font-extrabold text-xs sm:text-sm text-blue-950">Customer Support</h4>
+              <h4 className="font-display font-extrabold text-xs sm:text-sm text-zinc-950">Customer Support</h4>
               <p className="text-[11px] sm:text-xs text-slate-500 leading-snug">
                 Halo! Butuh layanan Sedot WC darurat sekarang? Kami online sigap 24 jam.
               </p>

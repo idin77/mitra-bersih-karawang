@@ -106,7 +106,7 @@ export default function ContactForm({ whatsappNumber }: ContactProps) {
     <section id="kontak" className="py-24 bg-white relative overflow-hidden">
       {/* Background blobs decor */}
       <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-yellow-100/30 rounded-full blur-[100px] -z-10"></div>
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-100/40 rounded-full blur-[100px] -z-10"></div>
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-amber-100/20 rounded-full blur-[100px] -z-10"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
@@ -118,10 +118,10 @@ export default function ContactForm({ whatsappNumber }: ContactProps) {
           transition={{ duration: 0.5 }}
           className="text-center max-w-3xl mx-auto mb-16 space-y-4"
         >
-          <span className="text-blue-600 font-bold uppercase tracking-widest text-sm">
+          <span className="text-amber-600 font-bold uppercase tracking-widest text-sm">
             HUBUNGI KAMI & ESTIMASI
           </span>
-          <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-blue-950 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-zinc-950 tracking-tight">
             Konsultasi Gratis & Booking Langsung
           </h2>
           <div className="w-20 h-1.5 bg-amber-400 mx-auto rounded-full"></div>
@@ -139,14 +139,14 @@ export default function ContactForm({ whatsappNumber }: ContactProps) {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.5 }}
-            className="lg:col-span-5 bg-gradient-to-br from-blue-950 to-blue-900 text-white rounded-3xl p-8 shadow-2xl flex flex-col justify-between relative overflow-hidden border border-blue-800"
+            className="lg:col-span-5 bg-gradient-to-br from-zinc-950 to-zinc-900 text-white rounded-3xl p-8 shadow-2xl flex flex-col justify-between relative overflow-hidden border border-zinc-800"
           >
             {/* Visual glow element */}
             <div className="absolute top-0 right-0 w-36 h-36 bg-amber-400/10 rounded-full blur-2xl"></div>
 
             <div className="space-y-6">
               <div className="flex items-center space-x-3">
-                <div className="bg-amber-400 text-blue-950 p-2 rounded-xl shadow-md">
+                <div className="bg-amber-400 text-zinc-950 p-2 rounded-xl shadow-md">
                   <Calculator className="w-6 h-6 animate-pulse" />
                 </div>
                 <div>
@@ -155,7 +155,7 @@ export default function ContactForm({ whatsappNumber }: ContactProps) {
                 </div>
               </div>
 
-              <div className="h-px bg-blue-800"></div>
+              <div className="h-px bg-zinc-800"></div>
 
               {/* Calculator Inputs */}
               <div className="space-y-4 pt-2">
@@ -164,12 +164,12 @@ export default function ContactForm({ whatsappNumber }: ContactProps) {
                 <div className="space-y-1.5">
                   <label className="text-xs text-slate-300 font-bold uppercase tracking-wide">Pilih Jenis Jasa</label>
                   <select
-                    className="w-full bg-blue-900/60 border border-blue-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
+                    className="w-full bg-zinc-900/60 border border-zinc-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
                     value={calcService}
                     onChange={(e) => setCalcService(e.target.value)}
                   >
                     {servicesOpts.map((opt) => (
-                      <option key={opt} value={opt} className="bg-blue-950 text-white">{opt}</option>
+                      <option key={opt} value={opt} className="bg-zinc-950 text-white">{opt}</option>
                     ))}
                   </select>
                 </div>
@@ -178,12 +178,12 @@ export default function ContactForm({ whatsappNumber }: ContactProps) {
                 <div className="space-y-1.5">
                   <label className="text-xs text-slate-300 font-bold uppercase tracking-wide">Tipe Properti / Bangunan</label>
                   <select
-                    className="w-full bg-blue-900/60 border border-blue-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
+                    className="w-full bg-zinc-900/60 border border-zinc-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
                     value={calcProperty}
                     onChange={(e) => setCalcProperty(e.target.value)}
                   >
                     {propertiesOpts.map((opt) => (
-                      <option key={opt} value={opt} className="bg-blue-950 text-white">{opt}</option>
+                      <option key={opt} value={opt} className="bg-zinc-950 text-white">{opt}</option>
                     ))}
                   </select>
                 </div>
@@ -192,16 +192,16 @@ export default function ContactForm({ whatsappNumber }: ContactProps) {
                 <div className="space-y-1.5">
                   <label className="text-xs text-slate-300 font-bold uppercase tracking-wide">Pilih Wilayah Anda</label>
                   <select
-                    className="w-full bg-blue-900/60 border border-blue-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
+                    className="w-full bg-zinc-900/60 border border-zinc-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
                     value={calcLocation}
                     onChange={(e) => setCalcLocation(e.target.value)}
                   >
-                    <option value="Karawang Kota" className="bg-blue-950">Karawang Kota (Bebas Ongkir Selang)</option>
-                    <option value="Telukjambe" className="bg-blue-950">Telukjambe (Bebas Ongkir Selang)</option>
-                    <option value="Klari" className="bg-blue-950">Klari (Bebas Ongkir Selang)</option>
-                    <option value="Cikampek" className="bg-blue-950">Cikampek (Biaya Menyesuaikan)</option>
-                    <option value="Purwakarta" className="bg-blue-950">Purwakarta (Biaya Menyesuaikan)</option>
-                    <option value="Lainnya" className="bg-blue-950">Luar Wilayah Tertera</option>
+                    <option value="Karawang Kota" className="bg-zinc-950">Karawang Kota (Bebas Ongkir Selang)</option>
+                    <option value="Telukjambe" className="bg-zinc-950">Telukjambe (Bebas Ongkir Selang)</option>
+                    <option value="Klari" className="bg-zinc-950">Klari (Bebas Ongkir Selang)</option>
+                    <option value="Cikampek" className="bg-zinc-950">Cikampek (Biaya Menyesuaikan)</option>
+                    <option value="Purwakarta" className="bg-zinc-950">Purwakarta (Biaya Menyesuaikan)</option>
+                    <option value="Lainnya" className="bg-zinc-950">Luar Wilayah Tertera</option>
                   </select>
                 </div>
 
@@ -209,8 +209,8 @@ export default function ContactForm({ whatsappNumber }: ContactProps) {
             </div>
 
             {/* Results output section */}
-            <div className="mt-8 pt-6 border-t border-blue-800 space-y-6">
-              <div className="bg-blue-950/60 border border-blue-800/80 rounded-2xl p-5 text-center">
+            <div className="mt-8 pt-6 border-t border-zinc-800 space-y-6">
+              <div className="bg-zinc-950/60 border border-zinc-800/80 rounded-2xl p-5 text-center">
                 <span className="text-xs text-slate-400 font-medium tracking-wide block">Estimasi Tarif Pengerjaan:</span>
                 <span className="text-2xl sm:text-3xl font-display font-extrabold text-amber-300 mt-1 block">
                   {getEstimatedPrice()}
@@ -223,9 +223,9 @@ export default function ContactForm({ whatsappNumber }: ContactProps) {
               <button
                 id="btn-calc-wa"
                 onClick={handleCalculatorSubmit}
-                className="w-full bg-amber-400 hover:bg-amber-300 active:bg-amber-500 text-blue-950 font-bold py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center space-x-2 text-sm cursor-pointer"
+                className="w-full bg-amber-400 hover:bg-amber-300 active:bg-amber-500 text-zinc-950 font-bold py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center space-x-2 text-sm cursor-pointer"
               >
-                <Phone className="w-4 h-4 fill-blue-950 text-amber-400" />
+                <Phone className="w-4 h-4 fill-zinc-950 text-amber-400" />
                 <span>Konsultasi Tarif Ini Melalui WhatsApp</span>
               </button>
             </div>
@@ -241,11 +241,11 @@ export default function ContactForm({ whatsappNumber }: ContactProps) {
             className="lg:col-span-7 bg-slate-50 border border-slate-100 rounded-3xl p-8 shadow-xl"
           >
             <div className="flex items-center space-x-3 mb-6">
-              <div className="bg-blue-600 p-2.5 rounded-xl text-white">
+              <div className="bg-amber-400 p-2.5 rounded-xl text-zinc-950 font-extrabold">
                 <MessageSquare className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="font-display font-extrabold text-blue-950 text-xl">Formulir Booking / Jadwal</h3>
+                <h3 className="font-display font-extrabold text-zinc-950 text-xl">Formulir Booking / Jadwal</h3>
                 <p className="text-xs text-slate-500">Pilih waktu kunjungan dan input detail alamat anda</p>
               </div>
             </div>
@@ -262,7 +262,7 @@ export default function ContactForm({ whatsappNumber }: ContactProps) {
                     type="text"
                     required
                     placeholder="Contoh: Bpk. Suwardi"
-                    className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition"
+                    className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   />
@@ -274,7 +274,7 @@ export default function ContactForm({ whatsappNumber }: ContactProps) {
                     Nama Jasa Layanan
                   </label>
                   <select
-                    className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition"
+                    className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
                     value={formData.serviceType}
                     onChange={(e) => setFormData({ ...formData, serviceType: e.target.value })}
                   >
@@ -299,7 +299,7 @@ export default function ContactForm({ whatsappNumber }: ContactProps) {
                     type="text"
                     required
                     placeholder="Contoh: Jl. Galuh Mas Raya No. 12, Kel. Sukaluyu, Telukjambe Timur"
-                    className="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-4 py-3 text-sm text-slate-800 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition"
+                    className="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-4 py-3 text-sm text-slate-800 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
                     value={formData.address}
                     onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                   />
@@ -318,7 +318,7 @@ export default function ContactForm({ whatsappNumber }: ContactProps) {
                     </div>
                     <input
                       type="date"
-                      className="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-4 py-3 text-sm text-slate-800 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition"
+                      className="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-4 py-3 text-sm text-slate-800 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
                       value={formData.scheduleDate}
                       onChange={(e) => setFormData({ ...formData, scheduleDate: e.target.value })}
                     />
@@ -335,7 +335,7 @@ export default function ContactForm({ whatsappNumber }: ContactProps) {
                       <Clock className="w-4 h-4" />
                     </div>
                     <select
-                      className="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-4 py-3 text-sm text-slate-800 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition"
+                      className="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-4 py-3 text-sm text-slate-800 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
                       value={formData.scheduleTime}
                       onChange={(e) => setFormData({ ...formData, scheduleTime: e.target.value })}
                     >
@@ -356,7 +356,7 @@ export default function ContactForm({ whatsappNumber }: ContactProps) {
                 <textarea
                   rows={3}
                   placeholder="Contoh: Saluran toilet tersumbat benda kecil, septic tank sudah tidak dikuras 5 tahun, dll."
-                  className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition resize-none"
+                  className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition resize-none"
                   value={formData.additionalNotes}
                   onChange={(e) => setFormData({ ...formData, additionalNotes: e.target.value })}
                 />

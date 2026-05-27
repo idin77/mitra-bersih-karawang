@@ -98,17 +98,17 @@ export default function ServiceAreas() {
   return (
     <section id="area-layanan" className="py-24 bg-slate-50 relative overflow-hidden">
       {/* Visual background decorations */}
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] bg-blue-100/30 rounded-full blur-[130px] -z-10"></div>
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] bg-amber-100/10 rounded-full blur-[130px] -z-10"></div>
       <div className="absolute -top-10 -right-10 w-64 h-64 bg-yellow-100/30 rounded-full blur-[100px] -z-10"></div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center mb-16 space-y-4">
-          <span className="text-blue-600 font-bold uppercase tracking-widest text-sm block">
+          <span className="text-amber-600 font-bold uppercase tracking-widest text-sm block">
             JANGKAUAN AREA LAYANAN
           </span>
-          <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-blue-950 tracking-tight leading-tight">
+          <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-zinc-950 tracking-tight leading-tight">
             Wilayah Jasa Sedot WC Karawang &amp; Purwakarta
           </h2>
           <div className="w-20 h-1.5 bg-amber-400 mx-auto rounded-full"></div>
@@ -125,11 +125,11 @@ export default function ServiceAreas() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="lg:col-span-5 space-y-8"
+            className="lg:col-span-12 lg:col-span-5 space-y-8"
           >
             {/* Header Description */}
             <div className="space-y-4">
-              <h3 className="font-display font-extrabold text-blue-950 text-2xl">
+              <h3 className="font-display font-extrabold text-zinc-950 text-2xl">
                 Cek Ketersediaan Area Terdekat Anda
               </h3>
               <p className="text-slate-600 leading-relaxed text-sm sm:text-base">
@@ -138,7 +138,7 @@ export default function ServiceAreas() {
             </div>
 
             {/* Interactive Search Tool */}
-            <div className="bg-white p-6 rounded-3xl shadow-xl border border-blue-50/50 space-y-4">
+            <div className="bg-white p-6 rounded-3xl shadow-xl border border-slate-100 space-y-4">
               <div className="relative">
                 <Search className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
                 <input
@@ -146,7 +146,7 @@ export default function ServiceAreas() {
                   placeholder="Ketik lokasi Anda (misal: Galuh Mas, Klari, Sadang...)"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all text-slate-800 placeholder:text-slate-400 font-medium"
+                  className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:bg-white transition-all text-slate-800 placeholder:text-slate-400 font-medium"
                 />
               </div>
 
@@ -187,13 +187,13 @@ export default function ServiceAreas() {
 
             {/* Help Call to action banner */}
             <div>
-              <div className="bg-amber-400 text-blue-950 p-6 rounded-3xl flex items-center space-x-4 shadow-lg border border-amber-300">
-                <Navigation className="w-10 h-10 shrink-0 fill-current animate-bounce text-blue-950" />
+              <div className="bg-amber-400 text-zinc-950 p-6 rounded-3xl flex items-center space-x-4 shadow-lg border border-amber-300">
+                <Navigation className="w-10 h-10 shrink-0 fill-current animate-bounce text-zinc-950" />
                 <div>
                   <h4 className="font-display font-extrabold text-sm sm:text-base leading-snug">
                     Hubungi WhatsApp Support
                   </h4>
-                  <p className="text-xs font-semibold text-blue-900 mt-1 leading-snug">
+                  <p className="text-xs font-semibold text-zinc-900 mt-1 leading-snug">
                     Armada kami tersebar di lapangan. Tanya lokasi armada terdekat dari tempat Anda gratis!
                   </p>
                 </div>
@@ -211,18 +211,18 @@ export default function ServiceAreas() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.3 }}
-                  className="bg-white border border-slate-100 p-6 rounded-2xl shadow-sm hover:shadow-md hover:border-blue-200 transition-all group relative overflow-hidden"
+                  className="bg-white border border-slate-100 p-6 rounded-2xl shadow-sm hover:shadow-md hover:border-amber-300 transition-all group relative overflow-hidden"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                     <div className="flex items-center space-x-3">
-                      <div className="bg-blue-50 p-2.5 rounded-xl text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all shrink-0">
+                      <div className="bg-zinc-100 text-amber-500 p-2.5 rounded-xl group-hover:bg-amber-400 group-hover:text-zinc-950 transition-all shrink-0">
                         <MapPin className="w-5 h-5 fill-current" />
                       </div>
                       <div>
-                        <h3 className="font-display font-extrabold text-lg text-blue-950">
+                        <h3 className="font-display font-extrabold text-lg text-zinc-950">
                           {area.name}
                         </h3>
-                        <span className="text-[10px] font-extrabold uppercase text-blue-500 tracking-wide">
+                        <span className="text-[10px] font-extrabold uppercase text-amber-600 tracking-wide">
                           {area.highlight}
                         </span>
                       </div>
@@ -252,7 +252,7 @@ export default function ServiceAreas() {
                   className="text-center py-12 bg-white rounded-3xl border border-slate-100 p-8 space-y-4"
                 >
                   <AlertCircle className="w-12 h-12 text-slate-400 mx-auto" />
-                  <h4 className="font-display font-extrabold text-lg text-blue-950">Area Tidak Ditemukan</h4>
+                  <h4 className="font-display font-extrabold text-lg text-zinc-950">Area Tidak Ditemukan</h4>
                   <p className="text-sm text-slate-500 max-w-md mx-auto">
                     Kecamatan atau wilayah tersebut tidak ada di daftar jangkauan utama. Tapi jangan khawatir! Kami menjangkau seluruh kelurahan di kawasan Karawang dan Purwakarta. Silakan komunikasikan lewat chat WhatsApp.
                   </p>

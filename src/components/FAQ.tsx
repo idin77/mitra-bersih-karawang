@@ -49,17 +49,17 @@ export default function FAQ() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
 
-      <div className="absolute top-1/4 left-10 w-96 h-96 bg-blue-50/40 rounded-full blur-[120px] -z-10"></div>
+      <div className="absolute top-1/4 left-10 w-96 h-96 bg-amber-50/20 rounded-full blur-[120px] -z-10"></div>
       <div className="absolute bottom-1/4 right-10 w-96 h-96 bg-amber-50/40 rounded-full blur-[120px] -z-10"></div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Heading */}
         <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
-          <span className="text-blue-600 font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2">
+          <span className="text-amber-600 font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2">
             <HelpCircle className="w-4.5 h-4.5" />
             PERTANYAAN UMUM (FAQ)
           </span>
-          <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-blue-950 tracking-tight leading-tight">
+          <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-zinc-950 tracking-tight leading-tight">
             FAQ Sedot WC Karawang Terpercaya
           </h2>
           <div className="w-16 h-1 bg-amber-400 mx-auto rounded-full"></div>
@@ -77,22 +77,22 @@ export default function FAQ() {
                 key={index}
                 className={`border rounded-2xl transition-all duration-300 overflow-hidden ${
                   isOpen
-                    ? "bg-slate-50/90 border-blue-200 shadow-md"
-                    : "bg-white border-slate-100 hover:border-slate-350 hover:bg-slate-50/30"
+                    ? "bg-slate-50/90 border-amber-300 shadow-md"
+                    : "bg-white border-slate-100 hover:border-slate-300 hover:bg-slate-50/30"
                 }`}
               >
                 <button
                   onClick={() => handleToggle(index)}
-                  className="w-full flex items-center justify-between p-6 text-left cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue-100 rounded-2xl"
+                  className="w-full flex items-center justify-between p-6 text-left cursor-pointer focus:outline-none focus:ring-1 focus:ring-amber-200 rounded-2xl"
                   aria-expanded={isOpen}
                 >
-                  <h3 className="font-display font-bold text-base sm:text-lg text-blue-950 pr-4">
+                  <h3 className="font-display font-bold text-base sm:text-lg text-zinc-950 pr-4">
                     {faq.question}
                   </h3>
                   <div
                     className={`shrink-0 p-1.5 rounded-full border transition-all ${
                       isOpen
-                        ? "bg-blue-600 text-white border-blue-600 rotate-90"
+                        ? "bg-amber-400 text-zinc-950 border-amber-400 rotate-90"
                         : "bg-slate-100 text-slate-500 border-slate-200"
                     }`}
                   >
@@ -120,7 +120,7 @@ export default function FAQ() {
         </div>
 
         {/* High Conversion Footer CTA inside FAQ */}
-        <div className="mt-12 p-6 bg-gradient-to-r from-blue-950 to-blue-900 rounded-2xl text-white flex flex-col sm:flex-row items-center justify-between gap-6 overflow-hidden relative shadow-lg">
+        <div className="mt-12 p-6 bg-gradient-to-r from-zinc-950 to-zinc-900 border border-zinc-800 rounded-2xl text-white flex flex-col sm:flex-row items-center justify-between gap-6 overflow-hidden relative shadow-lg">
           <div className="absolute top-0 right-0 w-32 h-32 bg-amber-400/5 rounded-full blur-2xl"></div>
           <div className="flex items-center space-x-3 text-left">
             <MessageSquareCode className="w-8 h-8 text-amber-300 shrink-0" />

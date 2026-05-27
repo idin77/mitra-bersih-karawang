@@ -1,4 +1,6 @@
-import { Phone, MapPin, CalendarClock, ShieldCheck, Mail } from "lucide-react";
+import { Phone, MapPin, CalendarClock, Mail } from "lucide-react";
+
+const logoUrl = "/src/assets/images/logo_mitra_bersih_1779896054697.png";
 
 interface FooterProps {
   whatsappNumber: string;
@@ -20,9 +22,14 @@ export default function Footer({ whatsappNumber }: FooterProps) {
           
           {/* Column 1: Brand Info */}
           <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <div className="bg-amber-400 p-2 rounded-xl text-blue-900 shadow-md">
-                <ShieldCheck className="w-5 h-5" />
+            <div className="flex items-center space-x-2.5">
+              <div className="w-10 h-10 bg-zinc-950 p-0.5 rounded-full shadow-md flex items-center justify-center border border-zinc-800">
+                <img 
+                  src={logoUrl} 
+                  alt="Logo Mitra Bersih" 
+                  className="w-full h-full object-contain" 
+                  referrerPolicy="no-referrer" 
+                />
               </div>
               <div className="flex flex-col">
                 <span className="font-display font-extrabold text-white text-base tracking-tight leading-none">
@@ -128,7 +135,7 @@ export default function Footer({ whatsappNumber }: FooterProps) {
                     href="https://share.google/Ukg1n7VEVlpssqptX" 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="inline-flex items-center space-x-1.5 text-[11px] font-bold text-amber-300 hover:text-white transition-colors bg-blue-950 border border-blue-900 px-3 py-1.5 rounded-xl hover:bg-amber-400 hover:text-blue-950 transition-all duration-300 cursor-pointer shadow-sm"
+                    className="inline-flex items-center space-x-1.5 text-[11px] font-bold text-amber-400 hover:text-black transition-colors bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-xl hover:bg-amber-400 hover:text-zinc-950 transition-all duration-300 cursor-pointer shadow-sm"
                   >
                     <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
                       <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
@@ -144,7 +151,7 @@ export default function Footer({ whatsappNumber }: FooterProps) {
                 </a>
               </li>
               <li className="flex items-center space-x-3">
-                <Mail className="w-5 h-5 text-blue-400 shrink-0" />
+                <Mail className="w-5 h-5 text-amber-500 shrink-0" />
                 <span className="text-xs">
                   info@mitrabersihkarawang.com
                 </span>
@@ -164,7 +171,7 @@ export default function Footer({ whatsappNumber }: FooterProps) {
                 className="opacity-70 group-hover:opacity-95 transition-opacity duration-300"
                 title="Peta Lokasi Mitra Bersih Karawang"
               ></iframe>
-              <div className="absolute inset-0 bg-blue-950/20 pointer-events-none group-hover:opacity-0 transition-opacity"></div>
+              <div className="absolute inset-0 bg-zinc-950/30 pointer-events-none group-hover:opacity-0 transition-opacity"></div>
             </div>
 
           </div>

@@ -57,10 +57,10 @@ export default function Testimonials() {
           transition={{ duration: 0.5 }}
           className="text-center max-w-3xl mx-auto mb-16 space-y-4"
         >
-          <span className="text-blue-600 font-bold uppercase tracking-widest text-sm">
+          <span className="text-amber-600 font-bold uppercase tracking-widest text-sm">
             TESTIMONI PELANGGAN
           </span>
-          <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-blue-950 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-zinc-950 tracking-tight">
             Apa Kata Mereka Yang Telah Memilih Kami?
           </h2>
           <div className="w-20 h-1.5 bg-amber-400 mx-auto rounded-full"></div>
@@ -104,7 +104,7 @@ export default function Testimonials() {
                 <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold font-display shadow-sm ${
                   testi.gender === "f" 
                     ? "bg-rose-100 text-rose-700" 
-                    : "bg-blue-100 text-blue-700"
+                    : "bg-amber-100 text-amber-800"
                 }`}>
                   {testi.name.substring(0, 3)}
                 </div>
@@ -115,7 +115,7 @@ export default function Testimonials() {
                   <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 text-xs text-slate-500 font-medium">
                     <span>{testi.location}</span>
                     <span className="hidden sm:inline text-slate-300">•</span>
-                    <span className="text-blue-600 font-bold">{testi.category}</span>
+                    <span className="text-amber-600 font-bold">{testi.category}</span>
                   </div>
                 </div>
               </div>
@@ -134,10 +134,10 @@ export default function Testimonials() {
         >
           <div className="inline-flex flex-col sm:flex-row items-center gap-4 bg-emerald-50 border border-emerald-100 rounded-2xl px-6 py-4">
             <div className="flex -space-x-2">
-              <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold border-2 border-white">R</div>
+              <div className="w-8 h-8 rounded-full bg-slate-700 text-white flex items-center justify-center text-xs font-bold border-2 border-white">R</div>
               <div className="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold border-2 border-white">H</div>
               <div className="w-8 h-8 rounded-full bg-amber-500 text-white flex items-center justify-center text-xs font-bold border-2 border-white">S</div>
-              <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs font-bold border-2 border-white">A</div>
+              <div className="w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center text-xs font-bold border-2 border-white">A</div>
             </div>
             <p className="text-emerald-950 font-bold text-sm tracking-wide">
               Bergabung bersama 5.000+ pelanggan yang puas dengan layanan tangki sedot modern kami!

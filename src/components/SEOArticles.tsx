@@ -21,7 +21,7 @@ export default function SEOArticles() {
             <p><strong>⏱️ Estimasi Panjang:</strong> ~1150 Kata — Gaya Penulisan Natural, Informatif & Persuasif</p>
           </div>
 
-          <h1 className="text-xl sm:text-2xl font-display font-extrabold text-blue-950 mt-4 leading-tight">
+          <h1 className="text-xl sm:text-2xl font-display font-extrabold text-zinc-950 mt-4 leading-tight">
             Panduan Lengkap Memilih Jasa Sedot WC Karawang Profesional, Murah & Terpercaya
           </h1>
 
@@ -30,10 +30,10 @@ export default function SEOArticles() {
           </p>
 
           <p>
-            Sanitasi sehat rumah tangga bermula dari pemeliharaan sistem pembuangan limbah air kotor yang baik, khususnya toilet dan septic tank. Begitu toilet di rumah Anda tersumbat, mengeluarkan suara bergelembung (gurgling) yang berisik, air siraman menggenang, atau bahkan mulai mengeluarkan polusi aroma busuk tak tertahankan, itu adalah sinyal darurat sanitasi yang tidak boleh ditawar lagi. Menunda penanganan toilet bermasalah hanya akan memperburuk situasi dan meningkatkan risiko penyakit berbahaya. Di sinilah tim ahli dari penyedia <strong className="text-blue-600">Jasa Sedot WC Karawang</strong> profesional dan resmi seperti <strong>MITRA BERSIH KARAWANG</strong> hadir memberikan respon cepat siaga 24 jam guna menormalkan fungsi jamban bersih Anda secara instan dan tanpa ribet.
+            Sanitasi sehat rumah tangga bermula dari pemeliharaan sistem pembuangan limbah air kotor yang baik, khususnya toilet dan septic tank. Begitu toilet di rumah Anda tersumbat, mengeluarkan suara bergelembung (gurgling) yang berisik, air siraman menggenang, atau bahkan mulai mengeluarkan polusi aroma busuk tak tertahankan, itu adalah sinyal darurat sanitasi yang tidak boleh ditawar lagi. Menunda penanganan toilet bermasalah hanya akan memperburuk situasi dan meningkatkan risiko penyakit berbahaya. Di sinilah tim ahli dari penyedia <strong className="text-amber-600">Jasa Sedot WC Karawang</strong> profesional dan resmi seperti <strong>MITRA BERSIH KARAWANG</strong> hadir memberikan respon cepat siaga 24 jam guna menormalkan fungsi jamban bersih Anda secara instan dan tanpa ribet.
           </p>
 
-          <h2 className="text-lg sm:text-xl font-display font-bold text-blue-950 pt-3 flex items-center gap-2">
+          <h2 className="text-lg sm:text-xl font-display font-bold text-zinc-950 pt-3 flex items-center gap-2">
             <span className="w-1.5 h-6 bg-amber-400 rounded-full inline-block"></span>
             Mengapa WC Mampet & Septic Tank Penuh Harus Segera Disedot?
           </h2>
@@ -61,7 +61,7 @@ export default function SEOArticles() {
             </li>
           </ul>
 
-          <h2 className="text-lg sm:text-xl font-display font-bold text-blue-950 pt-3 flex items-center gap-2">
+          <h2 className="text-lg sm:text-xl font-display font-bold text-zinc-950 pt-3 flex items-center gap-2">
             <span className="w-1.5 h-6 bg-amber-400 rounded-full inline-block"></span>
             Layanan Terpadu & Terpercaya dari MITRA BERSIH KARAWANG
           </h2>
@@ -72,35 +72,35 @@ export default function SEOArticles() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
             <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100">
-              <h3 className="font-extrabold text-blue-950 text-sm sm:text-base mb-2">🚽 Sedot Septic Tank Karawang</h3>
+              <h3 className="font-extrabold text-zinc-950 text-sm sm:text-base mb-2">🚽 Sedot Septic Tank Karawang</h3>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 Pengosongan lumpur padat sisa penguraian menggunakan mesin kompresor hisap modern berkekuatan tinggi tanpa merusak konstruksi dinding cor tangki. Rekomendasi wajib disedot berkala demi merestorasi penyerapan filter tanah kembali normal.
               </p>
             </div>
 
             <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100">
-              <h3 className="font-extrabold text-blue-950 text-sm sm:text-base mb-2">⚡ Atasi WC Mampet Karawang Tanpa Bongkar</h3>
+              <h3 className="font-extrabold text-zinc-950 text-sm sm:text-base mb-2">⚡ Atasi WC Mampet Karawang Tanpa Bongkar</h3>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 Penyumbatan kloset leher angsa akibat kertas rokok, tisu non-biodegradable, sachet pembersih, maupun sachet sampo dapat kami atasi seketika tanpa membongkar lantai keramik mahal berkat alat spiral blower lentur (drain snake) & kompresor tekanan terkontrol.
               </p>
             </div>
 
             <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100">
-              <h3 className="font-extrabold text-blue-950 text-sm sm:text-base mb-2">💰 Sedot WC Murah Karawang Transparan</h3>
+              <h3 className="font-extrabold text-zinc-950 text-sm sm:text-base mb-2">💰 Sedot WC Murah Karawang Transparan</h3>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 Kami melarang keras trik jebakan harga calo nakal. Seluruh biaya pengerjaan didasarkan pada penawaran kuantitatif transparan—baik per tangki ataupun hitungan borongan sesuai panjang penarikan selang—sejak awal konsultasi telepon.
               </p>
             </div>
 
             <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100">
-              <h3 className="font-extrabold text-blue-950 text-sm sm:text-base mb-2">💧 Sedot Wastafel Serta Saluran Got Tersumbat</h3>
+              <h3 className="font-extrabold text-zinc-950 text-sm sm:text-base mb-2">💧 Sedot Wastafel Serta Saluran Got Tersumbat</h3>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 Pembersihan jalur pipa dapur cuci piring yang dipenuhi tumpukan kerak lemak kotoran beku sisa dapur atau endapan sabun mandi yang menghalangi air pembuangan di luar rumah secara bersih menyeluruh tanpa bahan kimia perusak paralon PVC.
               </p>
             </div>
           </div>
 
-          <h2 className="text-lg sm:text-xl font-display font-bold text-blue-950 pt-3 flex items-center gap-2">
+          <h2 className="text-lg sm:text-xl font-display font-bold text-zinc-950 pt-3 flex items-center gap-2">
             <span className="w-1.5 h-6 bg-amber-400 rounded-full inline-block"></span>
             Mengapa Ribuan Pelanggan Karawang Memilih MITRA BERSIH?
           </h2>
@@ -124,7 +124,7 @@ export default function SEOArticles() {
             </li>
           </ol>
 
-          <h2 className="text-lg sm:text-xl font-display font-bold text-blue-950 pt-3 flex items-center gap-2">
+          <h2 className="text-lg sm:text-xl font-display font-bold text-zinc-950 pt-3 flex items-center gap-2">
             <span className="w-1.5 h-6 bg-amber-400 rounded-full inline-block"></span>
             Tips Sederhana Merawat Kloset Kamar Mandi Tetap Sehat
           </h2>
@@ -152,42 +152,42 @@ export default function SEOArticles() {
             </div>
           </div>
 
-          <h2 className="text-lg sm:text-xl font-display font-bold text-blue-950 pt-3 flex items-center gap-2">
+          <h2 className="text-lg sm:text-xl font-display font-bold text-zinc-950 pt-3 flex items-center gap-2">
             <span className="w-1.5 h-6 bg-amber-400 rounded-full inline-block"></span>
             Pertanyaan Umum Pelanggan (FAQ SEO)
           </h2>
 
           <div className="space-y-4 pt-1 text-xs sm:text-sm">
             <div className="border-b border-slate-100 pb-3">
-              <p className="font-extrabold text-blue-950">Q: Berapa tarif rata-rata pengerjaan jasa sedot WC di Karawang?</p>
+              <p className="font-extrabold text-zinc-950">Q: Berapa tarif rata-rata pengerjaan jasa sedot WC di Karawang?</p>
               <p className="text-slate-600 mt-1">
                 A: Biaya jasa kami sangat terbuka mulai dari Rp350.000 saja. Harga final disesuaikan dengan volume tangki yang dikuras, jarak panjang selang yang ditarik dari parkiran truk ke septic tank, serta tingkat kompleksitas mampet di pipa toilet.
               </p>
             </div>
 
             <div className="border-b border-slate-100 pb-3">
-              <p className="font-extrabold text-blue-950">Q: Apakah proses penyedotan kotoran memerlukan pembongkaran tegel?</p>
+              <p className="font-extrabold text-zinc-950">Q: Apakah proses penyedotan kotoran memerlukan pembongkaran tegel?</p>
               <p className="text-slate-600 mt-1">
                 A: Sedapat mungkin kami utamakan penanganan nir-bongkar menggunakan sistem vakum hidrolik. Bongkar tipis penutup hanya diperlukan di atas lubang instalasi septic tank utama jika memang belum dibuatkan pintu kontrol pemeliharaan sebelumnya.
               </p>
             </div>
 
             <div className="border-b border-slate-100 pb-3">
-              <p className="font-extrabold text-blue-950">Q: Area pemukiman kecamatan mana saja yang masuk daerah cover layanan?</p>
+              <p className="font-extrabold text-zinc-950">Q: Area pemukiman kecamatan mana saja yang masuk daerah cover layanan?</p>
               <p className="text-slate-600 mt-1">
                 A: Armada Mitra Bersih menjangkau penuh wilayah Kabupaten Karawang. Mulai dari Karawang Barat, Karawang Timur, Telukjambe Timur, Telukjambe Barat, Klari, Kosambi, Cikampek, Kotabaru, Jatisari, Cilamaya, Rengasdengklok, Rawamerta, Tempuran, Pedes, Batujaya, hingga batasan wilayah perbatasan kota tetangga.
               </p>
             </div>
 
             <div className="border-b border-slate-100 pb-3">
-              <p className="font-extrabold text-blue-950">Q: Bagaimana cara memprediksi kondisi septic tank murni penuh vs mampet?</p>
+              <p className="font-extrabold text-zinc-950">Q: Bagaimana cara memprediksi kondisi septic tank murni penuh vs mampet?</p>
               <p className="text-slate-600 mt-1">
                 A: Bila kloset disiram lambat mengalir tapi air lancar mengalir ke saluran luar saat diuji siram got lain, kemungkinan septic tank Anda terisi air penuh. Sementara jika toilet lain di rumah lain aman namun air toilet Anda menguap tumpah, bisa dipastikan itu mampet pipa. Tim kami siap menginspeksi gratis sebelum tindakan kuras!
               </p>
             </div>
           </div>
 
-          <h2 className="text-lg sm:text-xl font-display font-bold text-blue-950 pt-3 flex items-center gap-2">
+          <h2 className="text-lg sm:text-xl font-display font-bold text-zinc-950 pt-3 flex items-center gap-2">
             <span className="w-1.5 h-6 bg-amber-400 rounded-full inline-block"></span>
             Usulan Struktur Kode Schema Markup SEO (Structured Data JSON-LD)
           </h2>
@@ -228,21 +228,21 @@ export default function SEOArticles() {
 }`}
           </pre>
 
-          <h2 className="text-lg sm:text-xl font-display font-bold text-blue-950 pt-3 flex items-center gap-2">
+          <h2 className="text-lg sm:text-xl font-display font-bold text-zinc-950 pt-3 flex items-center gap-2">
             <span className="w-1.5 h-6 bg-amber-400 rounded-full inline-block"></span>
             Saran Struktur Saling Taut Web (Internal Linking)
           </h2>
-          <div className="bg-blue-50/50 p-4 rounded-2xl border border-blue-100 text-xs sm:text-sm space-y-2 text-blue-950 font-medium">
+          <div className="bg-zinc-50 p-4 rounded-2xl border border-zinc-200 text-xs sm:text-sm space-y-2 text-zinc-950 font-medium">
             <p>🔗 <strong>Optimasi Hierarki Konten Crawling Robot:</strong></p>
             <ul className="list-disc list-inside pl-1 space-y-1.5 text-slate-700 text-xs font-normal">
-              <li>Hubungkan halaman panduan ini langsung dengan komponen <a href="#estimasi-harga" className="text-blue-600 font-bold hover:underline">Kalkulator Estimasi Biaya</a> untuk memicu transaksi cepat pengerjaan di tempat.</li>
-              <li>Arahkan poin-poin wilayah kelurahan yang dilayani ke menu navigasi dinamis beranda bagian <a href="#wilayah" className="text-blue-600 font-bold hover:underline">Area Layanan Utama</a>.</li>
-              <li>Tautkan istilah teknis bakteri pengurai dengan komponen <a href="#faq" className="text-blue-600 font-bold hover:underline">Pertanyaan FAQ Utama</a> untuk memaksimalkan kepuasan navigasi pengunjung.</li>
+              <li>Hubungkan halaman panduan ini langsung dengan komponen <a href="#estimasi-harga" className="text-amber-600 font-bold hover:underline">Kalkulator Estimasi Biaya</a> untuk memicu transaksi cepat pengerjaan di tempat.</li>
+              <li>Arahkan poin-poin wilayah kelurahan yang dilayani ke menu navigasi dinamis beranda bagian <a href="#wilayah" className="text-amber-600 font-bold hover:underline">Area Layanan Utama</a>.</li>
+              <li>Tautkan istilah teknis bakteri pengurai dengan komponen <a href="#faq" className="text-amber-600 font-bold hover:underline">Pertanyaan FAQ Utama</a> untuk memaksimalkan kepuasan navigasi pengunjung.</li>
             </ul>
           </div>
 
           {/* Banner Call-To-Action Terpadu */}
-          <div className="p-6 bg-gradient-to-br from-blue-950 to-blue-900 rounded-3xl border border-blue-900 text-white space-y-4 shadow-xl mt-6">
+          <div className="p-6 bg-gradient-to-br from-zinc-950 to-zinc-900 rounded-3xl border border-zinc-800 text-white space-y-4 shadow-xl mt-6">
             <h4 className="font-display font-extrabold text-amber-300 text-sm sm:text-base uppercase tracking-wider">
               🚽 Toilet Bermasalah di Daerah Karawang? Masalah Selesai Hari Ini!
             </h4>
@@ -282,25 +282,25 @@ export default function SEOArticles() {
           </p>
           <ul className="space-y-3 pl-2">
             <li className="flex items-start gap-2.5">
-              <CornerDownRight className="w-4 h-4 text-blue-500 mt-1 shrink-0" />
+              <CornerDownRight className="w-4 h-4 text-amber-600 mt-1 shrink-0" />
               <span>
                 <strong>Masuknya Air Hujan / Resapan Air Tanah:</strong> Bila dinding septic tank retak atau tidak disemen dengan kedap air (waterproofing), air dari dalam tanah atau rembesan got luar dapat merembes ke dalam tangki, membuat volume air penuh seketika.
               </span>
             </li>
             <li className="flex items-start gap-2.5">
-              <CornerDownRight className="w-4 h-4 text-blue-500 mt-1 shrink-0" />
+              <CornerDownRight className="w-4 h-4 text-amber-600 mt-1 shrink-0" />
               <span>
                 <strong>Hilangnya Bakteri Pengurai Alami:</strong> Bakteri pengurai berfungsi mengubah limbah padat menjadi cair agar mudah meresap ke dalam tanah. Kebiasaan membuang bahan kimia keras seperti pemutih, detergen pekat, atau pembersih karbol ke lubang kloset dapat mematikan bakteri menguntungkan ini.
               </span>
             </li>
             <li className="flex items-start gap-2.5">
-              <CornerDownRight className="w-4 h-4 text-blue-500 mt-1 shrink-0" />
+              <CornerDownRight className="w-4 h-4 text-amber-600 mt-1 shrink-0" />
               <span>
                 <strong>Sumbatan Sampah Non-Organik:</strong> Menaruh tisu basah, pembalut, puntung rokok, atau sachet sampo ke dalam kloset akan menyumbat pipa penyalur dan tidak bisa diurai, mempercepat penumpukan limbah padat.
               </span>
             </li>
           </ul>
-          <p className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-xl text-blue-950 font-medium">
+          <p className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl text-zinc-950 font-medium">
             💡 <strong>Solusi Jitu:</strong> Lakukan penyedotan lumpur tinja secara berkala setiap 1-2 tahun sekali menggunakan teknologi vacuum modern dari Mitra Bersih Karawang untuk merestorasi fungsi resapan saringan air kotor Anda secara optimal!
           </p>
         </div>
@@ -408,17 +408,17 @@ export default function SEOArticles() {
   return (
     <section id="artikel-edu" className="py-24 bg-slate-50 relative overflow-hidden">
       <div className="absolute top-1/2 left-10 w-72 h-72 bg-amber-100/30 rounded-full blur-[100px] -z-10"></div>
-      <div className="absolute bottom-10 right-10 w-72 h-72 bg-blue-100/30 rounded-full blur-[100px] -z-10"></div>
+      <div className="absolute bottom-10 right-10 w-72 h-72 bg-amber-100/20 rounded-full blur-[100px] -z-10"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Title */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <span className="text-blue-600 font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2">
+          <span className="text-amber-600 font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2">
             <BookOpen className="w-4.5 h-4.5" />
             ARTIKEL PENDUKUNG SEO &amp; SOLUSI
           </span>
-          <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-blue-950 tracking-tight leading-tight">
+          <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-zinc-950 tracking-tight leading-tight">
             Edukasi Sanitasi Sehat Untuk Semua
           </h2>
           <div className="w-20 h-1.5 bg-amber-400 mx-auto rounded-full"></div>
@@ -440,21 +440,21 @@ export default function SEOArticles() {
                   onClick={() => setActiveArticle(index)}
                   className={`w-full text-left p-5 rounded-2xl border transition-all duration-300 relative cursor-pointer flex gap-4 ${
                     ixActive
-                      ? "bg-white border-blue-500/30 shadow-lg shadow-blue-500/5 translate-x-1"
+                      ? "bg-white border-amber-500/30 shadow-lg shadow-amber-500/5 translate-x-1"
                       : "bg-white/60 border-slate-150 hover:bg-white hover:border-slate-300"
                   }`}
                 >
-                  <div className={`p-3 rounded-xl shrink-0 ${ixActive ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-500"}`}>
+                  <div className={`p-3 rounded-xl shrink-0 ${ixActive ? "bg-amber-400 text-zinc-950 font-bold" : "bg-slate-100 text-slate-500"}`}>
                     {article.icon}
                   </div>
                   <div>
                     <div className="flex items-center space-x-2 mb-1">
-                      <span className="text-[10px] font-extrabold uppercase tracking-widest text-blue-600">
+                      <span className="text-[10px] font-extrabold uppercase tracking-widest text-amber-600">
                         {article.tag}
                       </span>
                       <span className="text-[10px] text-slate-400 font-medium">• {article.readTime}</span>
                     </div>
-                    <h3 className="font-display font-bold text-slate-900 leading-snug group-hover:text-blue-600 text-sm sm:text-base">
+                    <h3 className="font-display font-bold text-slate-900 leading-snug group-hover:text-amber-600 text-sm sm:text-base">
                       {article.title}
                     </h3>
                     <p className="text-xs text-slate-500 mt-1.5 line-clamp-2 leading-relaxed">
@@ -463,7 +463,7 @@ export default function SEOArticles() {
                   </div>
                   
                   {ixActive && (
-                    <div className="absolute top-1/2 -translate-y-1/2 -right-2 bg-blue-600 text-white p-1 rounded-full shadow-md z-10 hidden lg:block">
+                    <div className="absolute top-1/2 -translate-y-1/2 -right-2 bg-amber-400 text-zinc-950 p-1 rounded-full shadow-md z-10 hidden lg:block">
                       <ChevronRight className="w-4 h-4" />
                     </div>
                   )}
@@ -484,13 +484,13 @@ export default function SEOArticles() {
                 className="space-y-6"
               >
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="bg-blue-50 text-blue-700 text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
+                  <span className="bg-amber-100 text-amber-950 text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
                     {articles[activeArticle].tag}
                   </span>
                   <span className="text-slate-400 text-xs font-semibold">• Diperbarui Hari Ini (Mei 2026)</span>
                 </div>
 
-                <h3 className="font-display font-extrabold text-blue-950 text-2xl sm:text-3xl leading-snug">
+                <h3 className="font-display font-extrabold text-zinc-950 text-2xl sm:text-3xl leading-snug">
                   {articles[activeArticle].title}
                 </h3>
                 
@@ -504,16 +504,16 @@ export default function SEOArticles() {
             {/* Micro Conversion CTA link inside article panel */}
             <div className="mt-8 pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50 -mx-8 -mb-8 p-8 rounded-b-3xl">
               <div>
-                <h4 className="font-display font-extrabold text-blue-950 text-xs sm:text-sm uppercase tracking-wider">
+                <h4 className="font-display font-extrabold text-zinc-950 text-xs sm:text-sm uppercase tracking-wider">
                   WC MAMPET ATAU SEPTIC TANK PENUH?
                 </h4>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Dapatkan estimasi biaya transparan dan garut kelancaran 100%.
+                  Dapatkan estimasi biaya transparan dan garansi kelancaran 100%.
                 </p>
               </div>
               <a
                 href="#estimasi-harga"
-                className="bg-blue-600 hover:bg-blue-500 text-white text-xs font-extrabold px-5 py-3 rounded-xl transition-all shadow-md shadow-blue-600/10 cursor-pointer"
+                className="bg-amber-400 hover:bg-amber-300 text-zinc-950 text-xs font-extrabold px-5 py-3 rounded-xl transition-all shadow-md shadow-amber-400/10 cursor-pointer"
               >
                 Hitung Estimasi &rarr;
               </a>

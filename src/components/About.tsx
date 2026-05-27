@@ -4,22 +4,22 @@ import { motion } from "motion/react";
 export default function About() {
   const sectors = [
     {
-      icon: <Home className="w-6 h-6 text-blue-600" />,
+      icon: <Home className="w-6 h-6 text-amber-600" />,
       title: "Rumah Tangga",
       desc: "Menjaga kebersihan sanitasi perumahan dan perkampungan agar nyaman bagi keluarga."
     },
     {
-      icon: <Building2 className="w-6 h-6 text-blue-600" />,
+      icon: <Building2 className="w-6 h-6 text-amber-600" />,
       title: "Perkantoran",
       desc: "Layanan terjadwal berkala untuk memastikan operasional bisnis berjalan tanpa hambatan toilet."
     },
     {
-      icon: <Users className="w-6 h-6 text-blue-600" />,
+      icon: <Users className="w-6 h-6 text-amber-600" />,
       title: "Perusahaan & Restoran",
       desc: "Solusi higienis untuk restoran, ruko, sekolah, tempat ibadah, dan fasilitas umum."
     },
     {
-      icon: <Factory className="w-6 h-6 text-blue-600" />,
+      icon: <Factory className="w-6 h-6 text-amber-600" />,
       title: "Industri / Pabrik",
       desc: "Penanganan limbah cair non-B3 pabrik skala besar dengan standar kepatuhan lingkungan."
     }
@@ -38,16 +38,16 @@ export default function About() {
             transition={{ duration: 0.6, ease: "easeOut" }}
             className="lg:col-span-6 space-y-6"
           >
-            <span className="text-blue-600 font-bold uppercase tracking-widest text-sm block">
+            <span className="text-amber-500 font-bold uppercase tracking-widest text-sm block">
               TENTANG KAMI
             </span>
-            <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-blue-950 tracking-tight leading-tight">
+            <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-zinc-950 tracking-tight leading-tight">
               Solusi Sanitasi Terpercaya di Karawang
             </h2>
             <div className="w-20 h-1.5 bg-amber-400 rounded-full"></div>
             
             <p className="text-slate-600 text-base sm:text-lg leading-relaxed pt-2">
-              <strong className="text-blue-900 font-semibold">Mitra Bersih Karawang</strong> merupakan jasa sedot WC profesional yang melayani rumah tangga, perusahaan, perkantoran, dan industri dengan pelayanan cepat, aman, dan terpercaya.
+              <strong className="text-zinc-950 font-semibold">Mitra Bersih Karawang</strong> merupakan jasa sedot WC profesional yang melayani rumah tangga, perusahaan, perkantoran, dan industri dengan pelayanan cepat, aman, dan terpercaya.
             </p>
             
             <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
@@ -56,8 +56,8 @@ export default function About() {
 
             {/* Quick trust indicator badges */}
             <div className="flex flex-wrap gap-4 pt-4">
-              <div className="flex items-center space-x-2 bg-blue-50 text-blue-800 px-4 py-2 rounded-xl border border-blue-100 text-sm font-semibold">
-                <Award className="w-5 h-5 text-blue-600" />
+              <div className="flex items-center space-x-2 bg-zinc-100 text-zinc-900 px-4 py-2 rounded-xl border border-zinc-200 text-sm font-semibold">
+                <Award className="w-5 h-5 text-amber-500" />
                 <span>Teknisi Berlisensi</span>
               </div>
               <div className="flex items-center space-x-2 bg-yellow-50 text-amber-800 px-4 py-2 rounded-xl border border-yellow-100 text-sm font-semibold">
@@ -69,10 +69,10 @@ export default function About() {
             <div className="pt-2">
               <a
                 href="#kontak"
-                className="inline-flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-md cursor-pointer transition-all hover:-translate-y-0.5 text-sm"
+                className="inline-flex items-center justify-center space-x-2 bg-amber-400 hover:bg-amber-300 text-zinc-950 font-bold py-3.5 px-6 rounded-xl shadow-md cursor-pointer transition-all hover:-translate-y-0.5 text-sm"
               >
                 <span>Konsultasi Penanganan Gratis</span>
-                <span className="text-amber-300 font-extrabold">&rarr;</span>
+                <span className="text-zinc-950 font-extrabold">&rarr;</span>
               </a>
             </div>
           </motion.div>
@@ -93,12 +93,12 @@ export default function About() {
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true, margin: "-50px" }}
                   transition={{ duration: 0.4, delay: index * 0.1 }}
-                  className="bg-slate-50 border border-slate-100 p-6 rounded-2xl hover:bg-blue-50 hover:border-blue-200 transition-all duration-300 group"
+                  className="bg-slate-50 border border-slate-100 p-6 rounded-2xl hover:bg-amber-50/50 hover:border-amber-200 transition-all duration-300 group"
                 >
-                  <div className="bg-white p-3 rounded-xl shadow-sm w-fit mb-4 text-blue-600 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                  <div className="bg-white p-3 rounded-xl shadow-sm w-fit mb-4 text-amber-500 group-hover:scale-110 group-hover:bg-amber-400 group-hover:text-zinc-950 transition-all">
                     {sector.icon}
                   </div>
-                  <h3 className="font-display font-bold text-lg text-blue-950 mb-2">
+                  <h3 className="font-display font-bold text-lg text-zinc-950 mb-2">
                     {sector.title}
                   </h3>
                   <p className="text-slate-500 text-sm leading-relaxed">
@@ -109,7 +109,7 @@ export default function About() {
             </div>
 
             {/* Micro stats banner below grid inside right column */}
-            <div className="mt-8 bg-gradient-to-r from-blue-900 to-blue-850 text-white rounded-2xl p-6 shadow-xl relative overflow-hidden">
+            <div className="mt-8 bg-gradient-to-r from-zinc-950 to-zinc-900 border border-zinc-800 text-white rounded-2xl p-6 shadow-xl relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-amber-400/10 rounded-full blur-2xl -z-10"></div>
               <div className="flex justify-between items-center text-center gap-4">
                 <div>

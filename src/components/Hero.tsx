@@ -34,8 +34,8 @@ export default function Hero({ whatsappNumber, imageSrc }: HeroProps) {
           className="w-full h-full object-cover object-center opacity-40 scale-105"
           referrerPolicy="no-referrer"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-950/95 via-blue-950/85 to-transparent"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-black/50"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/95 via-zinc-900/85 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-black/50"></div>
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
@@ -47,7 +47,7 @@ export default function Hero({ whatsappNumber, imageSrc }: HeroProps) {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center space-x-2 bg-amber-400 text-blue-950 px-4 py-1.5 rounded-full font-bold text-xs tracking-wider uppercase shadow-md shadow-amber-400/20"
+              className="inline-flex items-center space-x-2 bg-amber-400 text-zinc-950 px-4 py-1.5 rounded-full font-bold text-xs tracking-wider uppercase shadow-md shadow-amber-400/20"
             >
               <CalendarClock className="w-4 h-4 animate-pulse" />
               <span>Layanan 24 Jam Non-Stop</span>
@@ -128,9 +128,9 @@ export default function Hero({ whatsappNumber, imageSrc }: HeroProps) {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="relative relative-card bg-blue-900/40 backdrop-blur-md border border-blue-500/30 p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center space-y-6"
+              className="relative relative-card bg-zinc-900/70 backdrop-blur-md border border-zinc-700/50 p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center space-y-6"
             >
-              <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-amber-400 text-blue-950 p-3 rounded-full shadow-lg">
+              <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-amber-400 text-zinc-950 p-3 rounded-full shadow-lg">
                 <ShieldCheck className="w-8 h-8" />
               </div>
 
@@ -143,7 +143,7 @@ export default function Hero({ whatsappNumber, imageSrc }: HeroProps) {
                 </p>
               </div>
 
-              <div className="h-px bg-blue-500/20"></div>
+              <div className="h-px bg-zinc-800/60"></div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>

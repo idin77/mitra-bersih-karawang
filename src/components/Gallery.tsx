@@ -60,8 +60,8 @@ export default function Gallery() {
   return (
     <section id="galeri" className="py-24 bg-white relative overflow-hidden">
       {/* Decorative Blur Backgrounds */}
-      <div className="absolute top-10 left-10 w-72 h-72 bg-blue-100/50 rounded-full blur-[100px] -z-10"></div>
-      <div className="absolute bottom-10 right-10 w-72 h-72 bg-yellow-100/40 rounded-full blur-[100px] -z-10"></div>
+      <div className="absolute top-10 left-10 w-72 h-72 bg-amber-100/20 rounded-full blur-[100px] -z-10"></div>
+      <div className="absolute bottom-10 right-10 w-72 h-72 bg-amber-100/10 rounded-full blur-[100px] -z-10"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
@@ -73,11 +73,11 @@ export default function Gallery() {
           transition={{ duration: 0.5 }}
           className="text-center max-w-3xl mx-auto mb-16 space-y-4"
         >
-          <span className="text-blue-600 font-bold uppercase tracking-widest text-sm flex items-center justify-center gap-2">
+          <span className="text-amber-600 font-bold uppercase tracking-widest text-sm flex items-center justify-center gap-2">
             <Camera className="w-4 h-4" />
             GALERI DOKUMENTASI KAMI
           </span>
-          <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-blue-950 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-zinc-950 tracking-tight">
             Dokumentasi Kerja Nyata Di Lapangan
           </h2>
           <div className="w-20 h-1.5 bg-amber-400 mx-auto rounded-full"></div>
@@ -100,7 +100,7 @@ export default function Gallery() {
               onClick={() => setActiveFilter(cat)}
               className={`px-5 py-2 rounded-full text-sm font-bold tracking-wide transition-all cursor-pointer ${
                 activeFilter === cat
-                  ? "bg-blue-600 text-white shadow-md shadow-blue-600/10"
+                  ? "bg-zinc-950 text-white shadow-lg shadow-zinc-950/15"
                   : "bg-slate-50 border border-slate-100 text-slate-600 hover:bg-slate-100 hover:text-slate-800"
               }`}
             >
@@ -134,16 +134,16 @@ export default function Gallery() {
                     className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500"
                     referrerPolicy="no-referrer"
                   />
-                  {/* Category Pill Tag */}
-                  <span className="absolute top-4 left-4 bg-amber-400 text-blue-950 text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest shadow-md">
+                    {/* Category Pill Tag */}
+                  <span className="absolute top-4 left-4 bg-amber-400 text-zinc-950 text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest shadow-md">
                     {item.category}
                   </span>
                   
                   {/* Hover action button */}
-                  <div className="absolute inset-0 bg-blue-950/60 opacity-0 group-hover:opacity-100 transition-opacity duration-350 flex items-center justify-center">
+                  <div className="absolute inset-0 bg-zinc-950/60 opacity-0 group-hover:opacity-100 transition-opacity duration-350 flex items-center justify-center">
                     <button
                       onClick={() => setSelectedPhoto(index)}
-                      className="bg-white text-blue-950 p-3.5 rounded-full shadow-lg hover:scale-110 active:scale-95 transition-transform cursor-pointer"
+                      className="bg-white text-zinc-950 p-3.5 rounded-full shadow-lg hover:scale-110 active:scale-95 transition-transform cursor-pointer"
                       title="Perbesar Gambar"
                     >
                       <Eye className="w-5 h-5" />
@@ -153,7 +153,7 @@ export default function Gallery() {
 
                 {/* Info Content Box */}
                 <div className="p-6">
-                  <h3 className="font-display font-bold text-lg text-blue-950 mb-1">
+                  <h3 className="font-display font-bold text-lg text-zinc-950 mb-1">
                     {item.title}
                   </h3>
                   <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">
@@ -216,7 +216,7 @@ export default function Gallery() {
                       </p>
                     </div>
 
-                    <div className="flex items-center space-x-2 shrink-0 bg-blue-900/30 border border-blue-500/20 px-4 py-3 rounded-2xl">
+                    <div className="flex items-center space-x-2 shrink-0 bg-zinc-800/40 border border-zinc-700/20 px-4 py-3 rounded-2xl">
                       <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
                       <div className="text-left">
                         <h4 className="text-white text-xs font-bold leading-none">Mitra Bersih</h4>
