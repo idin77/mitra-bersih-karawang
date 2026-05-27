@@ -125,7 +125,7 @@ export default function Footer({ whatsappNumber }: FooterProps) {
                     Kantor Pos Utama: Jl. Interchange Karawang Barat, Karawang, Jawa Barat - Indonesia
                   </span>
                   <a 
-                    href="https://maps.google.com/?q=Jl.+Interchange+Karawang+Barat,+Karawang,+Jawa+Barat" 
+                    href="https://share.google/Ukg1n7VEVlpssqptX" 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="inline-flex items-center space-x-1.5 text-[11px] font-bold text-amber-300 hover:text-white transition-colors bg-blue-950 border border-blue-900 px-3 py-1.5 rounded-xl hover:bg-amber-400 hover:text-blue-950 transition-all duration-300 cursor-pointer shadow-sm"
