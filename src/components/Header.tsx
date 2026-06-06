@@ -11,6 +11,7 @@ interface HeaderProps {
 export default function Header({ whatsappNumber }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [demand, setDemand] = useState("Normal");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,6 +23,14 @@ export default function Header({ whatsappNumber }: HeaderProps) {
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const levels = ["Low", "Normal", "High"];
+    const interval = setInterval(() => {
+      setDemand(levels[Math.floor(Math.random() * levels.length)]);
+    }, 8000);
+    return () => clearInterval(interval);
   }, []);
 
   const menuItems = [
@@ -71,13 +80,22 @@ export default function Header({ whatsappNumber }: HeaderProps) {
                 >
                   MITRA BERSIH
                 </span>
-                <span
-                  className={`text-xs font-bold font-sans tracking-widest ${
-                    isScrolled ? "text-amber-500" : "text-amber-300"
-                  }`}
-                >
-                  KARAWANG
-                </span>
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`text-xs font-bold font-sans tracking-widest ${
+                      isScrolled ? "text-amber-500" : "text-amber-300"
+                    }`}
+                  >
+                    KARAWANG
+                  </span>
+                  <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded-full ${
+                      demand === 'Low' ? 'bg-emerald-500/20 text-emerald-300' : 
+                      demand === 'Normal' ? 'bg-sky-500/20 text-sky-300' : 
+                      'bg-amber-500/20 text-amber-300'
+                    }`}>
+                    {demand}
+                  </span>
+                </div>
               </div>
             </a>
 

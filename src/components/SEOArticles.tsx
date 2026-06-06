@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "motion/react";
 
 export default function SEOArticles() {
   const [activeArticle, setActiveArticle] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState("Semua");
 
   const articles = [
     {
@@ -405,6 +406,13 @@ export default function SEOArticles() {
     }
   ];
 
+  const categories = ["Semua", ...Array.from(new Set(articles.map(a => a.tag)))];
+  const filteredArticles = selectedCategory === "Semua"
+    ? articles
+    : articles.filter(a => a.tag === selectedCategory);
+
+  const activeArticleObj = filteredArticles[activeArticle] || filteredArticles[0];
+
   return (
     <section id="artikel-edu" className="py-24 bg-slate-50 relative overflow-hidden">
       <div className="absolute top-1/2 left-10 w-72 h-72 bg-amber-100/30 rounded-full blur-[100px] -z-10"></div>
@@ -427,12 +435,32 @@ export default function SEOArticles() {
           </p>
         </div>
 
+        {/* Filter Category Tabs */}
+        <div className="flex flex-wrap gap-2 justify-center mb-10">
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => {
+                setSelectedCategory(category);
+                setActiveArticle(0);
+              }}
+              className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${
+                selectedCategory === category
+                  ? "bg-amber-400 text-zinc-950 shadow-md"
+                  : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-100"
+              }`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+
         {/* Dynamic Nav Tabs & Detail Reader layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
           
           {/* List of articles left column */}
           <div className="lg:col-span-5 space-y-4">
-            {articles.map((article, index) => {
+            {filteredArticles.map((article, index) => {
               const ixActive = index === activeArticle;
               return (
                 <button
@@ -485,18 +513,18 @@ export default function SEOArticles() {
               >
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="bg-amber-100 text-amber-950 text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
-                    {articles[activeArticle].tag}
+                    {activeArticleObj.tag}
                   </span>
                   <span className="text-slate-400 text-xs font-semibold">• Diperbarui Hari Ini (Mei 2026)</span>
                 </div>
 
                 <h3 className="font-display font-extrabold text-zinc-950 text-2xl sm:text-3xl leading-snug">
-                  {articles[activeArticle].title}
+                  {activeArticleObj.title}
                 </h3>
                 
                 <div className="w-full h-px bg-slate-100"></div>
 
-                {articles[activeArticle].content}
+                {activeArticleObj.content}
 
               </motion.article>
             </AnimatePresence>

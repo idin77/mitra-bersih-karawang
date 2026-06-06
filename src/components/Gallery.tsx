@@ -1,10 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Camera, Eye, HelpCircle, X, ShieldCheck } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { GallerySkeleton } from "./Skeletons";
+import { LazyImage } from "./LazyImage";
 
 export default function Gallery() {
   const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null);
   const [activeFilter, setActiveFilter] = useState("Semua");
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const galleryItems = [
     {
@@ -110,60 +118,64 @@ export default function Gallery() {
         </motion.div>
 
         {/* Gallery Grid */}
-        <motion.div
-          layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
-          <AnimatePresence mode="popLayout">
-            {filteredItems.map((item, index) => (
-              <motion.div
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.4 }}
-                key={item.id}
-                className="group relative bg-slate-50 border border-slate-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
-              >
-                {/* Photo container */}
-                <div className="relative h-64 overflow-hidden bg-slate-200">
-                  <img
+        {isLoading ? (
+          <GallerySkeleton />
+        ) : (
+          <motion.div
+            layout
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
+            <AnimatePresence mode="popLayout">
+              {filteredItems.map((item, index) => (
+                <motion.div
+                  layout
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.4 }}
+                  key={item.id}
+                  className="group relative bg-slate-50 border border-slate-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                >
+                  {/* Photo container */}
+                  <div className="relative h-64 overflow-hidden bg-slate-200">
+                    <LazyImage
                     src={item.image}
                     alt={item.title}
-                    loading="lazy"
                     className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500"
                     referrerPolicy="no-referrer"
                   />
-                    {/* Category Pill Tag */}
-                  <span className="absolute top-4 left-4 bg-amber-400 text-zinc-950 text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest shadow-md">
-                    {item.category}
-                  </span>
-                  
-                  {/* Hover action button */}
-                  <div className="absolute inset-0 bg-zinc-950/60 opacity-0 group-hover:opacity-100 transition-opacity duration-350 flex items-center justify-center">
-                    <button
-                      onClick={() => setSelectedPhoto(index)}
-                      className="bg-white text-zinc-950 p-3.5 rounded-full shadow-lg hover:scale-110 active:scale-95 transition-transform cursor-pointer"
-                      title="Perbesar Gambar"
-                    >
-                      <Eye className="w-5 h-5" />
-                    </button>
-                  </div>
-                </div>
 
-                {/* Info Content Box */}
-                <div className="p-6">
-                  <h3 className="font-display font-bold text-lg text-zinc-950 mb-1">
-                    {item.title}
-                  </h3>
-                  <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">
-                    {item.description}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </motion.div>
+                      {/* Category Pill Tag */}
+                    <span className="absolute top-4 left-4 bg-amber-400 text-zinc-950 text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest shadow-md">
+                      {item.category}
+                    </span>
+                    
+                    {/* Hover action button */}
+                    <div className="absolute inset-0 bg-zinc-950/60 opacity-0 group-hover:opacity-100 transition-opacity duration-350 flex items-center justify-center">
+                      <button
+                        onClick={() => setSelectedPhoto(index)}
+                        className="bg-white text-zinc-950 p-3.5 rounded-full shadow-lg hover:scale-110 active:scale-95 transition-transform cursor-pointer"
+                        title="Perbesar Gambar"
+                      >
+                        <Eye className="w-5 h-5" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Info Content Box */}
+                  <div className="p-6">
+                    <h3 className="font-display font-bold text-lg text-zinc-950 mb-1">
+                      {item.title}
+                    </h3>
+                    <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">
+                      {item.description}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
+        )}
 
         {/* Dynamic Lightbox Modal */}
         <AnimatePresence>

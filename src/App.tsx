@@ -70,10 +70,24 @@ export default function App() {
       </section>
 
       {/* 4. Tentang Kami (About Us) */}
-      <About />
+      <motion.div                
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
+      >
+        <About />
+      </motion.div>
 
       {/* 5. Layanan Utama (Services) */}
-      <Services whatsappNumber={WHATSAPP_NUMBER} />
+      <motion.div                
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
+      >
+        <Services whatsappNumber={WHATSAPP_NUMBER} />
+      </motion.div>
 
       {/* 6. Section Keunggulan (Features) */}
       <Features />

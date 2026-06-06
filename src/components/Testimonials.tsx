@@ -1,7 +1,16 @@
+import { useState, useEffect } from "react";
 import { Star, Quote, User } from "lucide-react";
 import { motion } from "motion/react";
+import { TestimonialSkeleton } from "./Skeletons";
 
 export default function Testimonials() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
   const testimonials = [
     {
       name: "Ibu Rahmawati",
@@ -70,59 +79,63 @@ export default function Testimonials() {
         </motion.div>
 
         {/* Testimonials Grid Slider */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {testimonials.map((testi, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 25 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-slate-50 border border-slate-100 p-8 rounded-3xl relative flex flex-col justify-between hover:shadow-lg transition-shadow"
-            >
-              {/* Top Quote Icon */}
-              <div className="absolute top-6 right-8 text-amber-400">
-                <Quote className="w-10 h-10 opacity-30 fill-current" />
-              </div>
-
-              <div className="space-y-4">
-                {/* Stars Rating */}
-                <div className="flex items-center space-x-1">
-                  {[...Array(testi.rating)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 text-amber-400 fill-current" />
-                  ))}
+        {isLoading ? (
+          <TestimonialSkeleton />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {testimonials.map((testi, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="bg-slate-50 border border-slate-100 p-8 rounded-3xl relative flex flex-col justify-between hover:shadow-lg transition-shadow"
+              >
+                {/* Top Quote Icon */}
+                <div className="absolute top-6 right-8 text-amber-400">
+                  <Quote className="w-10 h-10 opacity-30 fill-current" />
                 </div>
 
-                {/* Testimonial body */}
-                <p className="text-slate-600 text-sm sm:text-base leading-relaxed italic z-10 relative">
-                  "{testi.text}"
-                </p>
-              </div>
+                <div className="space-y-4">
+                  {/* Stars Rating */}
+                  <div className="flex items-center space-x-1">
+                    {[...Array(testi.rating)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 text-amber-400 fill-current" />
+                    ))}
+                  </div>
 
-              {/* User profile metadata */}
-              <div className="flex items-center space-x-4 pt-6 mt-6 border-t border-slate-150">
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold font-display shadow-sm ${
-                  testi.gender === "f" 
-                    ? "bg-rose-100 text-rose-700" 
-                    : "bg-amber-100 text-amber-800"
-                }`}>
-                  {testi.name.substring(0, 3)}
+                  {/* Testimonial body */}
+                  <p className="text-slate-600 text-sm sm:text-base leading-relaxed italic z-10 relative">
+                    "{testi.text}"
+                  </p>
                 </div>
-                <div>
-                  <h4 className="font-display font-extrabold text-slate-900 text-sm sm:text-base">
-                    {testi.name}
-                  </h4>
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 text-xs text-slate-500 font-medium">
-                    <span>{testi.location}</span>
-                    <span className="hidden sm:inline text-slate-300">•</span>
-                    <span className="text-amber-600 font-bold">{testi.category}</span>
+
+                {/* User profile metadata */}
+                <div className="flex items-center space-x-4 pt-6 mt-6 border-t border-slate-150">
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold font-display shadow-sm ${
+                    testi.gender === "f" 
+                      ? "bg-rose-100 text-rose-700" 
+                      : "bg-amber-100 text-amber-800"
+                  }`}>
+                    {testi.name.substring(0, 3)}
+                  </div>
+                  <div>
+                    <h4 className="font-display font-extrabold text-slate-900 text-sm sm:text-base">
+                      {testi.name}
+                    </h4>
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 text-xs text-slate-500 font-medium">
+                      <span>{testi.location}</span>
+                      <span className="hidden sm:inline text-slate-300">•</span>
+                      <span className="text-amber-600 font-bold">{testi.category}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-            </motion.div>
-          ))}
-        </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
 
         {/* Dynamic verified badge block */}
         <motion.div 

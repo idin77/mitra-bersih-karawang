@@ -1,6 +1,7 @@
 import { useState, FormEvent } from "react";
 import { Calculator, Send, MessageSquare, Phone, Calendar, Clock, MapPin } from "lucide-react";
 import { motion } from "motion/react";
+import { StepCostEstimator } from "./StepCostEstimator";
 
 interface ContactProps {
   whatsappNumber: string;
@@ -17,60 +18,6 @@ export default function ContactForm({ whatsappNumber }: ContactProps) {
     additionalNotes: ""
   });
 
-  // Calculator State
-  const [calcService, setCalcService] = useState("Sedot WC / Septic Tank");
-  const [calcProperty, setCalcProperty] = useState("Rumah Kecil / Sederhana");
-  const [calcLocation, setCalcLocation] = useState("Karawang Kota");
-
-  // Price ranges lookup
-  const priceRanges: Record<string, Record<string, string>> = {
-    "Sedot WC / Septic Tank": {
-      "Rumah Kecil / Sederhana": "Rp 350.000 - Rp 450.000",
-      "Kost / Rumah Mewah": "Rp 450.000 - Rp 650.000",
-      "Ruko / Restoran / Rumah Makan": "Rp 650.000 - Rp 1.200.000",
-      "Pabrik / Kawasan Industri": "Nego di Lokasi (Sesuai Kontrak)"
-    },
-    "WC Mampet": {
-      "Rumah Kecil / Sederhana": "Rp 250.000 - Rp 350.000",
-      "Kost / Rumah Mewah": "Rp 300.000 - Rp 450.000",
-      "Ruko / Restoran / Rumah Makan": "Rp 450.000 - Rp 800.000",
-      "Pabrik / Kawasan Industri": "Nego Hubungi Kami"
-    },
-    "Saluran Mampet": {
-      "Rumah Kecil / Sederhana": "Rp 200.000 - Rp 300.000",
-      "Kost / Rumah Mewah": "Rp 300.000 - Rp 400.000",
-      "Ruko / Restoran / Rumah Makan": "Rp 400.000 - Rp 600.000",
-      "Pabrik / Kawasan Industri": "Nego Hubungi Kami"
-    },
-    "Limbah Industri": {
-      "Rumah Kecil / Sederhana": "Nego Hubungi Kami",
-      "Kost / Rumah Mewah": "Nego Hubungi Kami",
-      "Ruko / Restoran / Rumah Makan": "Nego (Sesuai Survei)",
-      "Pabrik / Kawasan Industri": "Nego / Surat Perjanjian Kontrak (SPL)"
-    }
-  };
-
-  const getEstimatedPrice = () => {
-    try {
-      return priceRanges[calcService][calcProperty] || "Hubungi Kami";
-    } catch {
-      return "Hubungi Kami";
-    }
-  };
-
-  const servicesOpts = [
-    "Sedot WC / Septic Tank",
-    "WC Mampet",
-    "Saluran Mampet",
-    "Limbah Industri"
-  ];
-
-  const propertiesOpts = [
-    "Rumah Kecil / Sederhana",
-    "Kost / Rumah Mewah",
-    "Ruko / Restoran / Rumah Makan",
-    "Pabrik / Kawasan Industri"
-  ];
 
   const handleBookingSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -91,12 +38,12 @@ export default function ContactForm({ whatsappNumber }: ContactProps) {
     window.open(rawLink, "_blank");
   };
 
-  const handleCalculatorSubmit = () => {
+  const handleCalculatorSubmit = (data: { service: string; volume: string; location: string; price: string }) => {
     const message = `Halo Mitra Bersih Karawang,\n\nSaya ingin menanyakan penawaran harga berdasarkan estimasi kalkulator:\n` +
-      `- Jenis Jasa: ${calcService}\n` +
-      `- Tipe Properti: ${calcProperty}\n` +
-      `- Wilayah: ${calcLocation}\n` +
-      `- Estimasi Tarif: ${getEstimatedPrice()}\n\nApakah jadwal terdekat tersedia untuk pengerjaan ke lokasi saya?`;
+      `- Jenis Jasa: ${data.service}\n` +
+      `- Volume: ${data.volume}\n` +
+      `- Wilayah: ${data.location}\n` +
+      `- Estimasi Tarif: ${data.price}\n\nApakah jadwal terdekat tersedia untuk pengerjaan ke lokasi saya?`;
 
     const rawLink = `https://wa.me/62${whatsappNumber.substring(1)}?text=${encodeURIComponent(message)}`;
     window.open(rawLink, "_blank");
@@ -134,103 +81,9 @@ export default function ContactForm({ whatsappNumber }: ContactProps) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
           
           {/* Left Column: Cost Estimator */}
-          <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.5 }}
-            className="lg:col-span-5 bg-gradient-to-br from-zinc-950 to-zinc-900 text-white rounded-3xl p-8 shadow-2xl flex flex-col justify-between relative overflow-hidden border border-zinc-800"
-          >
-            {/* Visual glow element */}
-            <div className="absolute top-0 right-0 w-36 h-36 bg-amber-400/10 rounded-full blur-2xl"></div>
-
-            <div className="space-y-6">
-              <div className="flex items-center space-x-3">
-                <div className="bg-amber-400 text-zinc-950 p-2 rounded-xl shadow-md">
-                  <Calculator className="w-6 h-6 animate-pulse" />
-                </div>
-                <div>
-                  <h3 className="font-display font-extrabold text-xl">Kalkulator Estimasi Tarif</h3>
-                  <p className="text-xs text-slate-300">Dapatkan transparansi prakiraan biaya rincian anda</p>
-                </div>
-              </div>
-
-              <div className="h-px bg-zinc-800"></div>
-
-              {/* Calculator Inputs */}
-              <div className="space-y-4 pt-2">
-                
-                {/* 1. Service select */}
-                <div className="space-y-1.5">
-                  <label className="text-xs text-slate-300 font-bold uppercase tracking-wide">Pilih Jenis Jasa</label>
-                  <select
-                    className="w-full bg-zinc-900/60 border border-zinc-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
-                    value={calcService}
-                    onChange={(e) => setCalcService(e.target.value)}
-                  >
-                    {servicesOpts.map((opt) => (
-                      <option key={opt} value={opt} className="bg-zinc-950 text-white">{opt}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* 2. Property Type select */}
-                <div className="space-y-1.5">
-                  <label className="text-xs text-slate-300 font-bold uppercase tracking-wide">Tipe Properti / Bangunan</label>
-                  <select
-                    className="w-full bg-zinc-900/60 border border-zinc-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
-                    value={calcProperty}
-                    onChange={(e) => setCalcProperty(e.target.value)}
-                  >
-                    {propertiesOpts.map((opt) => (
-                      <option key={opt} value={opt} className="bg-zinc-950 text-white">{opt}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* 3. Location Input info */}
-                <div className="space-y-1.5">
-                  <label className="text-xs text-slate-300 font-bold uppercase tracking-wide">Pilih Wilayah Anda</label>
-                  <select
-                    className="w-full bg-zinc-900/60 border border-zinc-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
-                    value={calcLocation}
-                    onChange={(e) => setCalcLocation(e.target.value)}
-                  >
-                    <option value="Karawang Kota" className="bg-zinc-950">Karawang Kota (Bebas Ongkir Selang)</option>
-                    <option value="Telukjambe" className="bg-zinc-950">Telukjambe (Bebas Ongkir Selang)</option>
-                    <option value="Klari" className="bg-zinc-950">Klari (Bebas Ongkir Selang)</option>
-                    <option value="Cikampek" className="bg-zinc-950">Cikampek (Biaya Menyesuaikan)</option>
-                    <option value="Purwakarta" className="bg-zinc-950">Purwakarta (Biaya Menyesuaikan)</option>
-                    <option value="Lainnya" className="bg-zinc-950">Luar Wilayah Tertera</option>
-                  </select>
-                </div>
-
-              </div>
-            </div>
-
-            {/* Results output section */}
-            <div className="mt-8 pt-6 border-t border-zinc-800 space-y-6">
-              <div className="bg-zinc-950/60 border border-zinc-800/80 rounded-2xl p-5 text-center">
-                <span className="text-xs text-slate-400 font-medium tracking-wide block">Estimasi Tarif Pengerjaan:</span>
-                <span className="text-2xl sm:text-3xl font-display font-extrabold text-amber-300 mt-1 block">
-                  {getEstimatedPrice()}
-                </span>
-                <span className="text-[10px] text-slate-400 block mt-2 leading-snug">
-                  *Ketentuan tarif final diputuskan oleh teknisi setelah mencermati panjang selang dan tingkat kesulitan di lokasi.
-                </span>
-              </div>
-
-              <button
-                id="btn-calc-wa"
-                onClick={handleCalculatorSubmit}
-                className="w-full bg-amber-400 hover:bg-amber-300 active:bg-amber-500 text-zinc-950 font-bold py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center space-x-2 text-sm cursor-pointer"
-              >
-                <Phone className="w-4 h-4 fill-zinc-950 text-amber-400" />
-                <span>Konsultasi Tarif Ini Melalui WhatsApp</span>
-              </button>
-            </div>
-            
-          </motion.div>
+          <div className="lg:col-span-5">
+            <StepCostEstimator onSendMessage={handleCalculatorSubmit} />
+          </div>
 
           {/* Right Column: Reservation / Booking form */}
           <motion.div 
