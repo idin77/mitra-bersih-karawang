@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, MouseEvent } from "react";
 import { MessageSquareCode, MessageCircle, X, Volume2, VolumeX, ArrowUp } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { ConfettiBurst } from "./ConfettiBurst";
 
 interface FloatingProps {
   whatsappNumber: string;
@@ -10,6 +11,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [showTooltip, setShowTooltip] = useState(false);
   const [typedText, setTypedText] = useState("");
   const [isShaking, setIsShaking] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
   const tooltipMessage = "Halo! Butuh layanan Sedot WC darurat sekarang? Kami online sigap 24 jam.";
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -120,6 +122,8 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
       oscillator.start();
       oscillator.stop(audioContext.currentTime + 0.1);
     }
+    
+    setShowConfetti(true);
 
     const text = encodeURIComponent(
       "Halo Mitra Bersih Karawang, toilet saya bermasalah/penuh. Saya butuh respon cepat sekarang."
@@ -220,7 +224,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
              <span className="text-[9px] text-emerald-600 font-semibold">{chattingCount} currently chatting</span>
              <span className="text-[9px] text-emerald-600/80 font-normal">{currentTime} WIB</span>
           </div>
-          <motion.button
+           <motion.button
             ref={buttonRef}
             onMouseMove={handleMouseMove}
             onMouseLeave={() => { setPosition({ x: 0, y: 0 }); setIsHovered(false); }}
@@ -228,7 +232,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             animate={{
               x: position.x,
               y: position.y,
-              scale: isHovered ? 1.1 : 1,
+              scale: isHovered ? 1.1 : [1, 1.05, 1],
               rotate: isShaking ? [0, -10, 10, -10, 10, 0] : 0,
               boxShadow: isHovered 
                 ? ["0 0 10px 2px rgba(5, 150, 105, 0.6)", "0 0 20px 10px rgba(5, 150, 105, 0.6)", "0 0 10px 2px rgba(5, 150, 105, 0.6)"]
@@ -249,6 +253,11 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               damping: 20,
               delay: 1,
               rotate: { type: "tween", duration: 0.6 },
+              scale: {
+                  repeat: isHovered ? 0 : Infinity,
+                  duration: 2,
+                  ease: "easeInOut"
+              },
               boxShadow: {
                   repeat: isHovered ? Infinity : 0,
                   duration: 1.5,
@@ -259,6 +268,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             className="w-14 h-14 bg-emerald-600 hover:bg-emerald-500 text-white rounded-full shadow-lg shadow-emerald-500/50 flex items-center justify-center relative select-none pointer-events-auto cursor-pointer"
             title="Hubungi Kami Melalui WhatsApp"
           >
+            {showConfetti && <ConfettiBurst onComplete={() => setShowConfetti(false)} />}
             <span className="absolute inset-0 rounded-full bg-emerald-600/40 animate-pulse"></span>
             <MessageCircle className="w-8 h-8 fill-current" />
           </motion.button>

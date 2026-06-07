@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { WeatherWidget } from "./WeatherWidget";
 import { Phone, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -95,6 +96,7 @@ export default function Header({ whatsappNumber }: HeaderProps) {
                     }`}>
                     {demand}
                   </span>
+                  <WeatherWidget isScrolled={isScrolled} />
                 </div>
               </div>
             </a>
