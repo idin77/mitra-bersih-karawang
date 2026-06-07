@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://mitrabersihkarawang.com/sitemap.xml
+Sitemap: https://mitrabersih.sedotwckarawang.id/sitemap.xml
