@@ -236,7 +236,8 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               rotate: isShaking ? [0, -10, 10, -10, 10, 0] : 0,
               boxShadow: isHovered 
                 ? ["0 0 10px 2px rgba(5, 150, 105, 0.6)", "0 0 20px 10px rgba(5, 150, 105, 0.6)", "0 0 10px 2px rgba(5, 150, 105, 0.6)"]
-                : "0 10px 15px -3px rgba(16, 185, 129, 0.5)"
+                : "0 10px 15px -3px rgba(16, 185, 129, 0.5)",
+              opacity: 1
             }}
             id="btn-floating-wa"
             onClick={handleWhatsAppAction}
@@ -246,12 +247,11 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 handleWhatsAppAction();
               }
             }}
-            initial={{ scale: 0 }}
+            initial={{ scale: 0, opacity: 0 }}
             transition={{
               type: "spring",
               stiffness: 260,
               damping: 20,
-              delay: 1,
               rotate: { type: "tween", duration: 0.6 },
               scale: {
                   repeat: isHovered ? 0 : Infinity,

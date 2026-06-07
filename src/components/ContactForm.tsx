@@ -7,7 +7,7 @@ interface ContactProps {
   whatsappNumber: string;
 }
 
-export default function ContactForm({ whatsappNumber }: ContactProps) {
+export default function ContactForm({ whatsappNumber, location = "Karawang" }: { whatsappNumber: string; location?: string }) {
   // Booking Form State
   const [formData, setFormData] = useState({
     name: "",
@@ -26,7 +26,7 @@ export default function ContactForm({ whatsappNumber }: ContactProps) {
       return;
     }
 
-    const message = `Halo Jasa Sedot WC Mitra Bersih Karawang,\n\nSaya ingin booking layanan pengerjaan secepatnya:\n` +
+    const message = `Halo Jasa Sedot WC Mitra Bersih ${location},\n\nSaya ingin booking layanan pengerjaan secepatnya:\n` +
       `- Nama: ${formData.name}\n` +
       `- Alamat: ${formData.address}\n` +
       `- Layanan: ${formData.serviceType}\n` +
@@ -39,7 +39,7 @@ export default function ContactForm({ whatsappNumber }: ContactProps) {
   };
 
   const handleCalculatorSubmit = (data: { service: string; volume: string; location: string; price: string }) => {
-    const message = `Halo Mitra Bersih Karawang,\n\nSaya ingin menanyakan penawaran harga berdasarkan estimasi kalkulator:\n` +
+    const message = `Halo Mitra Bersih ${location},\n\nSaya ingin menanyakan penawaran harga berdasarkan estimasi kalkulator:\n` +
       `- Jenis Jasa: ${data.service}\n` +
       `- Volume: ${data.volume}\n` +
       `- Wilayah: ${data.location}\n` +

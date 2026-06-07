@@ -1,7 +1,7 @@
 import { Clock, Briefcase, Sparkles, HeartHandshake, Zap, ShieldCheck } from "lucide-react";
 import { motion } from "motion/react";
 
-export default function Features() {
+export default function Features({ location = "Karawang" }: { location?: string }) {
   const keunggulanItems = [
     {
       icon: <Clock className="w-8 h-8 text-amber-500" />,
@@ -30,7 +30,7 @@ export default function Features() {
     {
       icon: <Zap className="w-8 h-8 text-amber-500" />,
       title: "Respon Cepat",
-      description: "Armada siaga tersebar di area Karawang demi menjamin respon kilat ke tempat Anda.",
+      description: `Armada siaga tersebar di area ${location} demi menjamin respon kilat ke tempat Anda.`,
       badge: "FAST"
     },
     {
@@ -60,7 +60,7 @@ export default function Features() {
             MENGAPA MEMILIH KAMI?
           </span>
           <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-zinc-950 tracking-tight">
-            Keunggulan Layanan Mitra Bersih Karawang
+            Keunggulan Layanan Mitra Bersih {location}
           </h2>
           <div className="w-20 h-1.5 bg-amber-400 mx-auto rounded-full"></div>
           <p className="text-slate-600 leading-relaxed text-base sm:text-lg">

@@ -6,7 +6,7 @@ interface ServicesProps {
   whatsappNumber: string;
 }
 
-export default function Services({ whatsappNumber }: ServicesProps) {
+export default function Services({ whatsappNumber, location = "Karawang" }: { whatsappNumber: string; location?: string }) {
   const [activeTab, setActiveTab] = useState(0);
 
   const services = [
@@ -23,7 +23,7 @@ export default function Services({ whatsappNumber }: ServicesProps) {
         "Pemeriksaan kualitas pipa masuk & ventilasi",
         "Ramah lingkungan - langsung dibuang ke IPLT resmi"
       ],
-      whatsappText: "Halo Mitra Bersih Karawang, saya ingin memesan layanan Sedot WC / Septic Tank."
+      whatsappText: `Halo Mitra Bersih ${location}, saya ingin memesan layanan Sedot WC / Septic Tank.`
     },
     {
       id: 1,
@@ -38,7 +38,7 @@ export default function Services({ whatsappNumber }: ServicesProps) {
         "Waktu pengerjaan singkat (rata-rata 30-45 menit)",
         "Bergaransi lancar kembali sebelum teknisi pulang"
       ],
-      whatsappText: "Halo Mitra Bersih Karawang, saya ingin memesan layanan pelancaran WC Mampet."
+      whatsappText: `Halo Mitra Bersih ${location}, saya ingin memesan layanan pelancaran WC Mampet.`
     },
     {
       id: 2,
@@ -53,7 +53,7 @@ export default function Services({ whatsappNumber }: ServicesProps) {
         "Pembersihan kotoran kerak lemak dengan tekanan tinggi",
         "Menjamin aliran kembali lancar tanpa merusak paralon"
       ],
-      whatsappText: "Halo Mitra Bersih Karawang, saya ingin memesan layanan pelancaran Saluran Mampet."
+      whatsappText: `Halo Mitra Bersih ${location}, saya ingin memesan layanan pelancaran Saluran Mampet.`
     },
     {
       id: 3,
@@ -68,7 +68,7 @@ export default function Services({ whatsappNumber }: ServicesProps) {
         "Dokumentasi pembuangan resmi sesuai regulasi lingkungan",
         "Tersedia sistem kontrak kerja sama berkala (Bulanan/Tahunan)"
       ],
-      whatsappText: "Halo Mitra Bersih Karawang, saya tertarik berkonsultasi mengenai pengolahan Limbah Industri."
+      whatsappText: `Halo Mitra Bersih ${location}, saya tertarik berkonsultasi mengenai pengolahan Limbah Industri.`
     }
   ];
 

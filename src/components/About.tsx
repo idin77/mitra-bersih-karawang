@@ -1,7 +1,7 @@
 import { Home, Users, Building2, Factory, ShieldAlert, Award } from "lucide-react";
 import { motion } from "motion/react";
 
-export default function About() {
+export default function About({ location = "Karawang" }: { location?: string }) {
   const sectors = [
     {
       icon: <Home className="w-6 h-6 text-amber-600" />,
@@ -42,12 +42,12 @@ export default function About() {
               TENTANG KAMI
             </span>
             <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-zinc-950 tracking-tight leading-tight">
-              Solusi Sanitasi Terpercaya di Karawang
+              Solusi Sanitasi Terpercaya di {location}
             </h2>
             <div className="w-20 h-1.5 bg-amber-400 rounded-full"></div>
             
             <p className="text-slate-600 text-base sm:text-lg leading-relaxed pt-2">
-              <strong className="text-zinc-950 font-semibold">Mitra Bersih Karawang</strong> merupakan jasa sedot WC profesional yang melayani rumah tangga, perusahaan, perkantoran, dan industri dengan pelayanan cepat, aman, dan terpercaya.
+              <strong className="text-zinc-950 font-semibold">Mitra Bersih {location}</strong> merupakan jasa sedot WC profesional yang melayani rumah tangga, perusahaan, perkantoran, dan industri dengan pelayanan cepat, aman, dan terpercaya.
             </p>
             
             <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
