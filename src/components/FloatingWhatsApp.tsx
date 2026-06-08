@@ -21,6 +21,8 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [chattingCount, setChattingCount] = useState(12);
+  const [pressTimer, setPressTimer] = useState<NodeJS.Timeout | null>(null);
+  const [isLongPress, setIsLongPress] = useState(false);
 
   useEffect(() => {
 	  const interval = setInterval(() => {
@@ -103,6 +105,18 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   }, []);
 
   const handleWhatsAppAction = () => {
+    if (isLongPress) {                
+      setIsLongPress(false);
+      return;
+    }
+    // Track click to GA4
+    if (typeof (window as any).gtag === 'function') {
+      (window as any).gtag('event', 'whatsapp_click', {
+        event_category: 'contact',
+        event_label: 'floating_whatsapp_button'
+      });
+    }
+
     // Play pop sound if not muted
     if (!isMuted) {
       const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -129,6 +143,27 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
       "Halo Mitra Bersih Karawang, toilet saya bermasalah/penuh. Saya butuh respon cepat sekarang."
     );
     window.open(`https://wa.me/62${whatsappNumber.substring(1)}?text=${text}`, "_blank");
+  };
+
+  const handleCopyPhoneNumber = () => {
+    navigator.clipboard.writeText(whatsappNumber);
+    // Silent copy as requested
+  };
+
+  const handlePointerDown = () => {
+    setIsLongPress(false);
+    const timer = setTimeout(() => {
+      setIsLongPress(true);
+      handleCopyPhoneNumber();
+    }, 800);
+    setPressTimer(timer);
+  };
+
+  const handlePointerUp = () => {
+    if (pressTimer) {
+      clearTimeout(pressTimer);
+      setPressTimer(null);
+    }
   };
 
   const handleMouseMove = (e: MouseEvent) => {
@@ -227,8 +262,11 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
            <motion.button
             ref={buttonRef}
             onMouseMove={handleMouseMove}
-            onMouseLeave={() => { setPosition({ x: 0, y: 0 }); setIsHovered(false); }}
+            onMouseLeave={(e) => { handlePointerUp(); setPosition({ x: 0, y: 0 }); setIsHovered(false); }}
             onMouseEnter={() => setIsHovered(true)}
+            onContextMenu={(e: MouseEvent) => { e.preventDefault(); handleCopyPhoneNumber(); }}
+            onPointerDown={handlePointerDown}
+            onPointerUp={handlePointerUp}
             animate={{
               x: position.x,
               y: position.y,
