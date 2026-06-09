@@ -5,10 +5,12 @@ interface LazyImageProps {
   alt: string;
   className: string;
   title?: string;
+  width?: string;
+  height?: string;
   referrerPolicy?: "no-referrer" | "no-referrer-when-downgrade" | "origin" | "origin-when-cross-origin" | "same-origin" | "strict-origin" | "strict-origin-when-cross-origin" | "unsafe-url" | undefined;
 }
 
-export function LazyImage({ src, alt, className, title, referrerPolicy }: LazyImageProps) {
+export function LazyImage({ src, alt, className, title, width, height, referrerPolicy }: LazyImageProps) {
   const [isVisible, setIsVisible] = useState(false);
   const divRef = useRef<HTMLDivElement>(null);
 
@@ -32,7 +34,10 @@ export function LazyImage({ src, alt, className, title, referrerPolicy }: LazyIm
           title={title || "jasa-sedot-karawang"} 
           alt={`jasa sedot wc karawang ${alt}`} 
           className={className} 
-          referrerPolicy={referrerPolicy} 
+          referrerPolicy={referrerPolicy}
+          loading="lazy"
+          width={width}
+          height={height}
         />
       ) : (
         <div className="w-full h-full bg-slate-200 animate-pulse" />

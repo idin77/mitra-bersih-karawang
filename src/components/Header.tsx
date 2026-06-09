@@ -71,7 +71,9 @@ export default function Header({ whatsappNumber }: HeaderProps) {
                   title="jasa-sedot-karawang"
                   alt="jasa sedot wc karawang - logo mitra bersih" 
                   className="w-full h-full object-contain" 
-                  referrerPolicy="no-referrer" 
+                  referrerPolicy="no-referrer"
+                  width="44"
+                  height="44"
                 />
               </div>
               <div className="flex flex-col">

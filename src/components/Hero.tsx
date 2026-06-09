@@ -32,8 +32,11 @@ export default function Hero({ whatsappNumber, imageSrc }: HeroProps) {
           src={imageSrc}
           title="jasa-sedot-karawang"
           alt="jasa sedot wc karawang - armada profesional mitra bersih karawang"
-          className="w-full h-full object-cover object-center opacity-40 scale-105"
+          className="w-full h-full object-cover object-center opacity-40"
           referrerPolicy="no-referrer"
+          fetchPriority="high"
+          width="1920"
+          height="1080"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/95 via-zinc-900/85 to-transparent"></div>
         <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-black/50"></div>

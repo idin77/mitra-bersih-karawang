@@ -144,6 +144,8 @@ export default function Gallery() {
                       title="jasa-sedot-karawang"
                       className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500"
                       referrerPolicy="no-referrer"
+                      width="400"
+                      height="256"
                     />
 
                       {/* Category Pill Tag */}
@@ -209,6 +211,8 @@ export default function Gallery() {
                     alt={`jasa sedot wc karawang - ${filteredItems[selectedPhoto].title}`}
                     className="w-full h-full object-contain"
                     referrerPolicy="no-referrer"
+                    width="800"
+                    height="450"
                   />
                 </div>
 
