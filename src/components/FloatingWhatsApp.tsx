@@ -164,6 +164,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
       clearTimeout(pressTimer);
       setPressTimer(null);
     }
+    setIsLongPress(false);
   };
 
   const handleMouseMove = (e: MouseEvent) => {
@@ -270,11 +271,13 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             animate={{
               x: position.x,
               y: position.y,
-              scale: isHovered ? 1.1 : [1, 1.05, 1],
-              rotate: isShaking ? [0, -10, 10, -10, 10, 0] : 0,
-              boxShadow: isHovered 
-                ? ["0 0 10px 2px rgba(5, 150, 105, 0.6)", "0 0 20px 10px rgba(5, 150, 105, 0.6)", "0 0 10px 2px rgba(5, 150, 105, 0.6)"]
-                : "0 10px 15px -3px rgba(16, 185, 129, 0.5)",
+              scale: isLongPress ? 1.15 : (isHovered ? 1.1 : [1, 1.05, 1]),
+              rotate: isLongPress ? 0 : (isShaking ? [0, -10, 10, -10, 10, 0] : 0),
+              boxShadow: isLongPress 
+                ? "0 0 20px 10px rgba(255, 255, 255, 0.8)" 
+                : (isHovered 
+                    ? ["0 0 10px 2px rgba(5, 150, 105, 0.6)", "0 0 20px 10px rgba(5, 150, 105, 0.6)", "0 0 10px 2px rgba(5, 150, 105, 0.6)"]
+                    : "0 10px 15px -3px rgba(16, 185, 129, 0.5)"),
               opacity: 1
             }}
             id="btn-floating-wa"

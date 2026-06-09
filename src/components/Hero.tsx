@@ -30,7 +30,8 @@ export default function Hero({ whatsappNumber, imageSrc }: HeroProps) {
       <div className="absolute inset-0 z-0">
         <img
           src={imageSrc}
-          alt="Armada Sedot WC Profesional Mitra Bersih Karawang"
+          title="jasa-sedot-karawang"
+          alt="jasa sedot wc karawang - armada profesional mitra bersih karawang"
           className="w-full h-full object-cover object-center opacity-40 scale-105"
           referrerPolicy="no-referrer"
         />

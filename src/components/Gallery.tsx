@@ -139,11 +139,12 @@ export default function Gallery() {
                   {/* Photo container */}
                   <div className="relative h-64 overflow-hidden bg-slate-200">
                     <LazyImage
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500"
-                    referrerPolicy="no-referrer"
-                  />
+                      src={item.image}
+                      alt={item.title}
+                      title="jasa-sedot-karawang"
+                      className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500"
+                      referrerPolicy="no-referrer"
+                    />
 
                       {/* Category Pill Tag */}
                     <span className="absolute top-4 left-4 bg-amber-400 text-zinc-950 text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest shadow-md">
@@ -204,7 +205,8 @@ export default function Gallery() {
                 <div className="relative aspect-video max-h-[60vh] bg-black flex items-center justify-center">
                   <img
                     src={filteredItems[selectedPhoto].image}
-                    alt={filteredItems[selectedPhoto].title}
+                    title="jasa-sedot-karawang"
+                    alt={`jasa sedot wc karawang - ${filteredItems[selectedPhoto].title}`}
                     className="w-full h-full object-contain"
                     referrerPolicy="no-referrer"
                   />

@@ -68,7 +68,8 @@ export default function Header({ whatsappNumber }: HeaderProps) {
               <div className="w-11 h-11 bg-zinc-950 p-0.5 rounded-full group-hover:scale-105 transition-transform shadow-md overflow-hidden flex items-center justify-center border border-zinc-900">
                 <img 
                   src={logoUrl} 
-                  alt="Logo Mitra Bersih" 
+                  title="jasa-sedot-karawang"
+                  alt="jasa sedot wc karawang - logo mitra bersih" 
                   className="w-full h-full object-contain" 
                   referrerPolicy="no-referrer" 
                 />

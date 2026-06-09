@@ -26,7 +26,8 @@ export default function Footer({ whatsappNumber }: FooterProps) {
               <div className="w-10 h-10 bg-zinc-950 p-0.5 rounded-full shadow-md flex items-center justify-center border border-zinc-800">
                 <img 
                   src={logoUrl} 
-                  alt="Logo Mitra Bersih" 
+                  title="jasa-sedot-karawang"
+                  alt="jasa sedot wc karawang - logo mitra bersih" 
                   className="w-full h-full object-contain" 
                   referrerPolicy="no-referrer" 
                 />
