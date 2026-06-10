@@ -3,6 +3,10 @@ import { Camera, Eye, HelpCircle, X, ShieldCheck } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { GallerySkeleton } from "./Skeletons";
 import { LazyImage } from "./LazyImage";
+import armadaTangki from "../assets/images/armada_karawang_asli_1779610538314.png";
+import prosesSedot1 from "../assets/images/galeri_sedot_wc_1_1779611152423.png";
+import trukVacuum from "../assets/images/galeri_sedot_wc_2_1779611175502.png";
+import teknisiLapangan from "../assets/images/armada_sedot_wc_1779609893526.png";
 
 export default function Gallery() {
   const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null);
@@ -19,42 +23,42 @@ export default function Gallery() {
       id: 1,
       title: "Armada Tangki Siaga Karawang",
       category: "Armada",
-      image: "/src/assets/images/armada_karawang_asli_1779610538314.png",
+      image: armadaTangki,
       description: "Tangki vacuum Mitsubishi Fuso berkapasitas besar berpadu dengan selang hisap premium."
     },
     {
       id: 2,
       title: "Proses Penyedotan Septic Tank",
       category: "Proses Kerja",
-      image: "/src/assets/images/galeri_sedot_wc_1_1779611152423.png",
+      image: prosesSedot1,
       description: "Teknisi profesional kami sedang mengoperasikan selang hisap ke lubang septic tank secara steril."
     },
     {
       id: 3,
       title: "Barisan Truk Vacuum Siap Meluncur",
       category: "Armada",
-      image: "/src/assets/images/galeri_sedot_wc_2_1779611175502.png",
+      image: trukVacuum,
       description: "Dukungan armada tangki kuning dan orange modern milik Mitra Bersih Karawang."
     },
     {
       id: 4,
       title: "Teknisi Lapangan Berpengalaman",
       category: "Proses Kerja",
-      image: "/src/assets/images/armada_sedot_wc_1779609893526.png",
+      image: teknisiLapangan,
       description: "Uji kelayakan peralatan berkala sebelum dikirim langsung menuju pemukiman warga."
     },
     {
       id: 5,
       title: "Pelancaran Saluran Industri",
       category: "Industri",
-      image: "/src/assets/images/galeri_sedot_wc_1_1779611152423.png", // reusing high-quality realistic image
+      image: prosesSedot1, // reusing high-quality realistic image
       description: "Pembersihan kerak lemak membandel untuk grease trap restoran besar & pabrik industri."
     },
     {
       id: 6,
       title: "Pembersihan Septic Tank Tuntas",
       category: "Proses Kerja",
-      image: "/src/assets/images/armada_karawang_asli_1779610538314.png", // reusing high-quality core truck image
+      image: armadaTangki, // reusing high-quality core truck image
       description: "Pekerjaan rapi tanpa kotoran tercecer dan disemprot disinfektan pembasmi kuman pasca sedot."
     }
   ];

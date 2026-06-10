@@ -23,6 +23,35 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [chattingCount, setChattingCount] = useState(12);
   const [pressTimer, setPressTimer] = useState<NodeJS.Timeout | null>(null);
   const [isLongPress, setIsLongPress] = useState(false);
+  const [isIdle, setIsIdle] = useState(false);
+
+  useEffect(() => {
+    let idleTimer: NodeJS.Timeout;
+
+    const resetIdleTimer = () => {
+      setIsIdle(false);
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => {
+        setIsIdle(true);
+      }, 120000); // 120000ms = 2 minutes
+    };
+
+    window.addEventListener('mousemove', resetIdleTimer);
+    window.addEventListener('mousedown', resetIdleTimer);
+    window.addEventListener('keypress', resetIdleTimer);
+    window.addEventListener('scroll', resetIdleTimer);
+    
+    // Initial start
+    resetIdleTimer();
+
+    return () => {
+      window.removeEventListener('mousemove', resetIdleTimer);
+      window.removeEventListener('mousedown', resetIdleTimer);
+      window.removeEventListener('keypress', resetIdleTimer);
+      window.removeEventListener('scroll', resetIdleTimer);
+      clearTimeout(idleTimer);
+    };
+  }, []);
 
   useEffect(() => {
 	  const interval = setInterval(() => {
@@ -312,6 +341,16 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             {showConfetti && <ConfettiBurst onComplete={() => setShowConfetti(false)} />}
             <span className="absolute inset-0 rounded-full bg-emerald-600/40 animate-pulse"></span>
             <MessageCircle className="w-8 h-8 fill-current" />
+            
+            {isIdle && (
+              <motion.div 
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="absolute -top-1 -right-1 bg-white text-emerald-700 text-[8px] px-1.5 py-0.5 rounded-full border border-emerald-200 font-bold shadow-sm whitespace-nowrap"
+              >
+                Tanya Kami?
+              </motion.div>
+            )}
           </motion.button>
         </div>
       </div>

@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import { WeatherWidget } from "./WeatherWidget";
 import { Phone, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-
-const logoUrl = "/src/assets/images/logo_mitra_bersih_1779896054697.png";
+import logoUrl from "../assets/images/logo_mitra_bersih_1779896054697.png";
 
 interface HeaderProps {
   whatsappNumber: string;

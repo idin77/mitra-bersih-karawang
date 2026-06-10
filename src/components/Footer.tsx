@@ -1,6 +1,6 @@
 import { Phone, MapPin, CalendarClock, Mail } from "lucide-react";
 
-const logoUrl = "/src/assets/images/logo_mitra_bersih_1779896054697.png";
+import logoUrl from "../assets/images/logo_mitra_bersih_1779896054697.png";
 
 interface FooterProps {
   whatsappNumber: string;

@@ -11,6 +11,7 @@ import Footer from "../components/Footer";
 import FloatingWhatsApp from "../components/FloatingWhatsApp";
 import FAQ from "../components/FAQ";
 import SEOArticles from "../components/SEOArticles";
+import heroImage from "../assets/images/armada_karawang_asli_1779610538314.png";
 
 import { CheckSquare, ShieldCheck, HeartPulse, Award } from "lucide-react";
 import { motion } from "motion/react";
@@ -18,7 +19,7 @@ import { Helmet } from "react-helmet-async";
 
 export default function LandingPage() {
   const WHATSAPP_NUMBER = "085882448632";
-  const HERO_IMAGE_SRC = "/src/assets/images/armada_karawang_asli_1779610538314.png";
+  const HERO_IMAGE_SRC = heroImage;
 
   return (
     <div id="mitra-bersih-karawang-app" className="relative text-slate-800">
