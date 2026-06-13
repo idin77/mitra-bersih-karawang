@@ -24,6 +24,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [pressTimer, setPressTimer] = useState<NodeJS.Timeout | null>(null);
   const [isLongPress, setIsLongPress] = useState(false);
   const [isIdle, setIsIdle] = useState(false);
+  const [randomDelay] = useState(() => Math.random() * 1 + 0.5);
 
   useEffect(() => {
     let idleTimer: NodeJS.Timeout;
@@ -206,8 +207,8 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     const distanceY = clientY - centerY;
     const distance = Math.sqrt(distanceX ** 2 + distanceY ** 2);
     
-    if (distance < 50) {
-       setPosition({ x: distanceX * 0.3, y: distanceY * 0.3 });
+    if (distance < 150) {
+       setPosition({ x: distanceX * 0.45, y: distanceY * 0.45 });
     } else {
        setPosition({ x: 0, y: 0 });
     }
@@ -216,9 +217,13 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
 
   return (
   <motion.div
-    initial={{ opacity: 0, x: 50 }}
-    animate={{ opacity: isVisible ? 1 : 0, x: 0, y: isVisible ? 0 : 50, pointerEvents: isVisible ? 'auto' : 'none' }}
-    transition={{ duration: 0.5, ease: "easeOut" }}
+    initial={{ opacity: 0, y: 50 }}
+    animate={{ 
+      opacity: isVisible ? 1 : 0, 
+      y: isVisible ? 0 : 50, 
+      pointerEvents: isVisible ? 'auto' : 'none' 
+    }}
+    transition={{ type: "spring", stiffness: 260, damping: 20, delay: randomDelay }}
     className="fixed bottom-6 right-6 z-50 flex flex-col items-end space-y-2 pointer-events-none"
   >
       
@@ -322,6 +327,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               type: "spring",
               stiffness: 260,
               damping: 20,
+              delay: randomDelay,
               rotate: { type: "tween", duration: 0.6 },
               scale: {
                   repeat: isHovered ? 0 : Infinity,
