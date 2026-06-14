@@ -24,6 +24,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [pressTimer, setPressTimer] = useState<NodeJS.Timeout | null>(null);
   const [isLongPress, setIsLongPress] = useState(false);
   const [isIdle, setIsIdle] = useState(false);
+  const [copiedSuccess, setCopiedSuccess] = useState(false);
   const [randomDelay] = useState(() => Math.random() * 1 + 0.5);
 
   useEffect(() => {
@@ -177,7 +178,8 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
 
   const handleCopyPhoneNumber = () => {
     navigator.clipboard.writeText(whatsappNumber);
-    // Silent copy as requested
+    setCopiedSuccess(true);
+    setTimeout(() => setCopiedSuccess(false), 2000);
   };
 
   const handlePointerDown = () => {
@@ -207,8 +209,10 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     const distanceY = clientY - centerY;
     const distance = Math.sqrt(distanceX ** 2 + distanceY ** 2);
     
-    if (distance < 150) {
-       setPosition({ x: distanceX * 0.45, y: distanceY * 0.45 });
+    // Increased zone and added a distance-depedant factor for a "sticky" feel
+    if (distance < 200) {
+       const strength = 0.7 * (1 - distance / 200);
+       setPosition({ x: distanceX * strength, y: distanceY * strength });
     } else {
        setPosition({ x: 0, y: 0 });
     }
@@ -346,12 +350,30 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
           >
             {showConfetti && <ConfettiBurst onComplete={() => setShowConfetti(false)} />}
             <span className="absolute inset-0 rounded-full bg-emerald-600/40 animate-pulse"></span>
-            <MessageCircle className="w-8 h-8 fill-current" />
+            <motion.div
+              animate={{ rotate: isHovered ? 15 : 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+            >
+              <MessageCircle className="w-8 h-8 fill-current" />
+            </motion.div>
             
-            {isIdle && (
+            {copiedSuccess && (
               <motion.div 
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0, opacity: 0 }}
+                className="absolute -top-1 -right-1 bg-emerald-500 text-white text-[8px] px-1.5 py-0.5 rounded-full border border-emerald-200 font-bold shadow-sm whitespace-nowrap"
+              >
+                Tersalin!
+              </motion.div>
+            )}
+            
+            {!copiedSuccess && isIdle && (
+              <motion.div 
+                initial={{ scale: 0.5, opacity: 0, y: 10 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0, opacity: 0 }}
+                transition={{ type: "spring", stiffness: 300, damping: 15 }}
                 className="absolute -top-1 -right-1 bg-white text-emerald-700 text-[8px] px-1.5 py-0.5 rounded-full border border-emerald-200 font-bold shadow-sm whitespace-nowrap"
               >
                 Tanya Kami?
