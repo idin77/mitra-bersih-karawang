@@ -46,7 +46,8 @@ export default function ServiceAreas() {
       highlight: "Cabang Khusus Cikampek",
       suburbs: "Cikampek Kota, Cikampek Pusaka, Dawuan Barat, Dawuan Timur, Kamojing, Jatisari",
       delivery: "Gratis Ongkir Transportasi Serta Kunjungan",
-      response: "30 - 55 Menit"
+      response: "30 - 55 Menit",
+      link: "https://mitrabersih24jam.com/jasa-sedot-wc-cikampek/"
     },
     {
       name: "Purwakarta Kota",
@@ -237,6 +238,13 @@ export default function ServiceAreas() {
                     <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">
                       <strong className="text-slate-700 font-semibold mb-1 block">Kelurahan/Sub-area Terlayani:</strong>
                       {area.suburbs}
+                      {(area as any).link && (
+                        <span className="block mt-2">
+                          <a href={(area as any).link} className="text-amber-600 font-bold hover:underline" target="_blank" rel="noopener noreferrer">
+                            Jasa Sedot WC Cikampek 24 Jam
+                          </a>
+                        </span>
+                      )}
                     </p>
                     <div className="text-[11px] font-bold text-amber-600 bg-amber-50/70 inline-block px-2.5 py-1 rounded-lg">
                       🛡️ {area.delivery}
