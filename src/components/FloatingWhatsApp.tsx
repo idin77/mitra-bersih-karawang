@@ -1,7 +1,25 @@
 import { useState, useEffect, useRef, MouseEvent } from "react";
-import { MessageSquareCode, MessageCircle, X, Volume2, VolumeX, ArrowUp } from "lucide-react";
+import { MessageSquareCode, MessageCircle, X, Volume2, VolumeX, ArrowUp, Phone, MapPin, Mail } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { ConfettiBurst } from "./ConfettiBurst";
+
+const containerVariants = {
+  hidden: { opacity: 0, scale: 0.9, y: 20 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, x: 20 },
+  visible: { opacity: 1, x: 0 },
+};
 
 interface FloatingProps {
   whatsappNumber: string;
@@ -20,12 +38,64 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [isMuted, setIsMuted] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const [isKeyboardFocus, setIsKeyboardFocus] = useState(false);
   const [chattingCount, setChattingCount] = useState(12);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Tab') {
+        setIsKeyboardFocus(true);
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsMenuOpen((prev) => !prev);
+      }
+    };
+    const handleMouseDown = () => {
+      setIsKeyboardFocus(false);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('mousedown', handleMouseDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('mousedown', handleMouseDown);
+    };
+  }, []);
   const [pressTimer, setPressTimer] = useState<NodeJS.Timeout | null>(null);
   const [isLongPress, setIsLongPress] = useState(false);
   const [isIdle, setIsIdle] = useState(false);
   const [copiedSuccess, setCopiedSuccess] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [focusedIndex, setFocusedIndex] = useState(-1);
+  const menuButtonsRef = useRef<(HTMLButtonElement | null)[]>([]);
   const [randomDelay] = useState(() => Math.random() * 1 + 0.5);
+
+  useEffect(() => {
+    if (isMenuOpen) {
+      setFocusedIndex(0);
+      menuButtonsRef.current[0]?.focus();
+    } else {
+      setFocusedIndex(-1);
+      buttonRef.current?.focus();
+    }
+  }, [isMenuOpen]);
+
+  const handleMenuKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      const nextIndex = (focusedIndex + 1) % 4;
+      setFocusedIndex(nextIndex);
+      menuButtonsRef.current[nextIndex]?.focus();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      const prevIndex = (focusedIndex - 1 + 4) % 4;
+      setFocusedIndex(prevIndex);
+      menuButtonsRef.current[prevIndex]?.focus();
+    } else if (e.key === 'Escape') {
+      setIsMenuOpen(false);
+    }
+  };
 
   useEffect(() => {
     let idleTimer: NodeJS.Timeout;
@@ -136,11 +206,17 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   }, []);
 
   const handleWhatsAppAction = () => {
-    if (isLongPress) {                
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      navigator.vibrate(50);
+    }
+    if (isLongPress) {
       setIsLongPress(false);
       return;
     }
-    // Track click to GA4
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const executeWhatsApp = () => {
     if (typeof (window as any).gtag === 'function') {
       (window as any).gtag('event', 'whatsapp_click', {
         event_category: 'contact',
@@ -174,6 +250,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
       "Halo Mitra Bersih Karawang, toilet saya bermasalah/penuh. Saya butuh respon cepat sekarang."
     );
     window.open(`https://wa.me/62${whatsappNumber.substring(1)}?text=${text}`, "_blank");
+    setIsMenuOpen(false);
   };
 
   const handleCopyPhoneNumber = () => {
@@ -282,6 +359,60 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
 
         {/* Primary Floating WhatsApp Pulse-Button Container */}
         <div className="flex flex-col items-end space-y-2">
+          <AnimatePresence>
+            {isMenuOpen && (
+              <motion.div 
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                onKeyDown={handleMenuKeyDown}
+                className="bg-white rounded-2xl shadow-xl p-2 flex flex-col gap-2 border border-slate-100 pointer-events-auto min-w-[160px]"
+              >
+                <motion.button 
+                  variants={itemVariants}
+                  ref={el => menuButtonsRef.current[0] = el}
+                  onClick={() => { window.location.href = `tel:${whatsappNumber}`; setIsMenuOpen(false); }}
+                  className="relative flex items-center gap-3 px-4 py-2 hover:bg-slate-50 rounded-lg text-slate-700 font-medium text-sm transition-colors outline-none focus:bg-slate-100 border border-transparent focus:border-emerald-600"
+                >
+                  {focusedIndex === 0 && <span className="absolute left-1 w-1.5 h-1.5 bg-emerald-600 rounded-full" />}
+                  <Phone className="w-4 h-4 text-emerald-600" />
+                  Telepon
+                </motion.button>
+                <motion.button 
+                  variants={itemVariants}
+                  ref={el => menuButtonsRef.current[1] = el}
+                  onClick={() => { window.open('https://maps.google.com', '_blank'); setIsMenuOpen(false); }}
+                  className="relative flex items-center gap-3 px-4 py-2 hover:bg-slate-50 rounded-lg text-slate-700 font-medium text-sm transition-colors outline-none focus:bg-slate-100 border border-transparent focus:border-emerald-600"
+                >
+                  {focusedIndex === 1 && <span className="absolute left-1 w-1.5 h-1.5 bg-emerald-600 rounded-full" />}
+                  <MapPin className="w-4 h-4 text-emerald-600" />
+                  Lokasi
+                </motion.button>
+                <motion.button 
+                  variants={itemVariants}
+                  ref={el => menuButtonsRef.current[2] = el}
+                  onClick={() => { window.location.href = 'mailto:info@mitrabersih.sedotwckarawang.id'; setIsMenuOpen(false); }}
+                  className="relative flex items-center gap-3 px-4 py-2 hover:bg-slate-50 rounded-lg text-slate-700 font-medium text-sm transition-colors outline-none focus:bg-slate-100 border border-transparent focus:border-emerald-600"
+                >
+                  {focusedIndex === 2 && <span className="absolute left-1 w-1.5 h-1.5 bg-emerald-600 rounded-full" />}
+                  <Mail className="w-4 h-4 text-emerald-600" />
+                  Email
+                </motion.button>
+                <motion.button 
+                  variants={itemVariants}
+                  ref={el => menuButtonsRef.current[3] = el}
+                  onClick={executeWhatsApp}
+                  className="relative flex items-center gap-3 px-4 py-2 hover:bg-slate-50 rounded-lg text-slate-700 font-medium text-sm transition-colors outline-none focus:bg-slate-100 border border-transparent focus:border-emerald-600"
+                >
+                  {focusedIndex === 3 && <span className="absolute left-1 w-1.5 h-1.5 bg-emerald-600 rounded-full" />}
+                  <MessageCircle className="w-4 h-4 text-emerald-600" />
+                  WhatsApp
+                </motion.button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           <div className="bg-white text-emerald-700 text-[10px] font-bold px-2 py-1 rounded-full shadow-md border border-emerald-100 flex flex-col items-center shrink-0 pointer-events-auto">
              <div className="flex items-center gap-1">
                <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
@@ -314,19 +445,21 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               boxShadow: isLongPress 
                 ? "0 0 20px 10px rgba(255, 255, 255, 0.8)" 
                 : (isHovered 
-                    ? ["0 0 10px 2px rgba(5, 150, 105, 0.6)", "0 0 20px 10px rgba(5, 150, 105, 0.6)", "0 0 10px 2px rgba(5, 150, 105, 0.6)"]
+                    ? ["0 0 10px 2px rgba(4, 120, 87, 0.6)", "0 0 20px 10px rgba(4, 120, 87, 0.6)", "0 0 10px 2px rgba(4, 120, 87, 0.6)"]
                     : "0 10px 15px -3px rgba(16, 185, 129, 0.5)"),
               opacity: 1
             }}
             id="btn-floating-wa"
             onClick={handleWhatsAppAction}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
                 handleWhatsAppAction();
               }
             }}
-            initial={{ scale: 0, opacity: 0 }}
+            initial={{ scale: 0.3, borderRadius: "15px", opacity: 0 }}
             transition={{
               type: "spring",
               stiffness: 260,
@@ -338,6 +471,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                   duration: 2,
                   ease: "easeInOut"
               },
+              borderRadius: { duration: 0.6, ease: "easeOut" },
               boxShadow: {
                   repeat: isHovered ? Infinity : 0,
                   duration: 1.5,
@@ -345,10 +479,40 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               }
             }}
             whileTap={{ scale: 0.9 }}
-            className="w-14 h-14 bg-emerald-600 hover:bg-emerald-500 text-white rounded-full shadow-lg shadow-emerald-500/50 flex items-center justify-center relative select-none pointer-events-auto cursor-pointer"
+            className="w-14 h-14 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full shadow-lg shadow-emerald-700/50 flex items-center justify-center relative select-none pointer-events-auto cursor-pointer focus:outline-none transition-all duration-200"
             title="Hubungi Kami Melalui WhatsApp"
+            aria-label="Buka WhatsApp untuk layanan Sedot WC"
           >
+            {(isFocused && isKeyboardFocus) && (
+                <>
+                <motion.span 
+                    className="absolute inset-0 rounded-full border-4 border-emerald-900 pointer-events-none"
+                    initial={{ scale: 1, opacity: 1 }}
+                    animate={{ scale: 1.4, opacity: 0 }}
+                    transition={{ duration: 0.8, repeat: Infinity, ease: "easeOut" }}
+                />
+                <motion.span 
+                    className="absolute inset-0 rounded-full border-2 border-emerald-500 pointer-events-none"
+                    initial={{ scale: 1, opacity: 1 }}
+                    animate={{ scale: 1.6, opacity: 0 }}
+                    transition={{ duration: 0.8, repeat: Infinity, delay: 0.2, ease: "easeOut" }}
+                />
+                </>
+            )}
             {showConfetti && <ConfettiBurst onComplete={() => setShowConfetti(false)} />}
+            {/* Operational Availability Ring */}
+            <motion.span
+                className="absolute -inset-0.5 rounded-full border-2 border-emerald-400/60 pointer-events-none"
+                animate={{
+                     scale: [1, 1.2],
+                     opacity: [0.8, 0]
+                }}
+                transition={{
+                     duration: 3,
+                     repeat: Infinity,
+                     ease: "easeInOut"
+                }}
+            />
             <span className="absolute inset-0 rounded-full bg-emerald-600/40 animate-pulse"></span>
             <motion.div
               animate={{ rotate: isHovered ? 15 : 0 }}
@@ -356,6 +520,17 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             >
               <MessageCircle className="w-8 h-8 fill-current" />
             </motion.div>
+            
+            {isMuted && (
+              <motion.span 
+                initial={{ scale: 0.5, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.5, opacity: 0 }}
+                className="absolute -top-1 -left-1 bg-rose-500 text-white rounded-full p-0.5 border border-white shadow-sm pointer-events-none"
+              >
+                <VolumeX className="w-3 h-3" />
+              </motion.span>
+            )}
             
             {copiedSuccess && (
               <motion.div 
