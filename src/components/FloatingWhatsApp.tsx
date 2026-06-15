@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef, MouseEvent } from "react";
-import { MessageSquareCode, MessageCircle, X, Volume2, VolumeX, ArrowUp, Phone, MapPin, Mail } from "lucide-react";
+import { useState, useEffect, useRef, MouseEvent, KeyboardEvent } from "react";
+import { MessageSquareCode, MessageCircle, X, Volume2, VolumeX, ArrowUp, Phone, MapPin, Mail, Battery } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { ConfettiBurst } from "./ConfettiBurst";
 
@@ -41,6 +41,40 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [isFocused, setIsFocused] = useState(false);
   const [isKeyboardFocus, setIsKeyboardFocus] = useState(false);
   const [chattingCount, setChattingCount] = useState(12);
+  const [isMobile, setIsMobile] = useState(false);
+  const [particles, setParticles] = useState<{id: number}[]>([]);
+
+  const triggerParticles = () => {
+    const id = Date.now();
+    setParticles(prev => [...prev, { id }]);
+    setTimeout(() => setParticles(prev => prev.filter(p => p.id !== id)), 600);
+  };
+
+  useEffect(() => {
+	  // Play subtle "pop" on mount
+      if (!isMuted) {
+        const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(300, audioContext.currentTime + 0.05);
+
+        gainNode.gain.setValueAtTime(0.05, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.05);
+
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + 0.05);
+      }
+  }, []);
+
+  useEffect(() => {
+    setIsMobile(window.matchMedia('(max-width: 768px)').matches);
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -63,9 +97,13 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     };
   }, []);
   const [pressTimer, setPressTimer] = useState<NodeJS.Timeout | null>(null);
+  const [holdProgress, setHoldProgress] = useState(0);
+  const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const [isLongPress, setIsLongPress] = useState(false);
   const [isIdle, setIsIdle] = useState(false);
   const [copiedSuccess, setCopiedSuccess] = useState(false);
+  const [showCopyTooltip, setShowCopyTooltip] = useState(false);
+  const copyTooltipTimeoutRef = useRef<NodeJS.Timeout>();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const menuButtonsRef = useRef<(HTMLButtonElement | null)[]>([]);
@@ -81,7 +119,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     }
   }, [isMenuOpen]);
 
-  const handleMenuKeyDown = (e: React.KeyboardEvent) => {
+  const handleMenuKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       const nextIndex = (focusedIndex + 1) % 4;
@@ -105,7 +143,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
       clearTimeout(idleTimer);
       idleTimer = setTimeout(() => {
         setIsIdle(true);
-      }, 120000); // 120000ms = 2 minutes
+      }, 300000); // 300000ms = 5 minutes
     };
 
     window.addEventListener('mousemove', resetIdleTimer);
@@ -206,7 +244,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   }, []);
 
   const handleWhatsAppAction = () => {
-    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+    if (typeof navigator !== 'undefined' && navigator.vibrate && isMobile) {
       navigator.vibrate(50);
     }
     if (isLongPress) {
@@ -216,7 +254,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const executeWhatsApp = () => {
+  const executeWhatsApp = (customMessage?: string) => {
     if (typeof (window as any).gtag === 'function') {
       (window as any).gtag('event', 'whatsapp_click', {
         event_category: 'contact',
@@ -247,7 +285,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     setShowConfetti(true);
 
     const text = encodeURIComponent(
-      "Halo Mitra Bersih Karawang, toilet saya bermasalah/penuh. Saya butuh respon cepat sekarang."
+      customMessage || "Halo Mitra Bersih Karawang, toilet saya bermasalah/penuh. Saya butuh respon cepat sekarang."
     );
     window.open(`https://wa.me/62${whatsappNumber.substring(1)}?text=${text}`, "_blank");
     setIsMenuOpen(false);
@@ -261,9 +299,17 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
 
   const handlePointerDown = () => {
     setIsLongPress(false);
+    setHoldProgress(0);
+    if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
+    
+    progressIntervalRef.current = setInterval(() => {
+       setHoldProgress(prev => prev >= 100 ? 100 : prev + 2.5);
+    }, 20);
+
     const timer = setTimeout(() => {
       setIsLongPress(true);
       handleCopyPhoneNumber();
+      if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
     }, 800);
     setPressTimer(timer);
   };
@@ -273,6 +319,11 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
       clearTimeout(pressTimer);
       setPressTimer(null);
     }
+    if (progressIntervalRef.current) {
+        clearInterval(progressIntervalRef.current);
+        progressIntervalRef.current = null;
+    }
+    setHoldProgress(0);
     setIsLongPress(false);
   };
 
@@ -358,7 +409,28 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
         )}
 
         {/* Primary Floating WhatsApp Pulse-Button Container */}
-        <div className="flex flex-col items-end space-y-2">
+        <div className="flex flex-col items-end space-y-2 relative">                
+          {particles.map(p => (
+             <motion.div
+               key={p.id}
+               className="absolute w-2 h-2 bg-emerald-400 rounded-full z-[60] pointer-events-none"
+               initial={{ opacity: 1, scale: 0, bottom: 20, right: 20 }}
+               animate={{ opacity: 0, scale: 2, bottom: 100, right: 100 }}
+               transition={{ duration: 0.6 }}
+             />
+          ))}
+          <AnimatePresence>
+            {showCopyTooltip && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                className="absolute -top-12 right-0 bg-white text-emerald-800 text-xs px-3 py-1.5 rounded-lg shadow-xl border border-emerald-100 whitespace-nowrap pointer-events-none font-medium"
+              >
+                Click & Tahan untuk Salin No
+              </motion.div>
+            )}
+          </AnimatePresence>
           <AnimatePresence>
             {isMenuOpen && (
               <motion.div 
@@ -402,28 +474,50 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 <motion.button 
                   variants={itemVariants}
                   ref={el => menuButtonsRef.current[3] = el}
-                  onClick={executeWhatsApp}
+                  onClick={() => executeWhatsApp()}
                   className="relative flex items-center gap-3 px-4 py-2 hover:bg-slate-50 rounded-lg text-slate-700 font-medium text-sm transition-colors outline-none focus:bg-slate-100 border border-transparent focus:border-emerald-600"
                 >
                   {focusedIndex === 3 && <span className="absolute left-1 w-1.5 h-1.5 bg-emerald-600 rounded-full" />}
                   <MessageCircle className="w-4 h-4 text-emerald-600" />
                   WhatsApp
                 </motion.button>
+                <div className="px-2 py-2 border-t border-slate-100 mt-1">
+                  <p className="text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-wider px-2">Pesan Cepat</p>
+                  <div className="grid grid-cols-1 gap-1.5">
+                    <button onClick={() => executeWhatsApp("Halo, saya ingin tanya harga layanan sedot WC.")} className="text-left w-full hover:bg-emerald-50 rounded-lg text-emerald-800 font-medium text-[11px] transition-colors outline-none focus:bg-emerald-100 px-3 py-1.5 border border-emerald-100">Tanya Harga</button>
+                    <button onClick={() => executeWhatsApp("Halo, saya ingin menjadwalkan layanan sedot WC.")} className="text-left w-full hover:bg-emerald-50 rounded-lg text-emerald-800 font-medium text-[11px] transition-colors outline-none focus:bg-emerald-100 px-3 py-1.5 border border-emerald-100">Jadwalkan Sedot</button>
+                    <button onClick={() => executeWhatsApp("Halo, saya ingin konsultasi gratis mengenai masalah WC saya.")} className="text-left w-full hover:bg-emerald-50 rounded-lg text-emerald-800 font-medium text-[11px] transition-colors outline-none focus:bg-emerald-100 px-3 py-1.5 border border-emerald-100">Konsultasi Gratis</button>
+                  </div>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
 
           <div className="bg-white text-emerald-700 text-[10px] font-bold px-2 py-1 rounded-full shadow-md border border-emerald-100 flex flex-col items-center shrink-0 pointer-events-auto">
              <div className="flex items-center gap-1">
-               <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
-               Online: 5+ staff
-               <span className="bg-emerald-50 text-emerald-600 px-1 py-0.5 rounded text-[8px] border border-emerald-100 font-medium">Fast Reply (&lt;5min)</span>
+               {isIdle ? (
+                 <div className="flex items-center gap-1 text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
+                   <Battery className="w-3 h-3" />
+                   <span className="text-[9px] font-bold">Low Power</span>
+                 </div>
+               ) : (
+                 <>
+                   <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
+                   Online: 5+ staff
+                   <span className="bg-emerald-50 text-emerald-600 px-1 py-0.5 rounded text-[8px] border border-emerald-100 font-medium">Fast Reply (&lt;5min)</span>
+                 </>
+               )}
                <button 
-                 onClick={() => setIsMuted(!isMuted)}
+                 onClick={() => { setIsMuted(!isMuted); triggerParticles(); }}
                  className="ml-1 p-0.5 rounded-full hover:bg-emerald-50 text-emerald-600 transition-colors"
                  title={isMuted ? "Unmute Sound" : "Mute Sound"}
                >
-                 {isMuted ? <VolumeX className="w-3 h-3" /> : <Volume2 className="w-3 h-3" />}
+                 <motion.div
+                  animate={{ rotate: isMuted ? 360 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {isMuted ? <VolumeX className="w-3 h-3" /> : <Volume2 className="w-3 h-3" />}
+                </motion.div>
                </button>
              </div>
              <span className="text-[9px] text-emerald-600 font-semibold">{chattingCount} currently chatting</span>
@@ -431,9 +525,21 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
           </div>
            <motion.button
             ref={buttonRef}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={(e) => { handlePointerUp(); setPosition({ x: 0, y: 0 }); setIsHovered(false); }}
-            onMouseEnter={() => setIsHovered(true)}
+            onMouseMove={!isMobile ? handleMouseMove : undefined}
+            drag={isMobile}
+            dragConstraints={{ left: -300, right: 0, top: -600, bottom: 0 }}
+            dragElastic={0.1}
+            onMouseLeave={(e) => { 
+                handlePointerUp(); 
+                setPosition({ x: 0, y: 0 }); 
+                setIsHovered(false); 
+                if (copyTooltipTimeoutRef.current) clearTimeout(copyTooltipTimeoutRef.current);
+                setShowCopyTooltip(false);
+            }}
+            onMouseEnter={() => {
+                setIsHovered(true);
+                copyTooltipTimeoutRef.current = setTimeout(() => setShowCopyTooltip(true), 1500);
+            }}
             onContextMenu={(e: MouseEvent) => { e.preventDefault(); handleCopyPhoneNumber(); }}
             onPointerDown={handlePointerDown}
             onPointerUp={handlePointerUp}
@@ -445,7 +551,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               boxShadow: isLongPress 
                 ? "0 0 20px 10px rgba(255, 255, 255, 0.8)" 
                 : (isHovered 
-                    ? ["0 0 10px 2px rgba(4, 120, 87, 0.6)", "0 0 20px 10px rgba(4, 120, 87, 0.6)", "0 0 10px 2px rgba(4, 120, 87, 0.6)"]
+                    ? ["0 0 15px 5px rgba(16, 185, 129, 0.6)", "0 0 35px 20px rgba(16, 185, 129, 0.8)", "0 0 15px 5px rgba(16, 185, 129, 0.6)"]
                     : "0 10px 15px -3px rgba(16, 185, 129, 0.5)"),
               opacity: 1
             }}
@@ -459,7 +565,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 handleWhatsAppAction();
               }
             }}
-            initial={{ scale: 0.3, borderRadius: "15px", opacity: 0 }}
+            initial={isMobile ? { scale: 0, y: 50, opacity: 0 } : { scale: 0.3, borderRadius: "15px", opacity: 0 }}
             transition={{
               type: "spring",
               stiffness: 260,
@@ -483,6 +589,27 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             title="Hubungi Kami Melalui WhatsApp"
             aria-label="Buka WhatsApp untuk layanan Sedot WC"
           >
+            {/* Progress Ring */}
+            <svg className="absolute -inset-1 w-[64px] h-[64px] -rotate-90 pointer-events-none">
+              <circle
+                cx="32" cy="32" r="28"
+                className="text-white/30"
+                strokeWidth="2"
+                stroke="currentColor"
+                fill="transparent"
+              />
+              <circle
+                cx="32" cy="32" r="28"
+                className="text-white transition-all duration-75"
+                strokeWidth="3"
+                stroke="currentColor"
+                fill="transparent"
+                strokeDasharray={2 * Math.PI * 28}
+                strokeDashoffset={2 * Math.PI * 28 * (1 - holdProgress / 100)}
+                style={{ opacity: holdProgress > 0 ? 1 : 0 }}
+              />
+            </svg>
+
             {(isFocused && isKeyboardFocus) && (
                 <>
                 <motion.span 
@@ -500,19 +627,24 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 </>
             )}
             {showConfetti && <ConfettiBurst onComplete={() => setShowConfetti(false)} />}
-            {/* Operational Availability Ring */}
-            <motion.span
-                className="absolute -inset-0.5 rounded-full border-2 border-emerald-400/60 pointer-events-none"
-                animate={{
-                     scale: [1, 1.2],
-                     opacity: [0.8, 0]
-                }}
-                transition={{
-                     duration: 3,
-                     repeat: Infinity,
-                     ease: "easeInOut"
-                }}
-            />
+            {/* Operational Availability Wave Effect */}
+            {[0, 1.5].map((delay) => (
+                <motion.span
+                    key={delay}
+                    className="absolute -inset-0.5 rounded-full border-2 border-emerald-400/60 pointer-events-none"
+                    initial={{ scale: 1, opacity: 0.8 }}
+                    animate={{
+                        scale: [1, 1.4],
+                        opacity: [0.6, 0]
+                    }}
+                    transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        delay: delay,
+                        ease: "easeInOut"
+                    }}
+                />
+            ))}
             <span className="absolute inset-0 rounded-full bg-emerald-600/40 animate-pulse"></span>
             <motion.div
               animate={{ rotate: isHovered ? 15 : 0 }}
