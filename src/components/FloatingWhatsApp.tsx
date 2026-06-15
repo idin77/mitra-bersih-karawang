@@ -30,7 +30,13 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [typedText, setTypedText] = useState("");
   const [isShaking, setIsShaking] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
-  const tooltipMessage = "Halo! Butuh layanan Sedot WC darurat sekarang? Kami online sigap 24 jam.";
+  const getTooltipMessage = (h: number) => {
+      if (h >= 0 && h < 5) return "Selamat Malam! Butuh bantuan darurat untuk sedot WC? Tim kami tetap siaga.";
+      if (h >= 5 && h < 12) return "Selamat Pagi! Siap melayani kebutuhan sedot WC Anda dengan cepat.";
+      if (h >= 12 && h < 18) return "Selamat Siang/Sore! Layanan sedot WC Karawang profesional & bergaransi.";
+      return "Selamat Malam! Sedot WC Karawang siap membantu masalah Anda kapan saja.";
+  };
+  const tooltipMessage = getTooltipMessage(hour);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(true);
@@ -233,7 +239,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
       }, 30);
       return () => clearInterval(timer);
     }
-  }, [showTooltip]);
+  }, [showTooltip, tooltipMessage]);
 
   useEffect(() => {
     // Show tool tip after 4 seconds for friendly engagement
@@ -361,10 +367,11 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     const distanceY = clientY - centerY;
     const distance = Math.sqrt(distanceX ** 2 + distanceY ** 2);
     
-    // Increased zone and added a distance-depedant factor for a "sticky" feel
-    const range = 250;
+    // Magnetic snap effect
+    const range = 100;
     if (distance < range) {
-       const strength = 0.5 * (1 - distance / range);
+       // Gently snap towards cursor
+       const strength = 0.8;
        setPosition({ x: distanceX * strength, y: distanceY * strength });
     } else {
        setPosition({ x: 0, y: 0 });
