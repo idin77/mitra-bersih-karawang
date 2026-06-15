@@ -35,6 +35,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(true);
   const [currentTime, setCurrentTime] = useState("");
+  const [hour, setHour] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -175,7 +176,9 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
 
   useEffect(() => {
     const updateTime = () => {
-      const time = new Date().toLocaleTimeString("id-ID", {
+      const now = new Date();
+      setHour(now.getHours());
+      const time = now.toLocaleTimeString("id-ID", {
         timeZone: "Asia/Jakarta",
         hour: "2-digit",
         minute: "2-digit",
@@ -502,9 +505,9 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                  </div>
                ) : (
                  <>
-                   <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
-                   Online: 5+ staff
-                   <span className="bg-emerald-50 text-emerald-600 px-1 py-0.5 rounded text-[8px] border border-emerald-100 font-medium">Fast Reply (&lt;5min)</span>
+                   <span className={`w-1.5 h-1.5 ${hour >= 0 && hour < 5 ? 'bg-amber-500' : 'bg-emerald-500'} rounded-full`}></span>
+                   {hour >= 0 && hour < 5 ? 'Limited Support' : 'Available'}
+                   {!(hour >= 0 && hour < 5) && <span className="bg-emerald-50 text-emerald-600 px-1 py-0.5 rounded text-[8px] border border-emerald-100 font-medium">Fast Reply (&lt;5min)</span>}
                  </>
                )}
                <button 
@@ -546,7 +549,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             animate={{
               x: position.x,
               y: position.y,
-              scale: isLongPress ? 1.15 : (isHovered ? 1.1 : [1, 1.05, 1]),
+              scale: isLongPress ? 1.15 : (isHovered ? [1.1, 1.15, 1.1] : [1, 1.05, 1]),
               rotate: isLongPress ? 0 : (isShaking ? [0, -10, 10, -10, 10, 0] : 0),
               boxShadow: isLongPress 
                 ? "0 0 20px 10px rgba(255, 255, 255, 0.8)" 
@@ -573,8 +576,8 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               delay: randomDelay,
               rotate: { type: "tween", duration: 0.6 },
               scale: {
-                  repeat: isHovered ? 0 : Infinity,
-                  duration: 2,
+                  repeat: Infinity,
+                  duration: 1.5,
                   ease: "easeInOut"
               },
               borderRadius: { duration: 0.6, ease: "easeOut" },
