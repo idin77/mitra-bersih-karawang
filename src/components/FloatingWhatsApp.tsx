@@ -592,6 +592,16 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             title="Hubungi Kami Melalui WhatsApp"
             aria-label="Buka WhatsApp untuk layanan Sedot WC"
           >
+            {/* Ripple Animation */}
+            {isHovered && (
+              <motion.div
+                className="absolute inset-0 rounded-full bg-white/30 pointer-events-none"
+                initial={{ scale: 0.5, opacity: 0.5 }}
+                animate={{ scale: 2, opacity: 0 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+              />
+            )}
+
             {/* Progress Ring */}
             <svg className="absolute -inset-1 w-[64px] h-[64px] -rotate-90 pointer-events-none">
               <circle
