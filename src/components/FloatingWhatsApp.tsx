@@ -36,7 +36,16 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [isVisible, setIsVisible] = useState(true);
   const [currentTime, setCurrentTime] = useState("");
   const [hour, setHour] = useState(0);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem("whatsapp_muted") === "true";
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("whatsapp_muted", String(isMuted));
+  }, [isMuted]);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -306,7 +315,19 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
     
     progressIntervalRef.current = setInterval(() => {
-       setHoldProgress(prev => prev >= 100 ? 100 : prev + 2.5);
+       setHoldProgress(prev => {
+         const next = prev >= 100 ? 100 : prev + 2.5;
+         
+         // Vibrate on specific thresholds if not muted
+         if (!isMuted && typeof navigator !== 'undefined' && navigator.vibrate && isMobile) {
+            // Pulse thresholds: ~33%, ~66%, 100%
+            if ((prev < 33 && next >= 33) || (prev < 66 && next >= 66) || (prev < 100 && next >= 100)) {
+               navigator.vibrate(10); // Very subtle vibration
+            }
+         }
+
+         return next;
+       });
     }, 20);
 
     const timer = setTimeout(() => {
@@ -341,8 +362,9 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     const distance = Math.sqrt(distanceX ** 2 + distanceY ** 2);
     
     // Increased zone and added a distance-depedant factor for a "sticky" feel
-    if (distance < 200) {
-       const strength = 0.7 * (1 - distance / 200);
+    const range = 250;
+    if (distance < range) {
+       const strength = 0.5 * (1 - distance / range);
        setPosition({ x: distanceX * strength, y: distanceY * strength });
     } else {
        setPosition({ x: 0, y: 0 });
@@ -352,13 +374,13 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
 
   return (
   <motion.div
-    initial={{ opacity: 0, y: 50 }}
+    initial={{ opacity: 0, y: -100 }}
     animate={{ 
       opacity: isVisible ? 1 : 0, 
       y: isVisible ? 0 : 50, 
       pointerEvents: isVisible ? 'auto' : 'none' 
     }}
-    transition={{ type: "spring", stiffness: 260, damping: 20, delay: randomDelay }}
+    transition={{ type: "spring", stiffness: 150, damping: 10, delay: randomDelay }}
     className="fixed bottom-6 right-6 z-50 flex flex-col items-end space-y-2 pointer-events-none"
   >
       
