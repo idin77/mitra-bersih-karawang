@@ -9,7 +9,7 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/jasa-sedot-wc-cikampek" element={<CikampekPage />} />
+          <Route path="/cikampek/*" element={<CikampekPage />} />
           <Route path="/bekasi/*" element={<BekasiPage />} />
           <Route path="/tips-mengatasi-wc-mampet-karawang" element={<BlogArticlePage />} />
         </Routes>
