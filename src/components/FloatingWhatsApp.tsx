@@ -27,6 +27,7 @@ interface FloatingProps {
 
 export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [showTooltip, setShowTooltip] = useState(false);
+  const [showPinnedMessage, setShowPinnedMessage] = useState(true);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [typedText, setTypedText] = useState("");
   const [isShaking, setIsShaking] = useState(false);
@@ -282,6 +283,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
       setIsLongPress(false);
       return;
     }
+    setShowTooltip(false);
     setIsMenuOpen(!isMenuOpen);
   };
 
@@ -420,6 +422,14 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             </div>
             
             <div className="flex-1 space-y-1">
+              {showPinnedMessage && (
+                <div className="bg-amber-50 border border-amber-100 p-2 rounded-lg flex items-center justify-between mb-2">
+                  <p className="text-[10px] text-amber-800 font-bold leading-tight">🔥 Promo: Hemat Sedot WC 20% Hari Ini!</p>
+                  <button onClick={() => setShowPinnedMessage(false)} className="text-amber-600 hover:text-amber-800 shrink-0 cursor-pointer ml-2">
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              )}
               <h4 className="font-display font-extrabold text-xs sm:text-sm text-zinc-950">Customer Support</h4>
               <div className="max-h-24 overflow-y-auto pr-1" ref={chatContainerRef}>
                 <p className="text-[11px] sm:text-xs text-slate-500 leading-snug">
@@ -626,6 +636,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               }
             }}
             initial={isMobile ? { scale: 0, y: 50, opacity: 0 } : { scale: 0.3, borderRadius: "15px", opacity: 0 }}
+            animate={{ scale: 1, y: 0, opacity: 1, borderRadius: "50%" }}
             transition={{
               type: "spring",
               stiffness: 260,
@@ -647,7 +658,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               }
             }}
             whileTap={{ scale: 0.9 }}
-            className="w-14 h-14 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full shadow-lg shadow-emerald-700/50 flex items-center justify-center relative select-none pointer-events-auto cursor-pointer focus:outline-none transition-all duration-200"
+            className="w-14 h-14 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full shadow-lg shadow-emerald-700/50 flex items-center justify-center relative select-none pointer-events-auto cursor-pointer focus:outline-none transition-shadow duration-300 ease-in-out"
             title="Hubungi Kami Melalui WhatsApp"
             aria-label="Buka WhatsApp untuk layanan Sedot WC"
           >
