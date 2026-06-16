@@ -27,6 +27,7 @@ interface FloatingProps {
 
 export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [showTooltip, setShowTooltip] = useState(false);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
   const [typedText, setTypedText] = useState("");
   const [isShaking, setIsShaking] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -34,6 +35,13 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [isVisible, setIsVisible] = useState(true);
   const [currentTime, setCurrentTime] = useState("");
   const [hour, setHour] = useState(0);
+
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [typedText]);
+
   const [isMuted, setIsMuted] = useState(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem("whatsapp_muted") === "true";
@@ -413,7 +421,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             
             <div className="flex-1 space-y-1">
               <h4 className="font-display font-extrabold text-xs sm:text-sm text-zinc-950">Customer Support</h4>
-              <div className="max-h-24 overflow-y-auto pr-1">
+              <div className="max-h-24 overflow-y-auto pr-1" ref={chatContainerRef}>
                 <p className="text-[11px] sm:text-xs text-slate-500 leading-snug">
                   {typedText}
                 </p>
