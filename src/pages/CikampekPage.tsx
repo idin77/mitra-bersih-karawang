@@ -22,7 +22,7 @@ export default function CikampekPage() {
       <Helmet>
         <title>Jasa Sedot WC Cikampek Murah & 24 Jam Terpercaya | Mitra Bersih</title>
         <meta name="description" content="Jasa sedot WC Cikampek profesional, murah, dan bergaransi. Layanan sedot septic tank, pelancaran saluran air mampet di Cikampek 24 jam siap siaga." />
-        <link rel="canonical" href="https://mitrabersih.sedotwckarawang.id/jasa-sedot-wc-cikampek" />
+        <link rel="canonical" href="https://mitrabersih.sedotwckarawang.id/cikampek" />
       </Helmet>
 
       <Header whatsappNumber={WHATSAPP_NUMBER} />
