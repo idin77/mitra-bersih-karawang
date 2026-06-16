@@ -70,22 +70,26 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   useEffect(() => {
 	  // Play subtle "pop" on mount
       if (!isMuted) {
-        const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
+        try {
+          const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+          const oscillator = audioContext.createOscillator();
+          const gainNode = audioContext.createGain();
 
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
+          oscillator.connect(gainNode);
+          gainNode.connect(audioContext.destination);
 
-        oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
-        oscillator.frequency.exponentialRampToValueAtTime(300, audioContext.currentTime + 0.05);
+          oscillator.type = 'sine';
+          oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+          oscillator.frequency.exponentialRampToValueAtTime(300, audioContext.currentTime + 0.05);
 
-        gainNode.gain.setValueAtTime(0.05, audioContext.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.05);
+          gainNode.gain.setValueAtTime(0.05, audioContext.currentTime);
+          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.05);
 
-        oscillator.start();
-        oscillator.stop(audioContext.currentTime + 0.05);
+          oscillator.start();
+          oscillator.stop(audioContext.currentTime + 0.05);
+        } catch (e) {
+            console.error("Audio initialization failed:", e);
+        }
       }
   }, []);
 

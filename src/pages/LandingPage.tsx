@@ -15,7 +15,6 @@ import heroImage from "../assets/images/armada_karawang_asli_1779610538314.png";
 
 import { CheckSquare, ShieldCheck, HeartPulse, Award } from "lucide-react";
 import { motion } from "motion/react";
-import { Helmet } from "react-helmet-async";
 
 export default function LandingPage() {
   const WHATSAPP_NUMBER = "085882448632";
@@ -23,12 +22,6 @@ export default function LandingPage() {
 
   return (
     <div id="mitra-bersih-karawang-app" className="relative text-slate-800">
-      <Helmet>
-        <title>Sedot WC Karawang Murah &amp; 24 Jam Terpercaya | Mitra Bersih</title>
-        <meta name="description" content="Jasa sedot WC Karawang profesional &amp; bergaransi. Layanan sedot septic tank Karawang, pelancaran saluran air WC mampet murah cepat siaga 24 jam non-stop." />
-        <meta name="keywords" content="sedot wc karawang, jasa sedot wc murah karawang, sedot septic tank karawang, jasa sedot wc 24 jam karawang, wc mampet karawang, saluran mampet karawang, kuras septic tank, sedot limbah" />
-        <link rel="canonical" href="https://mitrabersihkarawang.com" />
-      </Helmet>
 
       {/* 1. Navbar / Header */}
       <Header whatsappNumber={WHATSAPP_NUMBER} />
