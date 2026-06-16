@@ -30,14 +30,6 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [typedText, setTypedText] = useState("");
   const [isShaking, setIsShaking] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
-  const getTooltipMessage = (h: number) => {
-      if (h >= 0 && h < 5) return "Selamat Malam! Butuh bantuan darurat untuk sedot WC? Tim kami tetap siaga.";
-      if (h >= 5 && h < 12) return "Selamat Pagi! Siap melayani kebutuhan sedot WC Anda dengan cepat.";
-      if (h >= 12 && h < 18) return "Selamat Siang/Sore! Layanan sedot WC Karawang profesional & bergaransi.";
-      return "Selamat Malam! Sedot WC Karawang siap membantu masalah Anda kapan saja.";
-  };
-  const tooltipMessage = getTooltipMessage(hour);
-  const buttonRef = useRef<HTMLButtonElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(true);
   const [currentTime, setCurrentTime] = useState("");
@@ -53,6 +45,15 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     localStorage.setItem("whatsapp_muted", String(isMuted));
   }, [isMuted]);
   const [showScrollTop, setShowScrollTop] = useState(false);
+
+  const getTooltipMessage = (h: number) => {
+      if (h >= 0 && h < 5) return "Selamat Malam! Butuh bantuan darurat untuk sedot WC? Tim kami tetap siaga.";
+      if (h >= 5 && h < 12) return "Selamat Pagi! Siap melayani kebutuhan sedot WC Anda dengan cepat.";
+      if (h >= 12 && h < 18) return "Selamat Siang/Sore! Layanan sedot WC Karawang profesional & bergaransi.";
+      return "Selamat Malam! Sedot WC Karawang siap membantu masalah Anda kapan saja.";
+  };
+  const tooltipMessage = getTooltipMessage(hour);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [isKeyboardFocus, setIsKeyboardFocus] = useState(false);
@@ -555,6 +556,21 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
              <span className="text-[9px] text-emerald-600 font-semibold">{chattingCount} currently chatting</span>
              <span className="text-[9px] text-emerald-600/80 font-normal">{currentTime} WIB</span>
           </div>
+
+          {/* Ghost element for trailing effect */}
+          <motion.div
+            className="absolute w-14 h-14 bg-emerald-600/30 rounded-full z-[40] pointer-events-none"
+            animate={{
+              x: position.x,
+              y: position.y,
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 80,
+              damping: 25,
+            }}
+          />
+
            <motion.button
             ref={buttonRef}
             onMouseMove={!isMobile ? handleMouseMove : undefined}
