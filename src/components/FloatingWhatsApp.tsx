@@ -619,6 +619,8 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               stiffness: 260,
               damping: 20,
               delay: randomDelay,
+              x: { type: "spring", stiffness: 100, damping: 5 },
+              y: { type: "spring", stiffness: 100, damping: 5 },
               rotate: { type: "tween", duration: 0.6 },
               scale: {
                   repeat: Infinity,
