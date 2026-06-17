@@ -3,6 +3,13 @@ import { MessageSquareCode, MessageCircle, X, Volume2, VolumeX, ArrowUp, Phone, 
 import { motion, AnimatePresence } from "motion/react";
 import { ConfettiBurst } from "./ConfettiBurst";
 
+const testimonials = [
+  { text: "Pengerjaan cuma 35 menit, langsung lancar kembali. Sangat puas!", name: "Ibu Rahmawati" },
+  { text: "Pelayanan profesional, harganya jujur transparan di awal.", name: "Bpk. Hendra" },
+  { text: "Sedotan tangki vacumnya kencang sekali, teknisi rapi.", name: "Ibu Siska" },
+  { text: "Teknisi datang 30 menit setelah dihubungi. Mantap!", name: "Bpk. Agus" },
+];
+
 const containerVariants = {
   hidden: { opacity: 0, scale: 0.9, y: 20 },
   visible: {
@@ -15,6 +22,12 @@ const containerVariants = {
     },
   },
 };
+
+const HOUSE_TYPES = [
+  { name: "Rumah Biasa", range: "Rp 500rb - 700rb" },
+  { name: "Rumah Besar", range: "Rp 700rb - 1jt" },
+  { name: "Ruko/Kantor", range: "Rp 1jt+" },
+];
 
 const itemVariants = {
   hidden: { opacity: 0, x: 20 },
@@ -98,8 +111,24 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [isFocused, setIsFocused] = useState(false);
   const [isKeyboardFocus, setIsKeyboardFocus] = useState(false);
   const [chattingCount, setChattingCount] = useState(12);
+  const [testimonialIndex, setTestimonialIndex] = useState(0);
+  const [serviceStatus, setServiceStatus] = useState<'Active' | 'Busy'>('Active');
   const [isMobile, setIsMobile] = useState(false);
   const [particles, setParticles] = useState<{id: number}[]>([]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTestimonialIndex((prev) => (prev + 1) % testimonials.length);
+    }, 7000); // Cycle every 7 seconds
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setServiceStatus(prev => Math.random() > 0.3 ? 'Active' : 'Busy');
+    }, 10000); // Toggle status every 10 seconds
+    return () => clearInterval(interval);
+  }, []);
 
   const triggerParticles = () => {
     const id = Date.now();
@@ -166,6 +195,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [showCopyTooltip, setShowCopyTooltip] = useState(false);
   const copyTooltipTimeoutRef = useRef<NodeJS.Timeout>();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [selectedHouseType, setSelectedHouseType] = useState<string>("");
   const [isFeedbackActive, setIsFeedbackActive] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const menuButtonsRef = useRef<(HTMLButtonElement | null)[]>([]);
@@ -319,7 +349,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const executeWhatsApp = (customMessage?: string) => {
+  const executeWhatsApp = (customMessage?: string, priceEstimate?: { type: string; range: string }) => {
     if (typeof (window as any).gtag === 'function') {
       (window as any).gtag('event', 'whatsapp_click', {
         event_category: 'contact',
@@ -354,9 +384,12 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     
     setShowConfetti(true);
 
-    const text = encodeURIComponent(
-      customMessage || "Halo Mitra Bersih Karawang, toilet saya bermasalah/penuh. Saya butuh respon cepat sekarang."
-    );
+    let message = customMessage || "Halo Mitra Bersih Karawang, toilet saya bermasalah/penuh. Saya butuh respon cepat sekarang.";
+    if (priceEstimate) {
+      message += `\n\nSaya ingin menanyakan estimasi untuk ${priceEstimate.type} (${priceEstimate.range}).`;
+    }
+
+    const text = encodeURIComponent(message);
     window.open(`https://wa.me/62${whatsappNumber.substring(1)}?text=${text}`, "_blank");
     setIsMenuOpen(false);
   };
@@ -537,6 +570,10 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 onKeyDown={handleMenuKeyDown}
                 className="bg-white rounded-2xl shadow-xl p-2 flex flex-col gap-2 border border-slate-100 pointer-events-auto min-w-[160px]"
               >
+                <div className="px-3 py-2 bg-amber-50 rounded-lg border border-amber-100">
+                    <p className="text-[10px] font-bold text-amber-800 italic leading-snug">"{testimonials[testimonialIndex].text}"</p>
+                    <p className="text-[9px] text-amber-600 font-bold mt-1">— {testimonials[testimonialIndex].name}</p>
+                </div>
                 <motion.button 
                   variants={itemVariants}
                   ref={el => menuButtonsRef.current[0] = el}
@@ -607,6 +644,36 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                         </div>
                     </motion.div>
                 )}
+                {/* Price Estimator */}
+                <div className="px-2 py-2 border-t border-slate-100 mt-1">
+                  <p className="text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-wider px-2">Cek Estimasi Harga</p>
+                  <select 
+                    value={selectedHouseType} 
+                    onChange={(e) => setSelectedHouseType(e.target.value)}
+                    className="w-full text-[11px] border border-emerald-100 rounded-lg px-2 py-1.5 mb-2 focus:ring-1 focus:ring-emerald-500 outline-none"
+                  >
+                     <option value="">Pilih Tipe Rumah</option>
+                     {HOUSE_TYPES.map(type => <option key={type.name} value={type.name}>{type.name}</option>)}
+                  </select>
+                  {selectedHouseType && (
+                    <div className="flex items-center justify-between gap-2 mb-2 p-2 bg-emerald-50 rounded-lg text-[11px]">
+                        <span className="font-medium text-emerald-800">Estimasi:</span>
+                        <span className="font-bold text-emerald-900">{HOUSE_TYPES.find(t => t.name === selectedHouseType)?.range}</span>
+                    </div>
+                  )}
+                  <button 
+                    disabled={!selectedHouseType}
+                    onClick={() => {
+                        const type = selectedHouseType;
+                        const range = HOUSE_TYPES.find(t => t.name === type)?.range || "";
+                        executeWhatsApp(undefined, { type, range });
+                    }} 
+                    className="text-center w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 text-white font-medium text-[11px] transition-colors rounded-lg px-3 py-1.5"
+                  >
+                    Chat dengan Estimasi
+                  </button>
+                </div>
+                
                 <div className="px-2 py-2 border-t border-slate-100 mt-1">
                   <p className="text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-wider px-2">Pesan Cepat</p>
                   <div className="grid grid-cols-1 gap-1.5">
@@ -619,8 +686,13 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             )}
           </AnimatePresence>
 
-          <div className="bg-white text-emerald-700 text-[10px] font-bold px-2 py-1 rounded-full shadow-md border border-emerald-100 flex flex-col items-center shrink-0 pointer-events-auto">
-             <div className="flex items-center gap-1">
+          <div className="bg-white text-emerald-700 text-[10px] font-bold px-2 py-1 rounded-full shadow-md border border-emerald-100 flex flex-col items-center shrink-0 pointer-events-auto gap-1">
+             <div className="flex items-center gap-1.5">
+                <span className={`flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded-full border ${serviceStatus === 'Active' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-amber-50 text-amber-700 border-amber-200'}`}>
+                    <span className={`w-1.5 h-1.5 rounded-full ${serviceStatus === 'Active' ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`}></span>
+                    {serviceStatus}
+                </span>
+
                {isIdle ? (
                  <div className="flex items-center gap-1 text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
                    <Battery className="w-3 h-3" />

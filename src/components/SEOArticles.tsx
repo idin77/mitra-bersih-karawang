@@ -188,46 +188,7 @@ export default function SEOArticles() {
             </div>
           </div>
 
-          <h2 className="text-lg sm:text-xl font-display font-bold text-zinc-950 pt-3 flex items-center gap-2">
-            <span className="w-1.5 h-6 bg-amber-400 rounded-full inline-block"></span>
-            Usulan Struktur Kode Schema Markup SEO (Structured Data JSON-LD)
-          </h2>
-          <p>
-            Untuk memberikan sinyal kuat kredibilitas geografi lokal di mata robot pencari Google Maps & Google Search, sematkan Schema Markup berikut ke dalam header template HTML website Anda:
-          </p>
 
-          <pre className="p-4 bg-slate-900 text-amber-300 rounded-2xl text-[10px] sm:text-xs overflow-x-auto font-mono select-all">
-{`{
-  "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  "name": "MITRA BERSIH KARAWANG",
-  "image": "https://mitrabersihkarawang.com/images/logo.png",
-  "telephone": "085882448632",
-  "priceRange": "$$",
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "Jl. Interchange Karawang Barat",
-    "addressLocality": "Karawang",
-    "addressRegion": "Jawa Barat",
-    "postalCode": "41311",
-    "addressCountry": "ID"
-  },
-  "geo": {
-    "@type": "GeoCoordinates",
-    "latitude": -6.300189,
-    "longitude": 107.280031
-  },
-  "url": "https://mitrabersihkarawang.com",
-  "openingHoursSpecification": {
-    "@type": "OpeningHoursSpecification",
-    "dayOfWeek": [
-      "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
-    ],
-    "opens": "00:00",
-    "closes": "23:59"
-  }
-}`}
-          </pre>
 
           <h2 className="text-lg sm:text-xl font-display font-bold text-zinc-950 pt-3 flex items-center gap-2">
             <span className="w-1.5 h-6 bg-amber-400 rounded-full inline-block"></span>
