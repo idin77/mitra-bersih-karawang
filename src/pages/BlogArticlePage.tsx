@@ -1,6 +1,7 @@
 import React from 'react';
 import BlogArticle from '../components/BlogArticle';
 import { Helmet } from 'react-helmet-async';
+import FAQ from '../components/FAQ';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
 
 const BlogArticlePage: React.FC = () => {
@@ -13,6 +14,7 @@ const BlogArticlePage: React.FC = () => {
       
       <main className="min-h-screen bg-gray-50">
         <BlogArticle />
+        <FAQ />
         <FloatingWhatsApp whatsappNumber="6281212345678" />
       </main>
     </>

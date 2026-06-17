@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Droplet, Wrench, Settings, Factory, Check, ArrowRight, Phone } from "lucide-react";
+import { Toilet, Wrench, ShowerHead, Factory, Check, ArrowRight, Phone } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
 interface ServicesProps {
@@ -12,7 +12,7 @@ export default function Services({ whatsappNumber, location = "Karawang" }: { wh
   const services = [
     {
       id: 0,
-      icon: <Droplet className="w-8 h-8" />,
+      icon: <Toilet className="w-8 h-8" />,
       title: "Sedot WC / Septic Tank",
       shortDesc: "Kuras septic tank penuh secara berkala guna mencegah pencemaran udara dan air tanah.",
       priceStart: "Harga Mulai Dari Rp 350RB-an",
@@ -42,7 +42,7 @@ export default function Services({ whatsappNumber, location = "Karawang" }: { wh
     },
     {
       id: 2,
-      icon: <Settings className="w-8 h-8" />,
+      icon: <ShowerHead className="w-8 h-8" />,
       title: "Saluran Mampet",
       shortDesc: "Pelancaran wastafel, cuci pirang, pembuangan kamar mandi, talang air, dan pipa air kotor.",
       priceStart: "Harga Mulai Dari Rp 200RB-an",

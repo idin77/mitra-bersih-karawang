@@ -25,6 +25,8 @@ interface FloatingProps {
   whatsappNumber: string;
 }
 
+import { primaryAreas } from './ServiceAreas';
+
 export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [showTooltip, setShowTooltip] = useState(false);
   const [showPinnedMessage, setShowPinnedMessage] = useState(true);
@@ -36,6 +38,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [isVisible, setIsVisible] = useState(true);
   const [currentTime, setCurrentTime] = useState("");
   const [hour, setHour] = useState(0);
+  const [showAllCoverage, setShowAllCoverage] = useState(false);
 
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -152,12 +155,12 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const handleMenuKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      const nextIndex = (focusedIndex + 1) % 4;
+      const nextIndex = (focusedIndex + 1) % 5;
       setFocusedIndex(nextIndex);
       menuButtonsRef.current[nextIndex]?.focus();
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      const prevIndex = (focusedIndex - 1 + 4) % 4;
+      const prevIndex = (focusedIndex - 1 + 5) % 5;
       setFocusedIndex(prevIndex);
       menuButtonsRef.current[prevIndex]?.focus();
     } else if (e.key === 'Escape') {
@@ -536,6 +539,34 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                   <MessageCircle className="w-4 h-4 text-emerald-600" />
                   WhatsApp
                 </motion.button>
+                <motion.button 
+                  variants={itemVariants}
+                  ref={el => menuButtonsRef.current[4] = el}
+                  onClick={() => { setShowAllCoverage(true); }}
+                  className="relative flex items-center gap-3 px-4 py-2 hover:bg-slate-50 rounded-lg text-slate-700 font-medium text-sm transition-colors outline-none focus:bg-slate-100 border border-transparent focus:border-emerald-600"
+                >
+                  {focusedIndex === 4 && <span className="absolute left-1 w-1.5 h-1.5 bg-emerald-600 rounded-full" />}
+                  <MapPin className="w-4 h-4 text-emerald-600" />
+                  List All Coverage
+                </motion.button>
+
+                {showAllCoverage && (
+                    <motion.div
+                        variants={itemVariants}
+                        className="fixed inset-0 bg-white z-50 p-4 flex flex-col gap-2"
+                    >
+                        <button onClick={() => setShowAllCoverage(false)} className="text-sm font-bold text-emerald-600 mb-2">← Back</button>
+                        <h4 className="font-bold text-slate-800 text-sm">Covered Areas:</h4>
+                        <div className="overflow-y-auto flex-1 text-xs text-slate-600 flex flex-col gap-2">
+                            {primaryAreas.map(area => (
+                                <div key={area.name} className="border-b pb-1">
+                                    <span className="font-bold">{area.name}</span>
+                                    <p>{area.suburbs}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </motion.div>
+                )}
                 <div className="px-2 py-2 border-t border-slate-100 mt-1">
                   <p className="text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-wider px-2">Pesan Cepat</p>
                   <div className="grid grid-cols-1 gap-1.5">

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const BlogArticle: React.FC = () => {
   return (
@@ -39,7 +40,7 @@ const BlogArticle: React.FC = () => {
       <div className="bg-emerald-50 p-8 rounded-2xl border border-emerald-100 text-center">
         <h3 className="text-2xl font-bold text-emerald-900 mb-4">Mitra Bersih Karawang - Solusi Cepat & Tuntas</h3>
         <p className="mb-6 text-slate-700">
-          Untuk penanganan Sedot WC profesional di wilayah Karawang dengan harga terjangkau dan peralatan lengkap, hubungi Mitrabersih!
+          Untuk penanganan <Link to="/" className="text-emerald-700 font-bold underline">Sedot WC profesional</Link> di wilayah Karawang dengan harga terjangkau dan peralatan lengkap, hubungi Mitrabersih!
         </p>
         <button 
           onClick={() => window.open('https://wa.me/6281212345678', '_blank')}

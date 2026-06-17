@@ -5,6 +5,7 @@ import About from "../components/About";
 import Services from "../components/Services";
 import Gallery from "../components/Gallery";
 import Testimonials from "../components/Testimonials";
+import TestimonialForm from "../components/TestimonialForm";
 import ServiceAreas from "../components/ServiceAreas";
 import ContactForm from "../components/ContactForm";
 import Footer from "../components/Footer";
@@ -94,6 +95,7 @@ export default function LandingPage() {
 
       {/* 7. Testimoni (Testimonials) */}
       <Testimonials />
+      <TestimonialForm />
 
       {/* 7b. Pertanyaan Umum / FAQ Terkait Sedot WC */}
       <FAQ />

@@ -1,0 +1,22 @@
+{
+  "entities": {
+    "Testimonial": {
+      "title": "Testimonial",
+      "description": "User testimonial",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Customer name" },
+        "review": { "type": "string", "description": "Review text" },
+        "rating": { "type": "number", "description": "Star rating" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" }
+      },
+      "required": ["name", "review", "rating", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/testimonials": {
+      "schema": "Testimonial",
+      "description": "Collection of user testimonials"
+    }
+  }
+}

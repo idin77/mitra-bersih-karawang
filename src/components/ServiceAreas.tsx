@@ -2,44 +2,46 @@ import { useState } from "react";
 import { MapPin, CheckCircle, Navigation, Search, Check, AlertCircle, Info } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
-export default function ServiceAreas() {
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const primaryAreas = [
+export const primaryAreas = [
     {
       name: "Karawang Barat",
       highlight: "Kantor Pusat / Respon < 1 Jam",
       suburbs: "Nagasari, Karangpawitan, Adiarsa Barat, Tanjungmekar, Tanjungpura, Tunggilis",
       delivery: "Gratis Ongkir Transportasi Serta Kunjungan",
-      response: "15 - 30 Menit Layanan Kilat"
+      response: "15 - 30 Menit Layanan Kilat",
+      link: "/karawang-barat"
     },
     {
       name: "Karawang Timur",
       highlight: "Respon Cepat < 1 Jam",
       suburbs: "Adiarsa Timur, Karawang Wetan, Plawad, Kondangjaya, Tegalsawah, Margasari",
       delivery: "Gratis Ongkir Transportasi Serta Kunjungan",
-      response: "20 - 45 Menit"
+      response: "20 - 45 Menit",
+      link: "/karawang-timur"
     },
     {
       name: "Telukjambe Timur",
       highlight: "Kawasan Siaga Utama",
       suburbs: "Galuh Mas, Sukaluyu, Sirnabakti, Sukaharja, Pinayungan, Wadas, Telukjambe",
       delivery: "Gratis Ongkir Transportasi Serta Kunjungan",
-      response: "15 - 35 Menit"
+      response: "15 - 35 Menit",
+      link: "/telukjambe-timur"
     },
     {
       name: "Telukjambe Barat",
       highlight: "Kawasan Industri Terintegrasi",
       suburbs: "KIIC, Wanamulya, Parungsari, Margamulya, Karangmulya, Karangligar",
       delivery: "Gratis Ongkir Transportasi / Khusus Industri & Pabrik",
-      response: "30 - 50 Menit"
+      response: "30 - 50 Menit",
+      link: "/telukjambe-barat"
     },
     {
       name: "Klari",
       highlight: "Armada Pos Siaga",
       suburbs: "Duren, Kosambi, Pancawati, Gintungkerta, Curug, Cimahi, Walahar, Majalaya",
       delivery: "Gratis Ongkir Transportasi Serta Kunjungan",
-      response: "25 - 45 Menit"
+      response: "25 - 45 Menit",
+      link: "/klari"
     },
     {
       name: "Cikampek",
@@ -47,7 +49,7 @@ export default function ServiceAreas() {
       suburbs: "Cikampek Kota, Cikampek Pusaka, Dawuan Barat, Dawuan Timur, Kamojing, Jatisari",
       delivery: "Gratis Ongkir Transportasi Serta Kunjungan",
       response: "30 - 55 Menit",
-      link: "https://mitrabersih24jam.com/jasa-sedot-wc-cikampek/"
+      link: "/cikampek"
     },
     {
       name: "Purwakarta Kota",
@@ -78,6 +80,9 @@ export default function ServiceAreas() {
       response: "Sesuai Jadwal Booking (Pagi / Sore)"
     }
   ];
+
+export default function ServiceAreas() {
+  const [searchQuery, setSearchQuery] = useState("");
 
   const benefits = [
     "Bebas Biaya Transportasi Tambahan untuk Seluruh Area Utama Karawang & Purwakarta Kota",
