@@ -536,7 +536,9 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                   className="relative flex items-center gap-3 px-4 py-2 hover:bg-slate-50 rounded-lg text-slate-700 font-medium text-sm transition-colors outline-none focus:bg-slate-100 border border-transparent focus:border-emerald-600"
                 >
                   {focusedIndex === 3 && <span className="absolute left-1 w-1.5 h-1.5 bg-emerald-600 rounded-full" />}
+                  <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 1.5 }}>
                   <MessageCircle className="w-4 h-4 text-emerald-600" />
+                  </motion.div>
                   WhatsApp
                 </motion.button>
                 <motion.button 

@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { Star, Quote, User } from "lucide-react";
-import { motion } from "motion/react";
+import { Star, Quote } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
 import { TestimonialSkeleton } from "./Skeletons";
 
 export default function Testimonials() {
   const [isLoading, setIsLoading] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 1500);
@@ -54,6 +55,13 @@ export default function Testimonials() {
     }
   ];
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [testimonials.length]);
+
   return (
     <section id="testimoni" className="py-24 bg-white relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -78,19 +86,19 @@ export default function Testimonials() {
           </p>
         </motion.div>
 
-        {/* Testimonials Grid Slider */}
+        {/* Testimonial Slider */}
         {isLoading ? (
           <TestimonialSkeleton />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {testimonials.map((testi, index) => (
+          <div className="relative h-[400px] md:h-[300px] flex items-center justify-center">
+            <AnimatePresence mode="wait">
               <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 25 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-slate-50 border border-slate-100 p-8 rounded-3xl relative flex flex-col justify-between hover:shadow-lg transition-shadow"
+                key={currentIndex}
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ duration: 0.5 }}
+                className="absolute bg-slate-50 border border-slate-100 p-8 rounded-3xl w-full max-w-2xl flex flex-col justify-between hover:shadow-lg transition-shadow"
               >
                 {/* Top Quote Icon */}
                 <div className="absolute top-6 right-8 text-amber-400">
@@ -100,42 +108,53 @@ export default function Testimonials() {
                 <div className="space-y-4">
                   {/* Stars Rating */}
                   <div className="flex items-center space-x-1">
-                    {[...Array(testi.rating)].map((_, i) => (
+                    {[...Array(testimonials[currentIndex].rating)].map((_, i) => (
                       <Star key={i} className="w-4 h-4 text-amber-400 fill-current" />
                     ))}
                   </div>
 
                   {/* Testimonial body */}
                   <p className="text-slate-600 text-sm sm:text-base leading-relaxed italic z-10 relative">
-                    "{testi.text}"
+                    "{testimonials[currentIndex].text}"
                   </p>
                 </div>
 
                 {/* User profile metadata */}
                 <div className="flex items-center space-x-4 pt-6 mt-6 border-t border-slate-150">
                   <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold font-display shadow-sm ${
-                    testi.gender === "f" 
+                    testimonials[currentIndex].gender === "f" 
                       ? "bg-rose-100 text-rose-700" 
                       : "bg-amber-100 text-amber-800"
                   }`}>
-                    {testi.name.substring(0, 3)}
+                    {testimonials[currentIndex].name.substring(0, 3)}
                   </div>
                   <div>
                     <h4 className="font-display font-extrabold text-slate-900 text-sm sm:text-base">
-                      {testi.name}
+                      {testimonials[currentIndex].name}
                     </h4>
                     <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 text-xs text-slate-500 font-medium">
-                      <span>{testi.location}</span>
+                      <span>{testimonials[currentIndex].location}</span>
                       <span className="hidden sm:inline text-slate-300">•</span>
-                      <span className="text-amber-600 font-bold">{testi.category}</span>
+                      <span className="text-amber-600 font-bold">{testimonials[currentIndex].category}</span>
                     </div>
                   </div>
                 </div>
 
               </motion.div>
-            ))}
+            </AnimatePresence>
           </div>
         )}
+        
+        {/* Slider Controls (Optional indicator) */}
+        <div className="flex justify-center mt-8 gap-2">
+            {testimonials.map((_, index) => (
+                <button 
+                  key={index}
+                  onClick={() => setCurrentIndex(index)}
+                  className={`w-3 h-3 rounded-full transition-all ${index === currentIndex ? 'bg-amber-600 w-8' : 'bg-slate-300'}`}
+                />
+            ))}
+        </div>
 
         {/* Dynamic verified badge block */}
         <motion.div 
