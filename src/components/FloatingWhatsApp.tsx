@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, MouseEvent, KeyboardEvent } from "react";
+import { useState, useEffect, useRef, MouseEvent, KeyboardEvent, useMemo } from "react";
 import { MessageSquareCode, MessageCircle, X, Volume2, VolumeX, ArrowUp, Phone, MapPin, Mail, Battery } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { ConfettiBurst } from "./ConfettiBurst";
@@ -39,6 +39,12 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [currentTime, setCurrentTime] = useState("");
   const [hour, setHour] = useState(0);
   const [showAllCoverage, setShowAllCoverage] = useState(false);
+  const [helpCount, setHelpCount] = useState(() => {
+    if (typeof window !== 'undefined') {
+        return parseInt(localStorage.getItem("whatsapp_help_count") || "2450", 10);
+    }
+    return 2450;
+  });
 
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -58,13 +64,35 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   }, [isMuted]);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
-  const getTooltipMessage = (h: number) => {
-      if (h >= 0 && h < 5) return "Selamat Malam! Butuh bantuan darurat untuk sedot WC? Tim kami tetap siaga.";
-      if (h >= 5 && h < 12) return "Selamat Pagi! Siap melayani kebutuhan sedot WC Anda dengan cepat.";
-      if (h >= 12 && h < 18) return "Selamat Siang/Sore! Layanan sedot WC Karawang profesional & bergaransi.";
-      return "Selamat Malam! Sedot WC Karawang siap membantu masalah Anda kapan saja.";
-  };
-  const tooltipMessage = getTooltipMessage(hour);
+  const tooltipMessage = useMemo(() => {
+    const h = new Date().getHours();
+    const greetings = {
+      nightEarly: [
+        "Selamat Malam! Butuh bantuan darurat untuk sedot WC? Tim kami tetap siaga.",
+        "Malam-malam septic tank penuh? Kami siap membantu!"
+      ],
+      morning: [
+        "Selamat Pagi! Siap melayani kebutuhan sedot WC Anda dengan cepat.",
+        "Pagi! Sedot WC Karawang melayani Anda hari ini dengan penuh semangat."
+      ],
+      day: [
+        "Selamat Siang! Layanan sedot WC Karawang profesional & bergaransi. Ada yang bisa dibantu?",
+        "Halo! Sedot WC Karawang hadir untuk solusi saluran mampet Anda."
+      ],
+      nightLate: [
+        "Selamat Malam! Sedot WC Karawang siap membantu masalah Anda kapan saja.",
+        "Butuh bantuan sedot WC di malam hari? Silakan klik tombol ini."
+      ]
+    };
+
+    let options: string[] = [];
+    if (h >= 0 && h < 5) options = greetings.nightEarly;
+    else if (h >= 5 && h < 12) options = greetings.morning;
+    else if (h >= 12 && h < 18) options = greetings.day;
+    else options = greetings.nightLate;
+
+    return options[Math.floor(Math.random() * options.length)];
+  }, []);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -138,6 +166,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [showCopyTooltip, setShowCopyTooltip] = useState(false);
   const copyTooltipTimeoutRef = useRef<NodeJS.Timeout>();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isFeedbackActive, setIsFeedbackActive] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const menuButtonsRef = useRef<(HTMLButtonElement | null)[]>([]);
   const [randomDelay] = useState(() => Math.random() * 1 + 0.5);
@@ -318,6 +347,11 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
       oscillator.stop(audioContext.currentTime + 0.1);
     }
     
+    // Increment helpCount
+    const newCount = helpCount + 1;
+    setHelpCount(newCount);
+    localStorage.setItem("whatsapp_help_count", String(newCount));
+    
     setShowConfetti(true);
 
     const text = encodeURIComponent(
@@ -330,7 +364,11 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const handleCopyPhoneNumber = () => {
     navigator.clipboard.writeText(whatsappNumber);
     setCopiedSuccess(true);
-    setTimeout(() => setCopiedSuccess(false), 2000);
+    setIsFeedbackActive(true);
+    setTimeout(() => {
+        setCopiedSuccess(false);
+        setIsFeedbackActive(false);
+    }, 2000);
   };
 
   const handlePointerDown = () => {
@@ -642,6 +680,25 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             onMouseEnter={() => {
                 setIsHovered(true);
                 copyTooltipTimeoutRef.current = setTimeout(() => setShowCopyTooltip(true), 1500);
+                
+                if (!isMuted) {
+                  const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+                  const oscillator = audioContext.createOscillator();
+                  const gainNode = audioContext.createGain();
+
+                  oscillator.connect(gainNode);
+                  gainNode.connect(audioContext.destination);
+
+                  oscillator.type = 'sine';
+                  oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
+                  oscillator.frequency.exponentialRampToValueAtTime(600, audioContext.currentTime + 0.05);
+
+                  gainNode.gain.setValueAtTime(0.02, audioContext.currentTime);
+                  gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.05);
+
+                  oscillator.start();
+                  oscillator.stop(audioContext.currentTime + 0.05);
+                }
             }}
             onContextMenu={(e: MouseEvent) => { e.preventDefault(); handleCopyPhoneNumber(); }}
             onPointerDown={handlePointerDown}
@@ -656,9 +713,11 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 : (isHovered 
                     ? ["0 0 15px 5px rgba(16, 185, 129, 0.6)", "0 0 35px 20px rgba(16, 185, 129, 0.8)", "0 0 15px 5px rgba(16, 185, 129, 0.6)"]
                     : "0 10px 15px -3px rgba(16, 185, 129, 0.5)"),
-              opacity: 1
+              opacity: 1,
+              backgroundColor: isFeedbackActive ? "#34d399" : "#059669"
             }}
             id="btn-floating-wa"
+            data-nosnippet
             onClick={handleWhatsAppAction}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
@@ -669,7 +728,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               }
             }}
             initial={isMobile ? { scale: 0, y: 50, opacity: 0 } : { scale: 0.3, borderRadius: "15px", opacity: 0 }}
-            animate={{ scale: 1, y: 0, opacity: 1, borderRadius: "50%" }}
+            animate={{ scale: 1, y: 0, opacity: 1, borderRadius: "50%", backgroundColor: isFeedbackActive ? "#34d399" : "#059669" }}
             transition={{
               type: "spring",
               stiffness: 260,
@@ -688,10 +747,11 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                   repeat: isHovered ? Infinity : 0,
                   duration: 1.5,
                   ease: "easeInOut"
-              }
+              },
+              backgroundColor: { duration: 0.3 }
             }}
             whileTap={{ scale: 0.9 }}
-            className="w-14 h-14 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full shadow-lg shadow-emerald-700/50 flex items-center justify-center relative select-none pointer-events-auto cursor-pointer focus:outline-none transition-shadow duration-300 ease-in-out"
+            className="w-14 h-14 text-white rounded-full shadow-lg shadow-emerald-700/50 flex items-center justify-center relative select-none pointer-events-auto cursor-pointer focus:outline-none transition-shadow duration-300 ease-in-out"
             title="Hubungi Kami Melalui WhatsApp"
             aria-label="Buka WhatsApp untuk layanan Sedot WC"
           >
@@ -802,6 +862,14 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 Tanya Kami?
               </motion.div>
             )}
+            
+            <motion.div 
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="absolute -bottom-7 right-0 bg-emerald-100 text-emerald-800 text-[8px] px-2 py-0.5 rounded-full font-bold shadow-sm whitespace-nowrap border border-emerald-200"
+            >
+              {helpCount}+ terbantu
+            </motion.div>
           </motion.button>
         </div>
       </div>

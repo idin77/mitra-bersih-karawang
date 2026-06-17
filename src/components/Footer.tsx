@@ -181,7 +181,7 @@ export default function Footer({ whatsappNumber }: FooterProps) {
         {/* Outer bottom footer area */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
           <p className="text-center sm:text-left">
-            © {currentYear} MITRA BERSIH KARAWANG. Seluruh Hak Cipta Dilindungi Undang-Undang.
+            © {currentYear} MITRA BERSIH KARAWANG. <a href="https://jasasedotwckarawang.com" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-500 transition-colors">Jasa Sedot WC Karawang</a>. Seluruh Hak Cipta Dilindungi Undang-Undang.
           </p>
           <div className="flex items-center space-x-4">
             <p className="bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg text-[10px] font-extrabold uppercase tracking-wide text-amber-400">
