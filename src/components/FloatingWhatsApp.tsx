@@ -573,8 +573,14 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 animate="visible"
                 exit="hidden"
                 onKeyDown={handleMenuKeyDown}
-                className="bg-white rounded-2xl shadow-xl p-2 flex flex-col gap-2 border border-slate-100 pointer-events-auto min-w-[160px]"
+                className="relative bg-white rounded-2xl shadow-xl p-2 flex flex-col gap-2 border border-slate-100 pointer-events-auto min-w-[160px]"
               >
+                <button 
+                  onClick={() => setIsMenuOpen(false)} 
+                  className="absolute top-2 right-2 p-1 rounded-full hover:bg-slate-100 text-slate-500 z-10"
+                >
+                  <X className="w-4 h-4" />
+                </button>
                 <div className="px-3 py-2 bg-amber-50 rounded-lg border border-amber-100">
                     <p className="text-[10px] font-bold text-amber-800 italic leading-snug">"{testimonials[testimonialIndex].text}"</p>
                     <p className="text-[9px] text-amber-600 font-bold mt-1">— {testimonials[testimonialIndex].name}</p>
@@ -650,9 +656,17 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                         />
                         <div className="overflow-y-auto flex-1 text-xs text-slate-600 flex flex-col gap-2">
                             {primaryAreas.filter(area => area.name.toLowerCase().includes(coverageSearch.toLowerCase()) || area.suburbs.toLowerCase().includes(coverageSearch.toLowerCase())).map(area => (
-                                <div key={area.name} className="border-b pb-1">
-                                    <span className="font-bold">{area.name}</span>
-                                    <p>{area.suburbs}</p>
+                                <div key={area.name} className="border-b pb-1 flex justify-between items-start">
+                                    <div>
+                                        <span className="font-bold">{area.name}</span>
+                                        <p>{area.suburbs}</p>
+                                    </div>
+                                    <button 
+                                      onClick={() => executeWhatsApp(`Halo Mitra Bersih Karawang, saya butuh layanan di area ${area.name} (${area.suburbs})`)}
+                                      className="text-[10px] bg-emerald-600 text-white rounded-md px-2 py-1 mt-1 hover:bg-emerald-700 transition"
+                                    >
+                                        Hubungi Kami
+                                    </button>
                                 </div>
                             ))}
                         </div>
