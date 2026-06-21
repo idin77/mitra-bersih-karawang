@@ -1,14 +1,8 @@
 import { useState, useEffect, useRef, MouseEvent, KeyboardEvent, useMemo } from "react";
-import { MessageSquareCode, MessageCircle, X, Volume2, VolumeX, ArrowUp, Phone, MapPin, Mail, Battery, Copy } from "lucide-react";
+import { MessageSquareCode, MessageCircle, X, Volume2, VolumeX, ArrowUp, Phone, MapPin, Mail, Battery, Copy, Calculator } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { ConfettiBurst } from "./ConfettiBurst";
 
-const testimonials = [
-  { text: "Pengerjaan cuma 35 menit, langsung lancar kembali. Sangat puas!", name: "Ibu Rahmawati" },
-  { text: "Pelayanan profesional, harganya jujur transparan di awal.", name: "Bpk. Hendra" },
-  { text: "Sedotan tangki vacumnya kencang sekali, teknisi rapi.", name: "Ibu Siska" },
-  { text: "Teknisi datang 30 menit setelah dihubungi. Mantap!", name: "Bpk. Agus" },
-];
 
 const containerVariants = {
   hidden: { opacity: 0, scale: 0.9, y: 20 },
@@ -66,6 +60,20 @@ const DistanceDisplay = ({ name }: { name: string }) => {
 };
 
 export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
+  const [testimonials, setTestimonials] = useState([
+    { text: "Pengerjaan cuma 35 menit, langsung lancar kembali. Sangat puas!", name: "Ibu Rahmawati" },
+    { text: "Pelayanan profesional, harganya jujur transparan di awal.", name: "Bpk. Hendra" },
+    { text: "Sedotan tangki vacumnya kencang sekali, teknisi rapi.", name: "Ibu Siska" },
+    { text: "Teknisi datang 30 menit setelah dihubungi. Mantap!", name: "Bpk. Agus" },
+  ]);
+  const [newTestimonial, setNewTestimonial] = useState({ text: "", name: "" });
+  const [isTestimonialFormOpen, setIsTestimonialFormOpen] = useState(false);
+  const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
+  const pricingData = [
+    { service: "Sedot WC", price: "Rp 500.000 - Rp 900.000" },
+    { service: "Saluran Mampet", price: "Rp 350.000 - Rp 600.000" },
+    { service: "Service Tangki", price: "Rp 700.000 - Rp 1.500.000" },
+  ];
   const [showTooltip, setShowTooltip] = useState(false);
   const [showPinnedMessage, setShowPinnedMessage] = useState(true);
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -241,12 +249,12 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const handleMenuKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      const nextIndex = (focusedIndex + 1) % 5;
+      const nextIndex = (focusedIndex + 1) % 7;
       setFocusedIndex(nextIndex);
       menuButtonsRef.current[nextIndex]?.focus();
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      const prevIndex = (focusedIndex - 1 + 5) % 5;
+      const prevIndex = (focusedIndex - 1 + 7) % 7;
       setFocusedIndex(prevIndex);
       menuButtonsRef.current[prevIndex]?.focus();
     } else if (e.key === 'Escape') {
@@ -632,6 +640,74 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                   <MapPin className="w-4 h-4 text-emerald-600" />
                   List All Coverage
                 </motion.button>
+                <motion.button 
+                  variants={itemVariants}
+                  ref={el => menuButtonsRef.current[5] = el}
+                  onClick={() => { setIsTestimonialFormOpen(true); }}
+                  className="relative flex items-center gap-3 px-4 py-2 hover:bg-slate-50 rounded-lg text-slate-700 font-medium text-sm transition-colors outline-none focus:bg-slate-100 border border-transparent focus:border-emerald-600"
+                >
+                  {focusedIndex === 5 && <span className="absolute left-1 w-1.5 h-1.5 bg-emerald-600 rounded-full" />}
+                  <MessageSquareCode className="w-4 h-4 text-emerald-600" />
+                  Kirim Testimoni
+                </motion.button>
+                <motion.button 
+                  variants={itemVariants}
+                  ref={el => menuButtonsRef.current[6] = el}
+                  onClick={() => { setIsPricingModalOpen(true); }}
+                  className="relative flex items-center gap-3 px-4 py-2 hover:bg-slate-50 rounded-lg text-slate-700 font-medium text-sm transition-colors outline-none focus:bg-slate-100 border border-transparent focus:border-emerald-600"
+                >
+                  {focusedIndex === 6 && <span className="absolute left-1 w-1.5 h-1.5 bg-emerald-600 rounded-full" />}
+                  <Calculator className="w-4 h-4 text-emerald-600" />
+                  Estimasi Harga
+                </motion.button>
+
+                {isPricingModalOpen && (
+                    <motion.div
+                        variants={itemVariants}
+                        className="fixed inset-0 bg-white/95 z-50 p-6 flex flex-col justify-center gap-4"
+                    >
+                        <h4 className="font-bold text-slate-800 text-lg">Estimasi Harga</h4>
+                        <div className="space-y-4">
+                        {pricingData.map((p, i) => (
+                           <div key={i} className="flex justify-between items-center border-b pb-2">
+                                <span className="font-medium text-slate-700">{p.service}</span>
+                                <span className="font-bold text-emerald-600">{p.price}</span>
+                           </div>
+                        ))}
+                        </div>
+                        <button onClick={() => setIsPricingModalOpen(false)} className="w-full px-4 py-2 bg-emerald-600 rounded-lg text-white font-bold">Tutup</button>
+                    </motion.div>
+                )}
+
+                {isTestimonialFormOpen && (
+                    <motion.div
+                        variants={itemVariants}
+                        className="fixed inset-0 bg-white/95 z-50 p-6 flex flex-col justify-center gap-4"
+                    >
+                        <h4 className="font-bold text-slate-800 text-lg">Kirim Testimoni Anda</h4>
+                        <input
+                            type="text"
+                            placeholder="Nama Anda"
+                            value={newTestimonial.name}
+                            onChange={(e) => setNewTestimonial({...newTestimonial, name: e.target.value})}
+                            className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 outline-none"
+                        />
+                        <textarea
+                            placeholder="Tulis testimoni Anda di sini..."
+                            value={newTestimonial.text}
+                            onChange={(e) => setNewTestimonial({...newTestimonial, text: e.target.value})}
+                            className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 outline-none h-24"
+                        />
+                        <div className="flex gap-2">
+                             <button onClick={() => setIsTestimonialFormOpen(false)} className="flex-1 px-4 py-2 bg-slate-100 rounded-lg text-slate-600">Batal</button>
+                             <button onClick={() => {
+                                 setTestimonials([...testimonials, newTestimonial]);
+                                 setNewTestimonial({ text: "", name: "" });
+                                 setIsTestimonialFormOpen(false);
+                             }} className="flex-1 px-4 py-2 bg-emerald-600 rounded-lg text-white font-bold">Kirim</button>
+                        </div>
+                    </motion.div>
+                )}
 
                 {showAllCoverage && (
                     <motion.div
