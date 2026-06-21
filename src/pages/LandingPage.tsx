@@ -12,6 +12,7 @@ import Footer from "../components/Footer";
 import FloatingWhatsApp from "../components/FloatingWhatsApp";
 import FAQ from "../components/FAQ";
 import SEOArticles from "../components/SEOArticles";
+import TipsGrid from "../components/TipsGrid";
 import heroImage from "../assets/images/armada_karawang_asli_1779610538314.png";
 
 import { CheckSquare, ShieldCheck, HeartPulse, Award } from "lucide-react";
@@ -90,7 +91,10 @@ export default function LandingPage() {
       {/* 6b. Galeri Dokumentasi (Gallery) */}
       <Gallery />
 
-      {/* 6c. Artikel SEO & Solusi Edukasi Sanitasi */}
+      {/* 6c. Tips & Artikel (TipsGrid) */}
+      <TipsGrid />
+
+      {/* 6d. Artikel SEO & Solusi Edukasi Sanitasi */}
       <SEOArticles />
 
       {/* 7. Testimoni (Testimonials) */}

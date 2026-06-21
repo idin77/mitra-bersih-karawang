@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, MouseEvent, KeyboardEvent, useMemo } from "react";
-import { MessageSquareCode, MessageCircle, X, Volume2, VolumeX, ArrowUp, Phone, MapPin, Mail, Battery } from "lucide-react";
+import { MessageSquareCode, MessageCircle, X, Volume2, VolumeX, ArrowUp, Phone, MapPin, Mail, Battery, Copy } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { ConfettiBurst } from "./ConfettiBurst";
 
@@ -33,6 +33,37 @@ interface FloatingProps {
 }
 
 import { primaryAreas } from './ServiceAreas';
+
+const DistanceDisplay = ({ name }: { name: string }) => {
+    const targetDistance = Math.abs(name.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % 20 + 1;
+    const [count, setCount] = useState(0);
+
+    useEffect(() => {
+        let start = 0;
+        const duration = 800;
+        const frameRate = 30;
+        const totalSteps = duration / frameRate;
+        const increment = targetDistance / totalSteps;
+        
+        const timer = setInterval(() => {
+            start += increment;
+            if (start >= targetDistance) {
+                setCount(targetDistance);
+                clearInterval(timer);
+            } else {
+                setCount(Math.floor(start));
+            }
+        }, frameRate);
+        
+        return () => clearInterval(timer);
+    }, [targetDistance]);
+
+    return (
+        <p className="text-[10px] text-slate-400 mt-0.5 font-mono">
+            {count}km dari pusat 
+        </p>
+    );
+};
 
 export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [showTooltip, setShowTooltip] = useState(false);
@@ -185,12 +216,13 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const [isLongPress, setIsLongPress] = useState(false);
   const [isIdle, setIsIdle] = useState(false);
-  const [copiedSuccess, setCopiedSuccess] = useState(false);
   const [showCopyTooltip, setShowCopyTooltip] = useState(false);
   const copyTooltipTimeoutRef = useRef<NodeJS.Timeout>();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [coverageSearch, setCoverageSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("Semua");
+  const [isSortedAZ, setIsSortedAZ] = useState(false);
+  const [copiedSuccess, setCopiedSuccess] = useState(false);
   const [isFeedbackActive, setIsFeedbackActive] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const menuButtonsRef = useRef<(HTMLButtonElement | null)[]>([]);
@@ -615,7 +647,13 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                           onChange={(e) => setCoverageSearch(e.target.value)}
                           className="w-full text-xs border border-slate-200 rounded-lg px-2 py-1.5 focus:ring-1 focus:ring-emerald-500 outline-none"
                         />
-                        <div className="flex gap-1 overflow-x-auto pb-1 text-[10px]">
+                        <div className="flex gap-1 overflow-x-auto pb-1 text-[10px] items-center">
+                           <button 
+                                onClick={() => setIsSortedAZ(!isSortedAZ)}
+                                className={`px-2 py-1 rounded-md whitespace-nowrap ${isSortedAZ ? 'bg-amber-600 text-white' : 'bg-slate-200 text-slate-700'}`}
+                           >
+                                {isSortedAZ ? 'Sorted A-Z' : 'Sort A-Z'}
+                           </button>
                            {["Semua", "Kecamatan Utama", "Industri", "Umum"].map(cat => (
                               <button 
                                 key={cat}
@@ -627,12 +665,24 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                            ))}
                         </div>
                         <div className="overflow-y-auto flex-1 text-xs text-slate-600 flex flex-col gap-2">
-                            {primaryAreas.filter(area => (selectedCategory === "Semua" || area.category === selectedCategory) && (area.name.toLowerCase().includes(coverageSearch.toLowerCase()) || area.suburbs.toLowerCase().includes(coverageSearch.toLowerCase()))).map(area => (
+                            {primaryAreas.filter(area => (selectedCategory === "Semua" || area.category === selectedCategory) && (area.name.toLowerCase().includes(coverageSearch.toLowerCase()) || area.suburbs.toLowerCase().includes(coverageSearch.toLowerCase()))).sort((a,b) => isSortedAZ ? a.name.localeCompare(b.name) : 0).map(area => (
                                 <div key={area.name} className="border-b pb-1 flex justify-between items-start">
                                     <div>
                                         <span className="font-bold">{area.name}</span>
                                         <p>{area.suburbs}</p>
+                                        <DistanceDisplay name={area.name} />
                                     </div>
+                                    <button 
+                                        onClick={() => {
+                                            navigator.clipboard.writeText(area.name);
+                                            setCopiedSuccess(true);
+                                            setTimeout(() => setCopiedSuccess(false), 2000);
+                                        }}
+                                        className="p-1 hover:bg-slate-100 rounded"
+                                        title="Copy area name"
+                                    >
+                                        <Copy className="w-3 h-3 text-slate-500" />
+                                    </button>
                                 </div>
                             ))}
                         </div>

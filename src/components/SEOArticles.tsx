@@ -389,6 +389,40 @@ export default function SEOArticles() {
           </p>
         </div>
       )
+    },
+    {
+      title: "Tips Menjaga Kebersihan Rumah Selama Musim Hujan",
+      short: "Musim hujan sering membawa masalah kebersihan. Simak tips praktis agar rumah tetap kering, bersih, dan bebas bakteri.",
+      icon: <Sparkles className="w-5 h-5 text-amber-500" />,
+      tag: "Tips & Edukasi",
+      readTime: "3 Menit Baca",
+      content: (
+        <div className="space-y-4 text-slate-600 text-sm sm:text-base leading-relaxed">
+          <p>Memasuki musim hujan, tingkat kelembapan di dalam rumah meningkat. Kondisi ini menjadi sarang ideal bagi bakteri dan jamur untuk berkembang biak. Berikut beberapa tips untuk menjaga kebersihan:</p>
+          <ul className="list-disc list-inside space-y-1">
+            <li>Pastikan ventilasi udara berjalan dengan baik agar tidak lembap.</li>
+            <li>Segera bersihkan genangan air di area teras atau atap rumah.</li>
+            <li>Gunakan jasa pembersihan profesional untuk area yang dalam dan sulit dijangkau.</li>
+          </ul>
+        </div>
+      )
+    },
+    {
+      title: "Pentingnya Jasa Cuci Sofa Profesional untuk Kesehatan",
+      short: "Tumpukan debu dan bakteri di sofa bisa memicu alergi. Mengapa jasa cuci sofa profesional adalah solusinya?",
+      icon: <BookOpen className="w-5 h-5 text-indigo-500" />,
+      tag: "Tips & Edukasi",
+      readTime: "4 Menit Baca",
+      content: (
+        <div className="space-y-4 text-slate-600 text-sm sm:text-base leading-relaxed">
+          <p>Sofa adalah perabotan yang paling sering digunakan, namun sering terlewatkan saat membersihkan rumah. Debu, kulit mati, dan sisa makanan menumpuk di serat sofa.</p>
+          <ul className="list-disc list-inside space-y-1">
+            <li>Menghilangkan tungau dan bakteri penyebab alergi (asma/kulit).</li>
+            <li>Menjaga tekstur dan warna bahan sofa agar tetap awet.</li>
+            <li>Menciptakan udara ruangan yang lebih segar dan bersih bagi keluarga.</li>
+          </ul>
+        </div>
+      )
     }
   ];
 
