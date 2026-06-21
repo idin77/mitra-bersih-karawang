@@ -23,14 +23,6 @@ const containerVariants = {
   },
 };
 
-const HOUSE_TYPES = [
-  { name: "Rumah Biasa", range: "Rp 500rb - 700rb" },
-  { name: "Rumah Besar", range: "Rp 700rb - 1jt" },
-  { name: "Ruko/Kantor", range: "Rp 1jt+" },
-];
-
-const SERVICES = ["Kuras Septic Tank", "Pelancaran WC", "Saluran Mampet", "Penyedotan Limbah"];
-
 const itemVariants = {
   hidden: { opacity: 0, x: 20 },
   visible: { opacity: 1, x: 0 },
@@ -198,8 +190,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const copyTooltipTimeoutRef = useRef<NodeJS.Timeout>();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [coverageSearch, setCoverageSearch] = useState("");
-  const [selectedHouseType, setSelectedHouseType] = useState<string>("");
-  const [selectedService, setSelectedService] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("Semua");
   const [isFeedbackActive, setIsFeedbackActive] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const menuButtonsRef = useRef<(HTMLButtonElement | null)[]>([]);
@@ -354,7 +345,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const executeWhatsApp = (customMessage?: string, priceEstimate?: { type: string; service: string; range: string }) => {
+  const executeWhatsApp = (customMessage?: string) => {
     if (typeof (window as any).gtag === 'function') {
       (window as any).gtag('event', 'whatsapp_click', {
         event_category: 'contact',
@@ -362,37 +353,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
       });
     }
 
-    // Play pop sound if not muted
-    if (!isMuted) {
-      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
-
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
-
-      oscillator.type = 'sine';
-      oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
-      oscillator.frequency.exponentialRampToValueAtTime(100, audioContext.currentTime + 0.1);
-
-      gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-
-      oscillator.start();
-      oscillator.stop(audioContext.currentTime + 0.1);
-    }
-    
-    // Increment helpCount
-    const newCount = helpCount + 1;
-    setHelpCount(newCount);
-    localStorage.setItem("whatsapp_help_count", String(newCount));
-    
-    setShowConfetti(true);
-
     let message = customMessage || "Halo Mitra Bersih Karawang, toilet saya bermasalah/penuh. Saya butuh respon cepat sekarang.";
-    if (priceEstimate) {
-      message += `\n\nSaya ingin menanyakan estimasi untuk layanan ${priceEstimate.service} pada ${priceEstimate.type} (${priceEstimate.range}).`;
-    }
 
     const text = encodeURIComponent(message);
     window.open(`https://wa.me/62${whatsappNumber.substring(1)}?text=${text}`, "_blank");
@@ -654,63 +615,31 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                           onChange={(e) => setCoverageSearch(e.target.value)}
                           className="w-full text-xs border border-slate-200 rounded-lg px-2 py-1.5 focus:ring-1 focus:ring-emerald-500 outline-none"
                         />
+                        <div className="flex gap-1 overflow-x-auto pb-1 text-[10px]">
+                           {["Semua", "Kecamatan Utama", "Industri", "Umum"].map(cat => (
+                              <button 
+                                key={cat}
+                                onClick={() => setSelectedCategory(cat)}
+                                className={`px-2 py-1 rounded-md whitespace-nowrap ${selectedCategory === cat ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600'}`}
+                              >
+                                {cat}
+                              </button>
+                           ))}
+                        </div>
                         <div className="overflow-y-auto flex-1 text-xs text-slate-600 flex flex-col gap-2">
-                            {primaryAreas.filter(area => area.name.toLowerCase().includes(coverageSearch.toLowerCase()) || area.suburbs.toLowerCase().includes(coverageSearch.toLowerCase())).map(area => (
+                            {primaryAreas.filter(area => (selectedCategory === "Semua" || area.category === selectedCategory) && (area.name.toLowerCase().includes(coverageSearch.toLowerCase()) || area.suburbs.toLowerCase().includes(coverageSearch.toLowerCase()))).map(area => (
                                 <div key={area.name} className="border-b pb-1 flex justify-between items-start">
                                     <div>
                                         <span className="font-bold">{area.name}</span>
                                         <p>{area.suburbs}</p>
                                     </div>
-                                    <button 
-                                      onClick={() => executeWhatsApp(`Halo Mitra Bersih Karawang, saya butuh layanan di area ${area.name} (${area.suburbs})`)}
-                                      className="text-[10px] bg-emerald-600 text-white rounded-md px-2 py-1 mt-1 hover:bg-emerald-700 transition"
-                                    >
-                                        Hubungi Kami
-                                    </button>
                                 </div>
                             ))}
                         </div>
                     </motion.div>
                 )}
-                {/* Price Estimator & Quote */}
-                <div className="px-2 py-2 border-t border-slate-100 mt-1">
-                  <p className="text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-wider px-2">Dapatkan Estimasi Harga</p>
-                  <select 
-                    value={selectedService} 
-                    onChange={(e) => setSelectedService(e.target.value)}
-                    className="w-full text-[11px] border border-emerald-100 rounded-lg px-2 py-1.5 mb-2 focus:ring-1 focus:ring-emerald-500 outline-none"
-                  >
-                     <option value="">Pilih Layanan</option>
-                     {SERVICES.map(service => <option key={service} value={service}>{service}</option>)}
-                  </select>
-                  <select 
-                    value={selectedHouseType} 
-                    onChange={(e) => setSelectedHouseType(e.target.value)}
-                    className="w-full text-[11px] border border-emerald-100 rounded-lg px-2 py-1.5 mb-2 focus:ring-1 focus:ring-emerald-500 outline-none"
-                  >
-                     <option value="">Pilih Tipe Rumah</option>
-                     {HOUSE_TYPES.map(type => <option key={type.name} value={type.name}>{type.name}</option>)}
-                  </select>
-                  
-                  {selectedHouseType && (
-                    <div className="flex items-center justify-between gap-2 mb-2 p-2 bg-emerald-50 rounded-lg text-[11px]">
-                        <span className="font-medium text-emerald-800">Estimasi:</span>
-                        <span className="font-bold text-emerald-900">{HOUSE_TYPES.find(t => t.name === selectedHouseType)?.range}</span>
-                    </div>
-                  )}
-                  <button 
-                    disabled={!selectedHouseType || !selectedService}
-                    onClick={() => {
-                        const type = selectedHouseType;
-                        const service = selectedService;
-                        const range = HOUSE_TYPES.find(t => t.name === type)?.range || "";
-                        executeWhatsApp(undefined, { type, service, range });
-                    }} 
-                    className="text-center w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 text-white font-medium text-[11px] transition-colors rounded-lg px-3 py-1.5"
-                  >
-                    Dapatkan Quote
-                  </button>
-                </div>
+
+                {/* End of Coverage Modal */}
                 
                 <div className="px-2 py-2 border-t border-slate-100 mt-1">
                   <p className="text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-wider px-2">Pesan Cepat</p>
@@ -838,7 +767,6 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               }
             }}
             initial={isMobile ? { scale: 0, y: 50, opacity: 0 } : { scale: 0.3, borderRadius: "15px", opacity: 0 }}
-            animate={{ scale: 1, y: 0, opacity: 1, borderRadius: "50%", backgroundColor: isFeedbackActive ? "#34d399" : "#059669" }}
             transition={{
               type: "spring",
               stiffness: 260,

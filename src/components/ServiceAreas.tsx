@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 export const primaryAreas = [
     {
       name: "Karawang Barat",
+      category: "Kecamatan Utama",
       highlight: "Kantor Pusat / Respon < 1 Jam",
       suburbs: "Nagasari, Karangpawitan, Adiarsa Barat, Tanjungmekar, Tanjungpura, Tunggilis",
       delivery: "Gratis Ongkir Transportasi Serta Kunjungan",
@@ -13,6 +14,7 @@ export const primaryAreas = [
     },
     {
       name: "Karawang Timur",
+      category: "Kecamatan Utama",
       highlight: "Respon Cepat < 1 Jam",
       suburbs: "Adiarsa Timur, Karawang Wetan, Plawad, Kondangjaya, Tegalsawah, Margasari",
       delivery: "Gratis Ongkir Transportasi Serta Kunjungan",
@@ -21,6 +23,7 @@ export const primaryAreas = [
     },
     {
       name: "Telukjambe Timur",
+      category: "Kecamatan Utama",
       highlight: "Kawasan Siaga Utama",
       suburbs: "Galuh Mas, Sukaluyu, Sirnabakti, Sukaharja, Pinayungan, Wadas, Telukjambe",
       delivery: "Gratis Ongkir Transportasi Serta Kunjungan",
@@ -29,6 +32,7 @@ export const primaryAreas = [
     },
     {
       name: "Telukjambe Barat",
+      category: "Kecamatan Utama",
       highlight: "Kawasan Industri Terintegrasi",
       suburbs: "KIIC, Wanamulya, Parungsari, Margamulya, Karangmulya, Karangligar",
       delivery: "Gratis Ongkir Transportasi / Khusus Industri & Pabrik",
@@ -37,6 +41,7 @@ export const primaryAreas = [
     },
     {
       name: "Klari",
+      category: "Kecamatan Utama",
       highlight: "Armada Pos Siaga",
       suburbs: "Duren, Kosambi, Pancawati, Gintungkerta, Curug, Cimahi, Walahar, Majalaya",
       delivery: "Gratis Ongkir Transportasi Serta Kunjungan",
@@ -45,6 +50,7 @@ export const primaryAreas = [
     },
     {
       name: "Cikampek",
+      category: "Kecamatan Utama",
       highlight: "Cabang Khusus Cikampek",
       suburbs: "Cikampek Kota, Cikampek Pusaka, Dawuan Barat, Dawuan Timur, Kamojing, Jatisari",
       delivery: "Gratis Ongkir Transportasi Serta Kunjungan",
@@ -53,6 +59,7 @@ export const primaryAreas = [
     },
     {
       name: "Purwakarta Kota",
+      category: "Kecamatan Utama",
       highlight: "Pos Cabang Utama Purwakarta",
       suburbs: "Sadang, Nagrikaler, Nagriwetan, Cipaisan, Sindangkasih, Jatiluhur, Babakancikao",
       delivery: "Bebas Biaya Transportasi Wilayah Jangkauan",
@@ -60,6 +67,7 @@ export const primaryAreas = [
     },
     {
       name: "Kotabaru & Purwasari",
+      category: "Kecamatan Utama",
       highlight: "Jalur Penghubung Karawang - Cikampek",
       suburbs: "Pangulah, Purwasari, Sukasari, Tamelang, Sukaseuri, Jariwangi",
       delivery: "Bebas Biaya Kunjungan Tim Lapangan",
@@ -67,6 +75,7 @@ export const primaryAreas = [
     },
     {
       name: "Kawasan Industri Karawang",
+      category: "Industri",
       highlight: "Spesialis Limbah STP & Lemak",
       suburbs: "Kawasan KIIC, KIM, Suryacipta, Kujang Cikampek, Indotaisei, Artha Industrial",
       delivery: "Gratis Transportasi, Siap Kontrak Kerja Sama",
@@ -74,6 +83,7 @@ export const primaryAreas = [
     },
     {
       name: "Surrounding Areas (Pesisir & Selatan)",
+      category: "Umum",
       highlight: "Area Terjauh - Tetap Terlayani",
       suburbs: "Rengasdengklok, Tempuran, Cilamaya, Pangkalan, Kutawaluya, Rawamerta, Pedes, Batujaya, Pakisjaya",
       delivery: "Surcharge Jarak Terjangkau Maks. 50rb",
