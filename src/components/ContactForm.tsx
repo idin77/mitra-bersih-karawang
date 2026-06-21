@@ -1,7 +1,6 @@
 import { useState, FormEvent } from "react";
-import { Calculator, Send, MessageSquare, Phone, Calendar, Clock, MapPin } from "lucide-react";
+import { Send, MessageSquare, Phone, Calendar, Clock, MapPin } from "lucide-react";
 import { motion } from "motion/react";
-import { StepCostEstimator } from "./StepCostEstimator";
 
 interface ContactProps {
   whatsappNumber: string;
@@ -38,17 +37,6 @@ export default function ContactForm({ whatsappNumber, location = "Karawang" }: {
     window.open(rawLink, "_blank");
   };
 
-  const handleCalculatorSubmit = (data: { service: string; volume: string; location: string; price: string }) => {
-    const message = `Halo Mitra Bersih ${location},\n\nSaya ingin menanyakan penawaran harga berdasarkan estimasi kalkulator:\n` +
-      `- Jenis Jasa: ${data.service}\n` +
-      `- Volume: ${data.volume}\n` +
-      `- Wilayah: ${data.location}\n` +
-      `- Estimasi Tarif: ${data.price}\n\nApakah jadwal terdekat tersedia untuk pengerjaan ke lokasi saya?`;
-
-    const rawLink = `https://wa.me/62${whatsappNumber.substring(1)}?text=${encodeURIComponent(message)}`;
-    window.open(rawLink, "_blank");
-  };
-
   return (
     <section id="kontak" className="py-24 bg-white relative overflow-hidden">
       {/* Background blobs decor */}
@@ -66,32 +54,27 @@ export default function ContactForm({ whatsappNumber, location = "Karawang" }: {
           className="text-center max-w-3xl mx-auto mb-16 space-y-4"
         >
           <span className="text-amber-600 font-bold uppercase tracking-widest text-sm">
-            HUBUNGI KAMI & ESTIMASI
+            HUBUNGI KAMI
           </span>
           <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-zinc-950 tracking-tight">
             Konsultasi Gratis & Booking Langsung
           </h2>
           <div className="w-20 h-1.5 bg-amber-400 mx-auto rounded-full"></div>
           <p className="text-slate-600 leading-relaxed text-base sm:text-lg">
-            Gunakan kalkulator estimasi tarif di bawah atau langsung kirimkan formulir pemesanan kunjungan tim teknisi kami di area Anda.
+            Silakan kirimkan formulir pemesanan kunjungan tim teknisi kami di area Anda, kami akan segera merespon kebutuhan Anda.
           </p>
         </motion.div>
 
-        {/* Dynamic Widget Split Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
+        {/* Dynamic Widget Layout */}
+        <div className="flex justify-center">
           
-          {/* Left Column: Cost Estimator */}
-          <div className="lg:col-span-5">
-            <StepCostEstimator onSendMessage={handleCalculatorSubmit} />
-          </div>
-
-          {/* Right Column: Reservation / Booking form */}
+          {/* Reservation / Booking form */}
           <motion.div 
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="lg:col-span-7 bg-slate-50 border border-slate-100 rounded-3xl p-8 shadow-xl"
+            className="w-full max-w-2xl bg-slate-50 border border-slate-100 rounded-3xl p-8 shadow-xl"
           >
             <div className="flex items-center space-x-3 mb-6">
               <div className="bg-amber-400 p-2.5 rounded-xl text-zinc-950 font-extrabold">
