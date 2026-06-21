@@ -649,6 +649,8 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                     <button onClick={() => executeWhatsApp("Halo, saya ingin konsultasi gratis mengenai masalah WC saya.")} className="text-left w-full hover:bg-emerald-50 rounded-lg text-emerald-800 font-medium text-[11px] transition-colors outline-none focus:bg-emerald-100 px-3 py-1.5 border border-emerald-100">Konsultasi Gratis</button>
                   </div>
                 </div>
+                
+
               </motion.div>
             )}
           </AnimatePresence>
