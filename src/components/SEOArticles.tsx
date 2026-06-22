@@ -8,6 +8,25 @@ export default function SEOArticles() {
 
   const articles = [
     {
+      title: "Ciri-Ciri Septic Tank Penuh yang Perlu Anda Waspadai",
+      short: "Jangan tunggu mampet total! Kenali tanda-tanda septic tank rumah Anda sudah penuh agar tidak terjadi masalah lingkungan yang lebih rumit.",
+      icon: <AlertTriangle className="w-5 h-5 text-rose-500" />,
+      tag: "Tips & Edukasi",
+      readTime: "4 Menit Baca",
+      content: (
+        <div className="space-y-4 text-slate-600 text-sm sm:text-base leading-relaxed">
+          <p>Banyak dari kita menganggap enteng kondisi septic tank hingga akhirnya masalah besar muncul. Mengetahui tanda-tanda septic tank penuh adalah langkah pencegahan paling awal agar rumah terhindar dari bau busuk dan risiko kesehatan.</p>
+          <ul className="list-disc list-inside space-y-1">
+            <li>Laju aliran air di kloset menjadi jauh lebih lambat (slow flush).</li>
+            <li>Muncul bau tidak sedap di sekitar area kamar mandi atau pekarangan.</li>
+            <li>Adanya suara gelembung udara (gurgling) saat air disiram.</li>
+            <li>Rumput di area septic tank tumbuh lebih subur secara tidak wajar.</li>
+          </ul>
+          <p>Jika Anda menemukan salah satu dari tanda di atas, segera hubungi jasa sedot WC profesional untuk penanganan yang tepat sebelum terjadi luapan limbah.</p>
+        </div>
+      )
+    },
+    {
       title: "Jasa Sedot WC Karawang Profesional",
       short: "Panduan lengkap memilih layanan sanitasi terpercaya, bersih tuntas, dan bergaransi resmi di seluruh wilayah Karawang.",
       icon: <Sparkles className="w-5 h-5 text-amber-500" />,
