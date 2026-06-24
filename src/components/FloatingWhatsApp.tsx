@@ -249,12 +249,12 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const handleMenuKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      const nextIndex = (focusedIndex + 1) % 7;
+      const nextIndex = (focusedIndex + 1) % 8;
       setFocusedIndex(nextIndex);
       menuButtonsRef.current[nextIndex]?.focus();
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      const prevIndex = (focusedIndex - 1 + 7) % 7;
+      const prevIndex = (focusedIndex - 1 + 8) % 8;
       setFocusedIndex(prevIndex);
       menuButtonsRef.current[prevIndex]?.focus();
     } else if (e.key === 'Escape') {
@@ -659,6 +659,16 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                   {focusedIndex === 6 && <span className="absolute left-1 w-1.5 h-1.5 bg-emerald-600 rounded-full" />}
                   <Calculator className="w-4 h-4 text-emerald-600" />
                   Estimasi Harga
+                </motion.button>
+                <motion.button 
+                  variants={itemVariants}
+                  ref={el => menuButtonsRef.current[7] = el}
+                  onClick={() => { window.open('https://www.google.com/maps/search/Jasa+Sedot+WC+Karawang/', '_blank'); setIsMenuOpen(false); }}
+                  className="relative flex items-center gap-3 px-4 py-2 hover:bg-slate-50 rounded-lg text-slate-700 font-medium text-sm transition-colors outline-none focus:bg-slate-100 border border-transparent focus:border-emerald-600"
+                >
+                  {focusedIndex === 7 && <span className="absolute left-1 w-1.5 h-1.5 bg-emerald-600 rounded-full" />}
+                  <MapPin className="w-4 h-4 text-emerald-600" />
+                  Cek Lokasi Terdekat
                 </motion.button>
 
                 {isPricingModalOpen && (

@@ -8,6 +8,24 @@ export default function SEOArticles() {
 
   const articles = [
     {
+      title: "Bahaya Septic Tank Penuh bagi Kesehatan Keluarga",
+      short: "Waspadai risiko kesehatan akibat septic tank yang tidak segera disedot. Dampak bakteri berbahaya bisa lebih fatal dari yang Anda bayangkan.",
+      icon: <AlertCircle className="w-5 h-5 text-rose-500" />,
+      tag: "Bahaya Sanitasi",
+      readTime: "4 Menit Baca",
+      content: (
+        <div className="space-y-4 text-slate-600 text-sm sm:text-base leading-relaxed">
+          <p>Septic tank yang sudah penuh seringkali dianggap hanya masalah bau. Padahal, risiko kesehatan yang ditimbulkan sangat serius bagi penghuni rumah, terutama anak-anak.</p>
+          <ul className="list-disc list-inside space-y-1">
+            <li>Pencemaran sumber air minum (sumur bor) oleh bakteri E-coli.</li>
+            <li>Penyebaran penyakit menular seperti diare, tifus, dan gatal kulit.</li>
+            <li>Risiko gas beracun yang mengganggu pernapasan.</li>
+          </ul>
+          <p>Segera lakukan penyedotan jika sistem sanitasi di rumah Anda sudah mulai menunjukkan tanda-tanda tidak berfungsi optimal untuk menjaga kesehatan keluarga.</p>
+        </div>
+      )
+    },
+    {
       title: "Ciri-Ciri Septic Tank Penuh yang Perlu Anda Waspadai",
       short: "Jangan tunggu mampet total! Kenali tanda-tanda septic tank rumah Anda sudah penuh agar tidak terjadi masalah lingkungan yang lebih rumit.",
       icon: <AlertTriangle className="w-5 h-5 text-rose-500" />,
@@ -23,6 +41,24 @@ export default function SEOArticles() {
             <li>Rumput di area septic tank tumbuh lebih subur secara tidak wajar.</li>
           </ul>
           <p>Jika Anda menemukan salah satu dari tanda di atas, segera hubungi jasa sedot WC profesional untuk penanganan yang tepat sebelum terjadi luapan limbah.</p>
+        </div>
+      )
+    },
+    {
+      title: "Manfaat Melakukan Sedot WC Secara Rutin di Karawang",
+      short: "Menjaga kebersihan lingkungan dan mencegah kerusakan septic tank dengan jadwal sedot WC rutin. Berikut adalah manfaat utama yang perlu Anda ketahui.",
+      icon: <Sparkles className="w-5 h-5 text-emerald-500" />,
+      tag: "Tips & Edukasi",
+      readTime: "5 Menit Baca",
+      content: (
+        <div className="space-y-4 text-slate-600 text-sm sm:text-base leading-relaxed">
+          <p>Banyak masyarakat di Karawang yang menganggap sedot WC hanya perlu dilakukan saat kloset sudah mampet total. Padahal, melakukan sedot WC secara rutin memiliki banyak manfaat jangka panjang.</p>
+          <ul className="list-disc list-inside space-y-1">
+            <li><strong>Mencegah Kerusakan Septic Tank:</strong> Penumpukan limbah padat yang terlalu lama bisa membuat struktur septic tank retak atau bocor.</li>
+            <li><strong>Menjaga Kesehatan Lingkungan:</strong> Mencegah rembesan bakteri berbahaya ke sumur air tanah.</li>
+            <li><strong>Menghindari Biaya Perbaikan Mahal:</strong> Mencegah mampet total yang seringkali memerlukan pembongkaran instalasi pipa.</li>
+          </ul>
+          <p>Jadwalkan sedot WC secara rutin, setidaknya setiap 2-3 tahun sekali, untuk memastikan sistem sanitasi rumah Anda selalu berfungsi optimal.</p>
         </div>
       )
     },
