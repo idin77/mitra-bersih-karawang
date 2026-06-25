@@ -13,6 +13,8 @@ import FloatingWhatsApp from "../components/FloatingWhatsApp";
 import FAQ from "../components/FAQ";
 import SEOArticles from "../components/SEOArticles";
 import TipsGrid from "../components/TipsGrid";
+import SEOHead from "../components/SEOHead";
+import { SEO_CONFIG } from "../lib/seo";
 import heroImage from "../assets/images/armada_karawang_asli_1779610538314.png";
 
 import { CheckSquare, ShieldCheck, HeartPulse, Award } from "lucide-react";
@@ -24,6 +26,7 @@ export default function LandingPage() {
 
   return (
     <div id="mitra-bersih-karawang-app" className="relative text-slate-800">
+      <SEOHead {...SEO_CONFIG.default} />
 
       {/* 1. Navbar / Header */}
       <Header whatsappNumber={WHATSAPP_NUMBER} />

@@ -1,0 +1,81 @@
+import { BookOpen, AlertCircle, HeartPulse, Sparkles, AlertTriangle } from "lucide-react";
+
+export const articles = [
+  {
+    title: "Bahaya Septic Tank Penuh bagi Kesehatan Keluarga",
+    short: "Waspadai risiko kesehatan akibat septic tank yang tidak segera disedot. Dampak bakteri berbahaya bisa lebih fatal dari yang Anda bayangkan.",
+    icon: <AlertCircle className="w-5 h-5 text-rose-500" />,
+    tag: "Bahaya Sanitasi",
+    readTime: "4 Menit Baca",
+  },
+  {
+    title: "Ciri-Ciri Septic Tank Penuh yang Perlu Anda Waspadai",
+    short: "Jangan tunggu mampet total! Kenali tanda-tanda septic tank rumah Anda sudah penuh agar tidak terjadi masalah lingkungan yang lebih rumit.",
+    icon: <AlertTriangle className="w-5 h-5 text-rose-500" />,
+    tag: "Tips & Edukasi",
+    readTime: "4 Menit Baca",
+  },
+  {
+    title: "Manfaat Melakukan Sedot WC Secara Rutin di Karawang",
+    short: "Menjaga kebersihan lingkungan dan mencegah kerusakan septic tank dengan jadwal sedot WC rutin. Berikut adalah manfaat utama yang perlu Anda ketahui.",
+    icon: <Sparkles className="w-5 h-5 text-emerald-500" />,
+    tag: "Tips & Edukasi",
+    readTime: "5 Menit Baca",
+  },
+  {
+    title: "Jasa Sedot WC Karawang Profesional",
+    short: "Panduan lengkap memilih layanan sanitasi terpercaya, bersih tuntas, dan bergaransi resmi di seluruh wilayah Karawang.",
+    icon: <Sparkles className="w-5 h-5 text-amber-500" />,
+    tag: "Rekomendasi Utama",
+    readTime: "10 Menit Baca",
+  },
+  {
+    title: "Penyebab Septic Tank Cepat Penuh & Solusinya",
+    short: "Mengapa pembuangan kotoran sering penuh meski baru disedot? Pahami penyebab dasarnya di sini.",
+    icon: <AlertTriangle className="w-5 h-5 text-amber-500" />,
+    tag: "Tips & Edukasi",
+    readTime: "4 Menit Baca",
+  },
+  {
+    title: "4 Tanda WC Harus Segera Disedot",
+    short: "Jangan tunggu WC tersumbat total dan meluber! Kenali tanda-tanda awal septic tank penuh di rumah Anda.",
+    icon: <AlertCircle className="w-5 h-5 text-rose-500" />,
+    tag: "Panduan Cepat",
+    readTime: "3 Menit Baca",
+  },
+  {
+    title: "Cara Efektif Merawat Septic Tank Agar Awet",
+    short: "Tips praktis menjaga daya tampung septic tank bertahan bertahun-tahun tanpa mampet berkelanjutan.",
+    icon: <Sparkles className="w-5 h-5 text-emerald-500" />,
+    tag: "Solusi Mandiri",
+    readTime: "5 Menit Baca",
+  },
+  {
+    title: "Dampak Buruk Mengabaikan Septic Tank Penuh",
+    short: "Mengapa membiarkan septic tank kepenuhan sangat berbahaya untuk kesehatan keluarga dan fondasi bangunan.",
+    icon: <HeartPulse className="w-5 h-5 text-rose-500" />,
+    tag: "Bahaya Sanitasi",
+    readTime: "4 Menit Baca",
+  },
+  {
+    title: "Mengenal Jenis-Jenis Septic Tank dan Perawatannya",
+    short: "Pahami perbedaan septic tank konvensional dan modern untuk sistem sanitasi rumah yang lebih awet.",
+    icon: <BookOpen className="w-5 h-5 text-indigo-500" />,
+    tag: "Tips & Edukasi",
+    readTime: "5 Menit Baca",
+  },
+  {
+    title: "Tips Menjaga Kebersihan Rumah Selama Musim Hujan",
+    short: "Musim hujan sering membawa masalah kebersihan. Simak tips praktis agar rumah tetap kering, bersih, dan bebas bakteri.",
+    icon: <Sparkles className="w-5 h-5 text-amber-500" />,
+    tag: "Tips & Edukasi",
+    readTime: "3 Menit Baca",
+  },
+  {
+    title: "Pentingnya Jasa Cuci Sofa Profesional untuk Kesehatan",
+    short: "Tumpukan debu dan bakteri di sofa bisa memicu alergi. Mengapa jasa cuci sofa profesional adalah solusinya?",
+    icon: <BookOpen className="w-5 h-5 text-indigo-500" />,
+    tag: "Tips & Edukasi",
+    readTime: "4 Menit Baca",
+  }
+];

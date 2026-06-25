@@ -10,7 +10,8 @@ export const primaryAreas = [
       suburbs: "Nagasari, Karangpawitan, Adiarsa Barat, Tanjungmekar, Tanjungpura, Tunggilis",
       delivery: "Gratis Ongkir Transportasi Serta Kunjungan",
       response: "15 - 30 Menit Layanan Kilat",
-      link: "/karawang-barat"
+      link: "/karawang-barat",
+      lat: -6.311, lng: 107.295
     },
     {
       name: "Karawang Timur",
@@ -19,7 +20,8 @@ export const primaryAreas = [
       suburbs: "Adiarsa Timur, Karawang Wetan, Plawad, Kondangjaya, Tegalsawah, Margasari",
       delivery: "Gratis Ongkir Transportasi Serta Kunjungan",
       response: "20 - 45 Menit",
-      link: "/karawang-timur"
+      link: "/karawang-timur",
+      lat: -6.321, lng: 107.310
     },
     {
       name: "Telukjambe Timur",
@@ -28,7 +30,8 @@ export const primaryAreas = [
       suburbs: "Galuh Mas, Sukaluyu, Sirnabakti, Sukaharja, Pinayungan, Wadas, Telukjambe",
       delivery: "Gratis Ongkir Transportasi Serta Kunjungan",
       response: "15 - 35 Menit",
-      link: "/telukjambe-timur"
+      link: "/telukjambe-timur",
+      lat: -6.322, lng: 107.288
     },
     {
       name: "Telukjambe Barat",
@@ -37,7 +40,8 @@ export const primaryAreas = [
       suburbs: "KIIC, Wanamulya, Parungsari, Margamulya, Karangmulya, Karangligar",
       delivery: "Gratis Ongkir Transportasi / Khusus Industri & Pabrik",
       response: "30 - 50 Menit",
-      link: "/telukjambe-barat"
+      link: "/telukjambe-barat",
+      lat: -6.331, lng: 107.265
     },
     {
       name: "Klari",
@@ -46,7 +50,8 @@ export const primaryAreas = [
       suburbs: "Duren, Kosambi, Pancawati, Gintungkerta, Curug, Cimahi, Walahar, Majalaya",
       delivery: "Gratis Ongkir Transportasi Serta Kunjungan",
       response: "25 - 45 Menit",
-      link: "/klari"
+      link: "/klari",
+      lat: -6.345, lng: 107.350
     },
     {
       name: "Cikampek",
@@ -55,7 +60,8 @@ export const primaryAreas = [
       suburbs: "Cikampek Kota, Cikampek Pusaka, Dawuan Barat, Dawuan Timur, Kamojing, Jatisari",
       delivery: "Gratis Ongkir Transportasi Serta Kunjungan",
       response: "30 - 55 Menit",
-      link: "/cikampek"
+      link: "/cikampek",
+      lat: -6.405, lng: 107.450
     },
     {
       name: "Purwakarta Kota",
@@ -63,7 +69,8 @@ export const primaryAreas = [
       highlight: "Pos Cabang Utama Purwakarta",
       suburbs: "Sadang, Nagrikaler, Nagriwetan, Cipaisan, Sindangkasih, Jatiluhur, Babakancikao",
       delivery: "Bebas Biaya Transportasi Wilayah Jangkauan",
-      response: "35 - 55 Menit"
+      response: "35 - 55 Menit",
+      lat: -6.550, lng: 107.445
     },
     {
       name: "Kotabaru & Purwasari",
@@ -71,7 +78,8 @@ export const primaryAreas = [
       highlight: "Jalur Penghubung Karawang - Cikampek",
       suburbs: "Pangulah, Purwasari, Sukasari, Tamelang, Sukaseuri, Jariwangi",
       delivery: "Bebas Biaya Kunjungan Tim Lapangan",
-      response: "30 - 50 Menit"
+      response: "30 - 50 Menit",
+      lat: -6.380, lng: 107.380
     },
     {
       name: "Kawasan Industri Karawang",
@@ -79,7 +87,8 @@ export const primaryAreas = [
       highlight: "Spesialis Limbah STP & Lemak",
       suburbs: "Kawasan KIIC, KIM, Suryacipta, Kujang Cikampek, Indotaisei, Artha Industrial",
       delivery: "Gratis Transportasi, Siap Kontrak Kerja Sama",
-      response: "Sesuai Jadwal Booking / Prioritas Khusus"
+      response: "Sesuai Jadwal Booking / Prioritas Khusus",
+      lat: -6.350, lng: 107.280
     },
     {
       name: "Surrounding Areas (Pesisir & Selatan)",
@@ -87,7 +96,8 @@ export const primaryAreas = [
       highlight: "Area Terjauh - Tetap Terlayani",
       suburbs: "Rengasdengklok, Tempuran, Cilamaya, Pangkalan, Kutawaluya, Rawamerta, Pedes, Batujaya, Pakisjaya",
       delivery: "Surcharge Jarak Terjangkau Maks. 50rb",
-      response: "Sesuai Jadwal Booking (Pagi / Sore)"
+      response: "Sesuai Jadwal Booking (Pagi / Sore)",
+      lat: -6.200, lng: 107.350
     }
   ];
 

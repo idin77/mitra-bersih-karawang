@@ -9,7 +9,9 @@ import ContactForm from "../components/ContactForm";
 import Footer from "../components/Footer";
 import FloatingWhatsApp from "../components/FloatingWhatsApp";
 import FAQ from "../components/FAQ";
-import { Helmet } from "react-helmet-async";
+import RelatedArticles from "../components/RelatedArticles";
+import SEOHead from "../components/SEOHead";
+import { SEO_CONFIG } from "../lib/seo";
 import { ShieldCheck, CheckSquare, HeartPulse, Award } from "lucide-react";
 import { motion } from "motion/react";
 
@@ -19,11 +21,7 @@ export default function CikampekPage() {
 
   return (
     <div id="mitra-bersih-cikampek-app" className="relative text-slate-800">
-      <Helmet>
-        <title>Jasa Sedot WC Cikampek Murah & 24 Jam Terpercaya | Mitra Bersih</title>
-        <meta name="description" content="Jasa sedot WC Cikampek profesional, murah, dan bergaransi. Layanan sedot septic tank, pelancaran saluran air mampet di Cikampek 24 jam siap siaga." />
-        <link rel="canonical" href="https://mitrabersih.sedotwckarawang.id/cikampek" />
-      </Helmet>
+      <SEOHead {...SEO_CONFIG.cikampek} />
 
       <Header whatsappNumber={WHATSAPP_NUMBER} />
       
@@ -54,6 +52,7 @@ export default function CikampekPage() {
         <Features location="Cikampek" />
         <Gallery />
         <Testimonials />
+        <RelatedArticles />
         <FAQ />
         <ContactForm whatsappNumber={WHATSAPP_NUMBER} location="Cikampek" />
       </motion.div>

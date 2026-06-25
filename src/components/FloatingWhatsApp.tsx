@@ -26,7 +26,20 @@ interface FloatingProps {
   whatsappNumber: string;
 }
 
+import CoverageMap from './CoverageMap';
 import { primaryAreas } from './ServiceAreas';
+
+// Haversine formula
+const getDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+  const R = 6371; // km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+};
 
 const DistanceDisplay = ({ name }: { name: string }) => {
     const targetDistance = Math.abs(name.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % 20 + 1;
@@ -85,6 +98,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [currentTime, setCurrentTime] = useState("");
   const [hour, setHour] = useState(0);
   const [showAllCoverage, setShowAllCoverage] = useState(false);
+  const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
   const [helpCount, setHelpCount] = useState(() => {
     if (typeof window !== 'undefined') {
         return parseInt(localStorage.getItem("whatsapp_help_count") || "2450", 10);
@@ -663,7 +677,38 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 <motion.button 
                   variants={itemVariants}
                   ref={el => menuButtonsRef.current[7] = el}
-                  onClick={() => { window.open('https://www.google.com/maps/search/Jasa+Sedot+WC+Karawang/', '_blank'); setIsMenuOpen(false); }}
+                  onClick={() => {
+                    if (navigator.geolocation) {
+                      navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                          const { latitude, longitude } = position.coords;
+                          let nearestArea = primaryAreas[0];
+                          let minDistance = Infinity;
+                          
+                          primaryAreas.forEach(area => {
+                            if(area.lat && area.lng) {
+                              const dist = getDistance(latitude, longitude, area.lat, area.lng);
+                              if(dist < minDistance) {
+                                minDistance = dist;
+                                nearestArea = area;
+                              }
+                            }
+                          });
+                          
+                          setShowAllCoverage(true);
+                          setCoverageSearch(nearestArea.name);
+                          alert(`Lokasi terdeteksi! Area terdekat adalah ${nearestArea.name}.`);
+                        },
+                        () => {
+                          setShowAllCoverage(true);
+                          alert("Gagal mendeteksi lokasi. Menampilkan semua area.");
+                        }
+                      );
+                    } else {
+                      setShowAllCoverage(true);
+                    }
+                    setIsMenuOpen(false);
+                  }}
                   className="relative flex items-center gap-3 px-4 py-2 hover:bg-slate-50 rounded-lg text-slate-700 font-medium text-sm transition-colors outline-none focus:bg-slate-100 border border-transparent focus:border-emerald-600"
                 >
                   {focusedIndex === 7 && <span className="absolute left-1 w-1.5 h-1.5 bg-emerald-600 rounded-full" />}
@@ -725,33 +770,44 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                         className="fixed inset-0 bg-white z-50 p-4 flex flex-col gap-2"
                     >
                         <button onClick={() => setShowAllCoverage(false)} className="text-sm font-bold text-emerald-600 mb-2">← Back</button>
-                        <h4 className="font-bold text-slate-800 text-sm">Covered Areas:</h4>
-                        <input 
-                          type="text"
-                          placeholder="Cari kecamatan/area..."
-                          value={coverageSearch}
-                          onChange={(e) => setCoverageSearch(e.target.value)}
-                          className="w-full text-xs border border-slate-200 rounded-lg px-2 py-1.5 focus:ring-1 focus:ring-emerald-500 outline-none"
-                        />
-                        <div className="flex gap-1 overflow-x-auto pb-1 text-[10px] items-center">
-                           <button 
-                                onClick={() => setIsSortedAZ(!isSortedAZ)}
-                                className={`px-2 py-1 rounded-md whitespace-nowrap ${isSortedAZ ? 'bg-amber-600 text-white' : 'bg-slate-200 text-slate-700'}`}
-                           >
-                                {isSortedAZ ? 'Sorted A-Z' : 'Sort A-Z'}
-                           </button>
-                           {["Semua", "Kecamatan Utama", "Industri", "Umum"].map(cat => (
-                              <button 
-                                key={cat}
-                                onClick={() => setSelectedCategory(cat)}
-                                className={`px-2 py-1 rounded-md whitespace-nowrap ${selectedCategory === cat ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600'}`}
-                              >
-                                {cat}
-                              </button>
-                           ))}
-                        </div>
+                        <div className="flex justify-between items-center mb-2">
+    <h4 className="font-bold text-slate-800 text-sm">Covered Areas:</h4>
+    <div className="flex bg-slate-100 rounded-lg p-0.5">
+        <button onClick={() => setViewMode('list')} className={`text-[10px] px-2 py-1 rounded ${viewMode === 'list' ? 'bg-white shadow text-emerald-700' : 'text-slate-500'}`}>List</button>
+        <button onClick={() => setViewMode('map')} className={`text-[10px] px-2 py-1 rounded ${viewMode === 'map' ? 'bg-white shadow text-emerald-700' : 'text-slate-500'}`}>Map</button>
+    </div>
+</div>
+                        {viewMode === 'list' && (
+                          <>
+                            <input 
+                              type="text"
+                              placeholder="Cari kecamatan/area..."
+                              value={coverageSearch}
+                              onChange={(e) => setCoverageSearch(e.target.value)}
+                              className="w-full text-xs border border-slate-200 rounded-lg px-2 py-1.5 focus:ring-1 focus:ring-emerald-500 outline-none"
+                            />
+                            <div className="flex gap-1 overflow-x-auto pb-1 text-[10px] items-center">
+                               <button 
+                                    onClick={() => setIsSortedAZ(!isSortedAZ)}
+                                    className={`px-2 py-1 rounded-md whitespace-nowrap ${isSortedAZ ? 'bg-amber-600 text-white' : 'bg-slate-200 text-slate-700'}`}
+                               >
+                                    {isSortedAZ ? 'Sorted A-Z' : 'Sort A-Z'}
+                               </button>
+                               {["Semua", "Kecamatan Utama", "Industri", "Umum"].map(cat => (
+                                  <button 
+                                    key={cat}
+                                    onClick={() => setSelectedCategory(cat)}
+                                    className={`px-2 py-1 rounded-md whitespace-nowrap ${selectedCategory === cat ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600'}`}
+                                  >
+                                    {cat}
+                                  </button>
+                               ))}
+                            </div>
+                          </>
+                        )}
                         <div className="overflow-y-auto flex-1 text-xs text-slate-600 flex flex-col gap-2">
-                            {primaryAreas.filter(area => (selectedCategory === "Semua" || area.category === selectedCategory) && (area.name.toLowerCase().includes(coverageSearch.toLowerCase()) || area.suburbs.toLowerCase().includes(coverageSearch.toLowerCase()))).sort((a,b) => isSortedAZ ? a.name.localeCompare(b.name) : 0).map(area => (
+                            {viewMode === 'list' ? (
+                                primaryAreas.filter(area => (selectedCategory === "Semua" || area.category === selectedCategory) && (area.name.toLowerCase().includes(coverageSearch.toLowerCase()) || area.suburbs.toLowerCase().includes(coverageSearch.toLowerCase()))).sort((a,b) => isSortedAZ ? a.name.localeCompare(b.name) : 0).map(area => (
                                 <div key={area.name} className="border-b pb-1 flex justify-between items-start">
                                     <div>
                                         <span className="font-bold">{area.name}</span>
@@ -770,7 +826,10 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                                         <Copy className="w-3 h-3 text-slate-500" />
                                     </button>
                                 </div>
-                            ))}
+                                ))
+                            ) : (
+                                <CoverageMap />
+                            )}
                         </div>
                     </motion.div>
                 )}
@@ -778,11 +837,22 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 {/* End of Coverage Modal */}
                 
                 <div className="px-2 py-2 border-t border-slate-100 mt-1">
-                  <p className="text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-wider px-2">Pesan Cepat</p>
+                  <p className="text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-wider px-2">Quick Reply (Pertanyaan Umum)</p>
                   <div className="grid grid-cols-1 gap-1.5">
-                    <button onClick={() => executeWhatsApp(hour >= 22 || hour < 5 ? "Halo, saya butuh Bantuan Darurat Malam untuk sedot WC." : "Halo, saya ingin tanya harga layanan sedot WC.")} className="text-left w-full hover:bg-emerald-50 rounded-lg text-emerald-800 font-medium text-[11px] transition-colors outline-none focus:bg-emerald-100 px-3 py-1.5 border border-emerald-100">{hour >= 22 || hour < 5 ? "Bantuan Darurat Malam" : "Tanya Harga"}</button>
-                    <button onClick={() => executeWhatsApp("Halo, saya ingin menjadwalkan layanan sedot WC.")} className="text-left w-full hover:bg-emerald-50 rounded-lg text-emerald-800 font-medium text-[11px] transition-colors outline-none focus:bg-emerald-100 px-3 py-1.5 border border-emerald-100">Jadwalkan Sedot</button>
-                    <button onClick={() => executeWhatsApp("Halo, saya ingin konsultasi gratis mengenai masalah WC saya.")} className="text-left w-full hover:bg-emerald-50 rounded-lg text-emerald-800 font-medium text-[11px] transition-colors outline-none focus:bg-emerald-100 px-3 py-1.5 border border-emerald-100">Konsultasi Gratis</button>
+                    {[
+                      { text: "Berapa harga sedot per tangki?", message: "Halo, bisa info berapa harga untuk jasa sedot WC per tangki?" },
+                      { text: "Berapa lama pengerjaannya?", message: "Halo, kira-kira berapa lama durasi pengerjaan untuk sedot WC ya?" },
+                      { text: "Apakah ada garansi?", message: "Halo, apakah layanan sedot WC ini bergaransi?" }
+                    ].map((reply, idx) => (
+                      <button 
+                        key={idx}
+                        onClick={() => executeWhatsApp(reply.message)} 
+                        className="text-left w-full hover:bg-emerald-50 rounded-lg text-emerald-800 font-medium text-[11px] transition-colors outline-none focus:bg-emerald-100 px-3 py-1.5 border border-emerald-100"
+                      >
+                        {reply.text}
+                      </button>
+                    ))}
+                    <button onClick={() => executeWhatsApp("Halo, saya butuh Bantuan Darurat Malam untuk sedot WC.")} className="text-left w-full hover:bg-emerald-50 rounded-lg text-emerald-800 font-medium text-[11px] transition-colors outline-none focus:bg-emerald-100 px-3 py-1.5 border border-emerald-100">Bantuan Darurat</button>
                   </div>
                 </div>
                 
