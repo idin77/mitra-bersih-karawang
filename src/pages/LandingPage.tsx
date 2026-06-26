@@ -14,6 +14,7 @@ import FAQ from "../components/FAQ";
 import SEOArticles from "../components/SEOArticles";
 import TipsGrid from "../components/TipsGrid";
 import SEOHead from "../components/SEOHead";
+import BlogSection from "../components/BlogSection";
 import { SEO_CONFIG } from "../lib/seo";
 import heroImage from "../assets/images/armada_karawang_asli_1779610538314.png";
 
@@ -96,6 +97,9 @@ export default function LandingPage() {
 
       {/* 6c. Tips & Artikel (TipsGrid) */}
       <TipsGrid />
+      
+      {/* 6c-2. Blog Section */}
+      <BlogSection />
 
       {/* 6d. Artikel SEO & Solusi Edukasi Sanitasi */}
       <SEOArticles />

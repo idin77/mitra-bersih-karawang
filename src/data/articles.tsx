@@ -7,6 +7,7 @@ export const articles = [
     icon: <AlertCircle className="w-5 h-5 text-rose-500" />,
     tag: "Bahaya Sanitasi",
     readTime: "4 Menit Baca",
+    slug: "bahaya-septic-tank-penuh",
   },
   {
     title: "Ciri-Ciri Septic Tank Penuh yang Perlu Anda Waspadai",
@@ -14,6 +15,7 @@ export const articles = [
     icon: <AlertTriangle className="w-5 h-5 text-rose-500" />,
     tag: "Tips & Edukasi",
     readTime: "4 Menit Baca",
+    slug: "ciri-septic-tank-penuh",
   },
   {
     title: "Manfaat Melakukan Sedot WC Secara Rutin di Karawang",
@@ -75,6 +77,13 @@ export const articles = [
     title: "Pentingnya Jasa Cuci Sofa Profesional untuk Kesehatan",
     short: "Tumpukan debu dan bakteri di sofa bisa memicu alergi. Mengapa jasa cuci sofa profesional adalah solusinya?",
     icon: <BookOpen className="w-5 h-5 text-indigo-500" />,
+    tag: "Tips & Edukasi",
+    readTime: "4 Menit Baca",
+  },
+  {
+    title: "5 Tanda Septic Tank Penuh yang Harus Anda Ketahui",
+    short: "Seringkali pemilik rumah tidak sadar septic tank penuh sampai akhirnya mampet total. Kenali 5 tanda peringatan ini untuk segera memanggil jasa sedot WC profesional.",
+    icon: <AlertTriangle className="w-5 h-5 text-rose-500" />,
     tag: "Tips & Edukasi",
     readTime: "4 Menit Baca",
   }
