@@ -1,4 +1,4 @@
-import { Phone, MapPin, CalendarClock, Mail } from "lucide-react";
+import { Phone, MapPin, CalendarClock, Mail, Instagram, Facebook } from "lucide-react";
 
 import logoUrl from "../assets/images/logo_mitra_bersih_1779896054697.png";
 
@@ -184,6 +184,12 @@ export default function Footer({ whatsappNumber }: FooterProps) {
             © {currentYear} MITRA BERSIH KARAWANG. <a href="https://jasasedotwckarawang.com" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-500 transition-colors">Jasa Sedot WC Karawang</a>, <a href="https://mitrabersih24jam.com" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-500 transition-colors">Mitra Bersih 24 Jam</a>. Seluruh Hak Cipta Dilindungi Undang-Undang.
           </p>
           <div className="flex items-center space-x-4">
+            <a href="https://www.instagram.com/mitrabersihkarawang/" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-emerald-500 transition-colors">
+              <Instagram className="w-5 h-5" />
+            </a>
+            <a href="https://www.facebook.com/profile.php?id=61591547755906" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-blue-600 transition-colors">
+              <Facebook className="w-5 h-5" />
+            </a>
             <p className="bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg text-[10px] font-extrabold uppercase tracking-wide text-amber-400">
               Negara Kesatuan Republik Indonesia
             </p>

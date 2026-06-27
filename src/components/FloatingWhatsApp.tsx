@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, MouseEvent, KeyboardEvent, useMemo } from "react";
-import { MessageSquareCode, MessageCircle, X, Volume2, VolumeX, ArrowUp, Phone, MapPin, Mail, Battery, Copy, Calculator } from "lucide-react";
+import { MessageSquareCode, MessageCircle, X, Volume2, VolumeX, ArrowUp, Phone, MapPin, Mail, Battery, Copy, Calculator, ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { ConfettiBurst } from "./ConfettiBurst";
 
@@ -730,7 +730,9 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                            </div>
                         ))}
                         </div>
-                        <button onClick={() => setIsPricingModalOpen(false)} className="w-full px-4 py-2 bg-emerald-600 rounded-lg text-white font-bold">Tutup</button>
+                        <button onClick={() => setIsPricingModalOpen(false)} className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-slate-100 rounded-lg text-slate-800 font-bold hover:bg-slate-200 transition-colors">
+                            <ArrowLeft className="w-5 h-5" /> Kembali
+                        </button>
                     </motion.div>
                 )}
 
@@ -754,7 +756,9 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                             className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 outline-none h-24"
                         />
                         <div className="flex gap-2">
-                             <button onClick={() => setIsTestimonialFormOpen(false)} className="flex-1 px-4 py-2 bg-slate-100 rounded-lg text-slate-600">Batal</button>
+                             <button onClick={() => setIsTestimonialFormOpen(false)} className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-slate-100 rounded-lg text-slate-800 font-bold hover:bg-slate-200 transition-colors">
+                                 <ArrowLeft className="w-5 h-5" /> Kembali
+                             </button>
                              <button onClick={() => {
                                  setTestimonials([...testimonials, newTestimonial]);
                                  setNewTestimonial({ text: "", name: "" });

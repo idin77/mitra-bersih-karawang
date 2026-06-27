@@ -86,5 +86,29 @@ export const articles = [
     icon: <AlertTriangle className="w-5 h-5 text-rose-500" />,
     tag: "Tips & Edukasi",
     readTime: "4 Menit Baca",
+  },
+  {
+    title: "Jasa Sedot WC Karawang Murah dan Bergaransi – Solusi Sanitasi Tuntas",
+    short: "Butuh jasa sedot WC Karawang murah dan cepat? Kami hadir sebagai solusi sanitasi terpercaya dengan tenaga profesional dan peralatan modern di Karawang.",
+    icon: <Sparkles className="w-5 h-5 text-emerald-500" />,
+    tag: "SEO Artikel",
+    readTime: "5 Menit Baca",
+    slug: "jasa-sedot-wc-karawang-murah",
+  },
+  {
+    title: "Mengapa Harus Memilih Jasa Sedot WC Karawang Kami untuk Rumah Anda?",
+    short: "Cari layanan sedot WC terbaik? Temukan keunggulan jasa sedot WC Karawang kami mulai dari armada yang bersih, pengerjaan cepat, hingga harga transparan.",
+    icon: <Sparkles className="w-5 h-5 text-emerald-500" />,
+    tag: "SEO Artikel",
+    readTime: "5 Menit Baca",
+    slug: "mengapa-pilih-jasa-sedot-wc-karawang",
+  },
+  {
+    title: "Daftar Harga Jasa Sedot WC Karawang Terbaru dan Terpercaya",
+    short: "Bingung dengan biaya sedot WC? Kami transparan soal harga jasa sedot WC Karawang. Cek estimasi biaya dan layanan terbaik kami hari ini.",
+    icon: <Sparkles className="w-5 h-5 text-emerald-500" />,
+    tag: "SEO Artikel",
+    readTime: "4 Menit Baca",
+    slug: "daftar-harga-jasa-sedot-wc-karawang",
   }
 ];
