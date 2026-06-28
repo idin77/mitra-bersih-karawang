@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, MouseEvent, KeyboardEvent, useMemo } from "react";
-import { MessageSquareCode, MessageCircle, X, Volume2, VolumeX, ArrowUp, Phone, MapPin, Mail, Battery, Copy, Calculator, ArrowLeft } from "lucide-react";
+import { MessageSquareCode, MessageCircle, X, Volume2, VolumeX, ArrowUp, Phone, MapPin, Mail, Battery, Copy, Calculator, ArrowLeft, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { ConfettiBurst } from "./ConfettiBurst";
 
@@ -79,6 +79,11 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     { text: "Sedotan tangki vacumnya kencang sekali, teknisi rapi.", name: "Ibu Siska" },
     { text: "Teknisi datang 30 menit setelah dihubungi. Mantap!", name: "Bpk. Agus" },
   ]);
+  const [faqs] = useState([
+    { question: "Mengapa pilih jasa sedot WC Karawang kami?", answer: "Kami menyediakan tenaga profesional, peralatan modern, pengerjaan cepat, dan harga yang transparan untuk semua masalah sanitasi di Karawang." },
+    { question: "Berapa harga jasa sedot WC Karawang?", answer: "Harga jasa sedot WC Karawang kami sangat kompetitif, mulai dari Rp350.000 tergantung pada volume tangki dan lokasi Anda. Kami menjamin tidak ada biaya tambahan tersembunyi." },
+  ]);
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const [newTestimonial, setNewTestimonial] = useState({ text: "", name: "" });
   const [isTestimonialFormOpen, setIsTestimonialFormOpen] = useState(false);
   const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
@@ -599,6 +604,24 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 <div className="px-3 py-2 bg-amber-50 rounded-lg border border-amber-100">
                     <p className="text-[10px] font-bold text-amber-800 italic leading-snug">"{testimonials[testimonialIndex].text}"</p>
                     <p className="text-[9px] text-amber-600 font-bold mt-1">— {testimonials[testimonialIndex].name}</p>
+                </div>
+                
+                {/* FAQ Section */}
+                <div className="px-3 py-2">
+                    <h4 className="font-bold text-slate-800 text-[11px] mb-2">FAQ Jasa Sedot WC Karawang</h4>
+                    <div className="space-y-1">
+                        {faqs.map((faq, i) => (
+                            <div key={i} className="border border-slate-100 rounded-lg overflow-hidden">
+                                <button onClick={() => setOpenFaqIndex(openFaqIndex === i ? null : i)} className="w-full flex items-center justify-between p-2 text-[10px] font-bold text-slate-700">
+                                    {faq.question}
+                                    <ChevronDown className={`w-3 h-3 transition-transform ${openFaqIndex === i ? 'rotate-180' : ''}`} />
+                                </button>
+                                {openFaqIndex === i && (
+                                    <p className="px-2 pb-2 text-[9px] text-slate-600 bg-slate-50">{faq.answer}</p>
+                                )}
+                            </div>
+                        ))}
+                    </div>
                 </div>
                 <motion.button 
                   variants={itemVariants}

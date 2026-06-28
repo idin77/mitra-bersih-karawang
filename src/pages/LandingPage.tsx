@@ -9,7 +9,6 @@ import TestimonialForm from "../components/TestimonialForm";
 import ServiceAreas from "../components/ServiceAreas";
 import ContactForm from "../components/ContactForm";
 import Footer from "../components/Footer";
-import FloatingWhatsApp from "../components/FloatingWhatsApp";
 import FAQ from "../components/FAQ";
 import SEOArticles from "../components/SEOArticles";
 import TipsGrid from "../components/TipsGrid";
@@ -119,9 +118,6 @@ export default function LandingPage() {
 
       {/* 10. Footer info */}
       <Footer whatsappNumber={WHATSAPP_NUMBER} />
-
-      {/* 11. Custom Floating WhatsApp Widget with reactive notifications */}
-      <FloatingWhatsApp whatsappNumber={WHATSAPP_NUMBER} />
     </div>
   );
 }
