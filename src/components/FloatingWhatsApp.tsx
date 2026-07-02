@@ -22,6 +22,12 @@ const itemVariants = {
   visible: { opacity: 1, x: 0 },
 };
 
+const modalSlideVariants = {
+  hidden: { x: '100%', opacity: 0 },
+  visible: { x: 0, opacity: 1, transition: { type: "spring", damping: 25, stiffness: 200 } },
+  exit: { x: '100%', opacity: 0, transition: { duration: 0.2 } }
+};
+
 interface FloatingProps {
   whatsappNumber: string;
 }
@@ -249,6 +255,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [coverageSearch, setCoverageSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("Semua");
   const [isSortedAZ, setIsSortedAZ] = useState(false);
+  const [detectedLocation, setDetectedLocation] = useState<{lat: number, lng: number} | null>(null);
   const [copiedSuccess, setCopiedSuccess] = useState(false);
   const [isFeedbackActive, setIsFeedbackActive] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
@@ -720,6 +727,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                           
                           setShowAllCoverage(true);
                           setCoverageSearch(nearestArea.name);
+                          setDetectedLocation({ lat: latitude, lng: longitude });
                           alert(`Lokasi terdeteksi! Area terdekat adalah ${nearestArea.name}.`);
                         },
                         () => {
@@ -739,9 +747,13 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                   Cek Lokasi Terdekat
                 </motion.button>
 
+                <AnimatePresence>
                 {isPricingModalOpen && (
                     <motion.div
-                        variants={itemVariants}
+                        variants={modalSlideVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
                         className="fixed inset-0 bg-white/95 z-50 p-6 flex flex-col justify-center gap-4"
                     >
                         <h4 className="font-bold text-slate-800 text-lg">Estimasi Harga</h4>
@@ -758,10 +770,15 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                         </button>
                     </motion.div>
                 )}
+                </AnimatePresence>
 
+                <AnimatePresence>
                 {isTestimonialFormOpen && (
                     <motion.div
-                        variants={itemVariants}
+                        variants={modalSlideVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
                         className="fixed inset-0 bg-white/95 z-50 p-6 flex flex-col justify-center gap-4"
                     >
                         <h4 className="font-bold text-slate-800 text-lg">Kirim Testimoni Anda</h4>
@@ -790,6 +807,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                         </div>
                     </motion.div>
                 )}
+                </AnimatePresence>
 
                 {showAllCoverage && (
                     <motion.div
@@ -799,6 +817,9 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                         <button onClick={() => setShowAllCoverage(false)} className="text-sm font-bold text-emerald-600 mb-2">← Back</button>
                         <div className="flex justify-between items-center mb-2">
     <h4 className="font-bold text-slate-800 text-sm">Covered Areas:</h4>
+    {detectedLocation && (
+      <button onClick={() => executeWhatsApp(`Saya ingin memesan layanan sedot WC. Lokasi saya: https://www.google.com/maps/search/?api=1&query=${detectedLocation.lat},${detectedLocation.lng}`)} className="text-[10px] bg-emerald-600 text-white px-2 py-1 rounded">Kirim Lokasi via WA</button>
+    )}
     <div className="flex bg-slate-100 rounded-lg p-0.5">
         <button onClick={() => setViewMode('list')} className={`text-[10px] px-2 py-1 rounded ${viewMode === 'list' ? 'bg-white shadow text-emerald-700' : 'text-slate-500'}`}>List</button>
         <button onClick={() => setViewMode('map')} className={`text-[10px] px-2 py-1 rounded ${viewMode === 'map' ? 'bg-white shadow text-emerald-700' : 'text-slate-500'}`}>Map</button>

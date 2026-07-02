@@ -8,6 +8,7 @@ export const articles = [
     tag: "Bahaya Sanitasi",
     readTime: "4 Menit Baca",
     slug: "bahaya-septic-tank-penuh",
+    externalLink: "https://mitrabersih24jam.com/bahaya-septic-tank-penuh-bagi-kesehatan-keluarga/",
   },
   {
     title: "Ciri-Ciri Septic Tank Penuh yang Perlu Anda Waspadai",
@@ -16,6 +17,7 @@ export const articles = [
     tag: "Tips & Edukasi",
     readTime: "4 Menit Baca",
     slug: "ciri-septic-tank-penuh",
+    externalLink: "https://mitrabersih24jam.com/jasa-sedot-wc-karawa/",
   },
   {
     title: "Manfaat Melakukan Sedot WC Secara Rutin di Karawang",
@@ -23,6 +25,7 @@ export const articles = [
     icon: <Sparkles className="w-5 h-5 text-emerald-500" />,
     tag: "Tips & Edukasi",
     readTime: "5 Menit Baca",
+    externalLink: "https://mitrabersih24jam.com/manfaat-melakukan-sedot-wc-secara-rutin-di-karawang/",
   },
   {
     title: "Jasa Sedot WC Karawang Profesional",
@@ -51,6 +54,7 @@ export const articles = [
     icon: <Sparkles className="w-5 h-5 text-emerald-500" />,
     tag: "Solusi Mandiri",
     readTime: "5 Menit Baca",
+    externalLink: "https://mitrabersih24jam.com/artikel/",
   },
   {
     title: "Dampak Buruk Mengabaikan Septic Tank Penuh",
@@ -94,6 +98,7 @@ export const articles = [
     tag: "SEO Artikel",
     readTime: "5 Menit Baca",
     slug: "jasa-sedot-wc-karawang-murah",
+    externalLink: "https://mitrabersih24jam.com/jasa-sedot-wc-karawang/",
   },
   {
     title: "Mengapa Harus Memilih Jasa Sedot WC Karawang Kami untuk Rumah Anda?",

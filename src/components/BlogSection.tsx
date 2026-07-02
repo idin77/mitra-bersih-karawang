@@ -17,9 +17,15 @@ const BlogSection: React.FC = () => {
                 <span>{article.tag}</span>
                 <span>{article.readTime}</span>
               </div>
-              <Link to={`/tips/${article.slug || 'tips-mengatasi-wc-mampet-karawang'}`} className="block mt-4 text-emerald-600 font-semibold text-sm">
-                Baca Selengkapnya →
-              </Link>
+              {article.externalLink ? (
+                <a href={article.externalLink} target="_blank" rel="noopener noreferrer" className="block mt-4 text-emerald-600 font-semibold text-sm">
+                  Baca Selengkapnya →
+                </a>
+              ) : (
+                <Link to={`/tips/${article.slug || 'tips-mengatasi-wc-mampet-karawang'}`} className="block mt-4 text-emerald-600 font-semibold text-sm">
+                  Baca Selengkapnya →
+                </Link>
+              )}
             </div>
           ))}
         </div>
