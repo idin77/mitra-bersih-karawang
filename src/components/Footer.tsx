@@ -181,7 +181,7 @@ export default function Footer({ whatsappNumber }: FooterProps) {
         {/* Outer bottom footer area */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
           <p className="text-center sm:text-left">
-            © {currentYear} MITRA BERSIH KARAWANG. <a href="https://jasasedotwckarawang.com" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-500 transition-colors">Jasa Sedot WC Karawang</a>, <a href="https://mitrabersih24jam.com" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-500 transition-colors">Mitra Bersih 24 Jam</a>. Seluruh Hak Cipta Dilindungi Undang-Undang.
+            © {currentYear} MITRA BERSIH KARAWANG. <a href="https://murah.sedotwckarawang.id" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-500 transition-colors">Jasa Sedot WC Karawang</a>, <a href="https://mitrabersih24jam.com" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-500 transition-colors">Mitra Bersih 24 Jam</a>. Seluruh Hak Cipta Dilindungi Undang-Undang.
           </p>
           <div className="flex items-center space-x-4">
             <a href="https://www.instagram.com/mitrabersihkarawang/" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-emerald-500 transition-colors">

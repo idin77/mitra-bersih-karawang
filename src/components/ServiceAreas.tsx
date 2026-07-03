@@ -135,7 +135,7 @@ export default function ServiceAreas() {
             JANGKAUAN AREA LAYANAN
           </span>
           <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-zinc-950 tracking-tight leading-tight">
-            Wilayah Jasa Sedot WC Karawang &amp; Purwakarta
+            Wilayah <a href="https://murah.sedotwckarawang.id" className="text-zinc-950 hover:text-amber-600 underline">Jasa Sedot WC Karawang</a> &amp; Purwakarta
           </h2>
           <div className="w-20 h-1.5 bg-amber-400 mx-auto rounded-full"></div>
           <p className="text-slate-600 leading-relaxed text-base">

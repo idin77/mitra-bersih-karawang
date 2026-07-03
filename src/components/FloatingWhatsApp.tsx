@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, MouseEvent, KeyboardEvent, useMemo } from "react";
-import { MessageSquareCode, MessageCircle, X, Volume2, VolumeX, ArrowUp, Phone, MapPin, Mail, Battery, Copy, Calculator, ArrowLeft, ChevronDown } from "lucide-react";
+import { MessageSquareCode, MessageCircle, X, Volume2, VolumeX, ArrowUp, Phone, MapPin, Mail, Battery, Copy, Calculator, ArrowLeft, ChevronDown, Calendar, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { ConfettiBurst } from "./ConfettiBurst";
 
@@ -47,34 +47,41 @@ const getDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => 
   return R * c;
 };
 
-const DistanceDisplay = ({ name }: { name: string }) => {
-    const targetDistance = Math.abs(name.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % 20 + 1;
-    const [count, setCount] = useState(0);
+const EtaDisplay = ({ minutes }: { minutes: number }) => {
+    const [displayMinutes, setDisplayMinutes] = useState(0);
 
     useEffect(() => {
         let start = 0;
-        const duration = 800;
+        const duration = 1500;
         const frameRate = 30;
         const totalSteps = duration / frameRate;
-        const increment = targetDistance / totalSteps;
+        const increment = minutes / totalSteps;
         
         const timer = setInterval(() => {
             start += increment;
-            if (start >= targetDistance) {
-                setCount(targetDistance);
+            if (start >= minutes) {
+                setDisplayMinutes(minutes);
                 clearInterval(timer);
             } else {
-                setCount(Math.floor(start));
+                setDisplayMinutes(Math.floor(start));
             }
         }, frameRate);
         
         return () => clearInterval(timer);
-    }, [targetDistance]);
+    }, [minutes]);
 
     return (
-        <p className="text-[10px] text-slate-400 mt-0.5 font-mono">
-            {count}km dari pusat 
-        </p>
+        <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-emerald-50 border border-emerald-200 p-3 rounded-xl mt-2"
+        >
+            <p className="text-[10px] text-emerald-800 font-bold uppercase tracking-wider mb-1">Estimasi Kedatangan</p>
+            <div className="flex items-baseline gap-1">
+                <span className="text-2xl font-black text-emerald-600">{displayMinutes}</span>
+                <span className="text-xs font-bold text-emerald-700">menit</span>
+            </div>
+        </motion.div>
     );
 };
 
@@ -93,6 +100,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [newTestimonial, setNewTestimonial] = useState({ text: "", name: "" });
   const [isTestimonialFormOpen, setIsTestimonialFormOpen] = useState(false);
   const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
+  const [isSchedulingModalOpen, setIsSchedulingModalOpen] = useState(false);
   const pricingData = [
     { service: "Sedot WC", price: "Rp 500.000 - Rp 900.000" },
     { service: "Saluran Mampet", price: "Rp 350.000 - Rp 600.000" },
@@ -182,9 +190,22 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setServiceStatus(prev => Math.random() > 0.3 ? 'Active' : 'Busy');
-    }, 10000); // Toggle status every 10 seconds
+    const checkOperatingHours = () => {
+      const now = new Date();
+      // Set to Jakarta time
+      const jakartaTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Jakarta"}));
+      const hour = jakartaTime.getHours();
+      
+      // Jam operasional: 00:00 - 21:00 (Active), 21:00 - 23:59 (Busy)
+      if (hour >= 21) {
+        setServiceStatus('Busy');
+      } else {
+        setServiceStatus('Active');
+      }
+    };
+    
+    checkOperatingHours();
+    const interval = setInterval(checkOperatingHours, 60000); // Cek setiap menit
     return () => clearInterval(interval);
   }, []);
 
@@ -256,8 +277,20 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>("Semua");
   const [isSortedAZ, setIsSortedAZ] = useState(false);
   const [detectedLocation, setDetectedLocation] = useState<{lat: number, lng: number} | null>(null);
+  const [eta, setEta] = useState<number | null>(null);
+  const [hasUnread, setHasUnread] = useState(false);
+  const [scheduleDate, setScheduleDate] = useState("");
+  const [scheduleTime, setScheduleTime] = useState("");
+  const [isAskAdminModalOpen, setIsAskAdminModalOpen] = useState(false);
+  const [askAdminQuestion, setAskAdminQuestion] = useState("");
   const [copiedSuccess, setCopiedSuccess] = useState(false);
   const [isFeedbackActive, setIsFeedbackActive] = useState(false);
+  const [lastContacted, setLastContacted] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') {
+        return localStorage.getItem("whatsapp_last_contacted");
+    }
+    return null;
+  });
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const menuButtonsRef = useRef<(HTMLButtonElement | null)[]>([]);
   const [randomDelay] = useState(() => Math.random() * 1 + 0.5);
@@ -275,12 +308,12 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const handleMenuKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      const nextIndex = (focusedIndex + 1) % 8;
+      const nextIndex = (focusedIndex + 1) % 10;
       setFocusedIndex(nextIndex);
       menuButtonsRef.current[nextIndex]?.focus();
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      const prevIndex = (focusedIndex - 1 + 8) % 8;
+      const prevIndex = (focusedIndex - 1 + 10) % 10;
       setFocusedIndex(prevIndex);
       menuButtonsRef.current[prevIndex]?.focus();
     } else if (e.key === 'Escape') {
@@ -356,6 +389,14 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   }, []);
 
   useEffect(() => {
+    // Simulate incoming message
+    const timer = setTimeout(() => {
+        setHasUnread(true);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
       const interval = setInterval(() => {
           setIsShaking(true);
           setTimeout(() => setIsShaking(false), 600);
@@ -423,6 +464,14 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
 
     const text = encodeURIComponent(message);
     window.open(`https://wa.me/62${whatsappNumber.substring(1)}?text=${text}`, "_blank");
+    const now = new Date();
+    const dd = String(now.getDate()).padStart(2, '0');
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const hh = String(now.getHours()).padStart(2, '0');
+    const min = String(now.getMinutes()).padStart(2, '0');
+    const timestamp = `${dd}/${mm} ${hh}:${min}`;
+    setLastContacted(timestamp);
+    localStorage.setItem("whatsapp_last_contacted", timestamp);
     setIsMenuOpen(false);
   };
 
@@ -746,7 +795,83 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                   <MapPin className="w-4 h-4 text-emerald-600" />
                   Cek Lokasi Terdekat
                 </motion.button>
+                <motion.button 
+                  variants={itemVariants}
+                  ref={el => menuButtonsRef.current[8] = el}
+                  onClick={() => { setIsSchedulingModalOpen(true); }}
+                  className="relative flex items-center gap-3 px-4 py-2 hover:bg-slate-50 rounded-lg text-slate-700 font-medium text-sm transition-colors outline-none focus:bg-slate-100 border border-transparent focus:border-emerald-600"
+                >
+                  {focusedIndex === 8 && <span className="absolute left-1 w-1.5 h-1.5 bg-emerald-600 rounded-full" />}
+                  <Calendar className="w-4 h-4 text-emerald-600" />
+                  Jadwalkan Sedot
+                </motion.button>
+                <motion.button 
+                  variants={itemVariants}
+                  ref={el => menuButtonsRef.current[9] = el}
+                  onClick={() => { setIsAskAdminModalOpen(true); }}
+                  className="relative flex items-center gap-3 px-4 py-2 hover:bg-slate-50 rounded-lg text-slate-700 font-medium text-sm transition-colors outline-none focus:bg-slate-100 border border-transparent focus:border-emerald-600"
+                >
+                  {focusedIndex === 9 && <span className="absolute left-1 w-1.5 h-1.5 bg-emerald-600 rounded-full" />}
+                  <MessageCircle className="w-4 h-4 text-emerald-600" />
+                  Tanya Admin
+                </motion.button>
 
+                <AnimatePresence>
+                {isSchedulingModalOpen && (
+                    <motion.div
+                        variants={modalSlideVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        className="fixed inset-0 bg-white/95 z-50 p-6 flex flex-col justify-center gap-4"
+                    >
+                        <h4 className="font-bold text-slate-800 text-lg">Jadwalkan Sedot</h4>
+                        <div className="space-y-4">
+                            <input type="date" className="w-full p-3 border rounded-lg" onChange={(e) => setScheduleDate(e.target.value)} />
+                            <input type="time" className="w-full p-3 border rounded-lg" onChange={(e) => setScheduleTime(e.target.value)} />
+                        </div>
+                        <button onClick={() => {
+                            const message = `Halo Mitra Bersih Karawang, saya ingin menjadwalkan sedot WC pada tanggal ${scheduleDate} pukul ${scheduleTime}.`;
+                            executeWhatsApp(message);
+                            setIsSchedulingModalOpen(false);
+                        }} className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600 rounded-lg text-white font-bold hover:bg-emerald-700 transition-colors">
+                            Kirim Jadwal
+                        </button>
+                        <button onClick={() => setIsSchedulingModalOpen(false)} className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-slate-100 rounded-lg text-slate-800 font-bold hover:bg-slate-200 transition-colors">
+                            <ArrowLeft className="w-5 h-5" /> Kembali
+                        </button>
+                    </motion.div>
+                )}
+                </AnimatePresence>
+                <AnimatePresence>
+                {isAskAdminModalOpen && (
+                    <motion.div
+                        variants={modalSlideVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        className="fixed inset-0 bg-white/95 z-50 p-6 flex flex-col justify-center gap-4"
+                    >
+                        <h4 className="font-bold text-slate-800 text-lg">Tanya Admin</h4>
+                        <textarea
+                            className="w-full p-3 border rounded-lg h-32"
+                            placeholder="Apa yang ingin Anda tanyakan?"
+                            onChange={(e) => setAskAdminQuestion(e.target.value)}
+                        />
+                        <button onClick={() => {
+                            const message = `Halo Admin, saya ingin bertanya: ${askAdminQuestion}`;
+                            executeWhatsApp(message);
+                            setIsAskAdminModalOpen(false);
+                        }} className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600 rounded-lg text-white font-bold hover:bg-emerald-700 transition-colors">
+                            Kirim Pertanyaan
+                        </button>
+                        <button onClick={() => setIsAskAdminModalOpen(false)} className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-slate-100 rounded-lg text-slate-800 font-bold hover:bg-slate-200 transition-colors">
+                            <ArrowLeft className="w-5 h-5" /> Kembali
+                        </button>
+                    </motion.div>
+                )}
+                </AnimatePresence>
+                
                 <AnimatePresence>
                 {isPricingModalOpen && (
                     <motion.div
@@ -943,6 +1068,16 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
              </div>
              <span className="text-[9px] text-emerald-600 font-semibold">{chattingCount} currently chatting</span>
              <span className="text-[9px] text-emerald-600/80 font-normal">{currentTime} WIB</span>
+             {lastContacted && (
+               <motion.span 
+                 initial={{ scale: 0, opacity: 0 }}
+                 animate={{ scale: 1, opacity: 1 }}
+                 transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                 className="text-[8px] text-emerald-500/70 italic block mt-0.5"
+               >
+                 Last: {lastContacted}
+               </motion.span>
+             )}
           </div>
 
           {/* Ghost element for trailing effect */}
@@ -1013,7 +1148,10 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             }}
             id="btn-floating-wa"
             data-nosnippet
-            onClick={handleWhatsAppAction}
+            onClick={() => {
+              handleWhatsAppAction();
+              setHasUnread(false);
+            }}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             onKeyDown={(e) => {
@@ -1049,6 +1187,19 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             title="Hubungi Kami Melalui WhatsApp"
             aria-label="Buka WhatsApp untuk layanan Sedot WC"
           >
+            {hasUnread && (
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-white z-50"
+              >
+                <motion.div 
+                  className="w-full h-full bg-red-500 rounded-full"
+                  animate={{ scale: [1, 1.5, 1], opacity: [1, 0, 1] }}
+                  transition={{ repeat: Infinity, duration: 1.5 }}
+                />
+              </motion.div>
+            )}
             {/* Ripple Animation */}
             {isHovered && (
               <motion.div

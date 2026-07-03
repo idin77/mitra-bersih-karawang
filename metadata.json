@@ -1,6 +1,7 @@
 {
   "name": "Mitra Bersih Karawang",
   "description": "Website profesional modern Jasa Sedot WC Mitra Bersih Karawang dengan desain premium, responsif mobile, dan terpercaya.",
-  "requestFramePermissions": [],
+  "keywords": "sedot wc karawang, jasa sedot wc terdekat, ahli saluran mampet karawang, kuras septic tank karawang, layanan kebersihan karawang",
+  "requestFramePermissions": ["camera"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

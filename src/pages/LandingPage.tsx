@@ -4,9 +4,10 @@ import Features from "../components/Features";
 import About from "../components/About";
 import Services from "../components/Services";
 import Gallery from "../components/Gallery";
-import Testimonials from "../components/Testimonials";
+import TestimonialsCarousel from "../components/TestimonialsCarousel";
 import TestimonialForm from "../components/TestimonialForm";
 import ServiceAreas from "../components/ServiceAreas";
+import KeywordsSection from "../components/KeywordsSection";
 import ContactForm from "../components/ContactForm";
 import Footer from "../components/Footer";
 import FAQ from "../components/FAQ";
@@ -104,7 +105,7 @@ export default function LandingPage() {
       <SEOArticles />
 
       {/* 7. Testimoni (Testimonials) */}
-      <Testimonials />
+      <TestimonialsCarousel />
       <TestimonialForm />
 
       {/* 7b. Pertanyaan Umum / FAQ Terkait Sedot WC */}
@@ -112,6 +113,8 @@ export default function LandingPage() {
 
       {/* 8. Area Layanan (Service Areas) */}
       <ServiceAreas />
+
+      <KeywordsSection />
 
       {/* 9. Kontak Kami & Kalkulator Estimasi (Contact & Calculator) */}
       <ContactForm whatsappNumber={WHATSAPP_NUMBER} />
