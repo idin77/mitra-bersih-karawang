@@ -4,8 +4,10 @@ import CikampekPage from "./pages/CikampekPage";
 import BekasiPage from "./pages/BekasiPage";
 import KarawangBaratPage from "./pages/KarawangBaratPage";
 import BlogArticlePage from "./pages/BlogArticlePage";
+import FloatingWhatsApp from "./components/FloatingWhatsApp";
 
 export default function App() {
+  const WHATSAPP_NUMBER = "085882448632";
   return (
       <BrowserRouter>
         <Routes>
@@ -15,6 +17,7 @@ export default function App() {
           <Route path="/jasa-sedot-wc-karawang-barat/*" element={<KarawangBaratPage />} />
           <Route path="/tips-mengatasi-wc-mampet-karawang" element={<BlogArticlePage />} />
         </Routes>
+        <FloatingWhatsApp whatsappNumber={WHATSAPP_NUMBER} />
       </BrowserRouter>
   );
 }

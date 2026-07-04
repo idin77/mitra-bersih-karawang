@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, MouseEvent, KeyboardEvent, useMemo } from "react";
-import { MessageSquareCode, MessageCircle, X, Volume2, VolumeX, ArrowUp, Phone, MapPin, Mail, Battery, Copy, Calculator, ArrowLeft, ChevronDown, Calendar, Clock } from "lucide-react";
+import { MessageSquareCode, MessageCircle, X, Volume2, VolumeX, ArrowUp, Phone, MapPin, Mail, Battery, Copy, Calculator, ArrowLeft, ChevronDown, Calendar, Clock, GripHorizontal } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { ConfettiBurst } from "./ConfettiBurst";
 
@@ -1094,7 +1094,20 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             }}
           />
 
-           <motion.button
+           <AnimatePresence>
+            {isMobile && !isMenuOpen && (
+              <motion.div 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="absolute -top-10 right-0 flex items-center justify-center p-1 bg-white/20 backdrop-blur-sm rounded-full text-white pointer-events-none"
+              >
+                <GripHorizontal className="w-4 h-4" />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <motion.button
             ref={buttonRef}
             onMouseMove={!isMobile ? handleMouseMove : undefined}
             drag={isMobile}

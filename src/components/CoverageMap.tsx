@@ -1,43 +1,43 @@
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
+import { APIProvider, Map, AdvancedMarker, Pin } from '@vis.gl/react-google-maps';
 import { primaryAreas } from './ServiceAreas';
 
-// Fix for default marker icons in react-leaflet
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-
-let DefaultIcon = L.icon({
-    iconUrl: icon,
-    shadowUrl: iconShadow,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41]
-});
-L.Marker.prototype.options.icon = DefaultIcon;
+const API_KEY =
+  process.env.GOOGLE_MAPS_PLATFORM_KEY ||
+  (import.meta as any).env?.VITE_GOOGLE_MAPS_PLATFORM_KEY ||
+  (globalThis as any).GOOGLE_MAPS_PLATFORM_KEY ||
+  '';
+const hasValidKey = Boolean(API_KEY) && API_KEY !== 'YOUR_API_KEY';
 
 export default function CoverageMap() {
-  const center: [number, number] = [-6.3, 107.35]; // Roughly Karawang area center
+  const center = { lat: -6.3, lng: 107.35 };
+
+  if (!hasValidKey) {
+    return (
+      <div className="h-full w-full rounded-2xl border border-slate-200 flex items-center justify-center p-4">
+        <p className="text-sm text-slate-500">Peta layanan belum dikonfigurasi.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="h-full w-full rounded-2xl overflow-hidden border border-slate-200">
-      <MapContainer center={center} zoom={11} className="h-full w-full">
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        {primaryAreas.map((area) => (
-          area.lat && area.lng && (
-            <Marker key={area.name} position={[area.lat, area.lng]}>
-              <Popup>
-                <div className="text-xs">
-                  <h4 className="font-bold">{area.name}</h4>
-                  <p>{area.highlight}</p>
-                </div>
-              </Popup>
-            </Marker>
-          )
-        ))}
-      </MapContainer>
+      <APIProvider apiKey={API_KEY} version="weekly">
+        <Map
+          defaultCenter={center}
+          defaultZoom={11}
+          mapId="COVERAGE_MAP_ID"
+          internalUsageAttributionIds={['gmp_mcp_codeassist_v1_aistudio']}
+          style={{width: '100%', height: '100%'}}
+        >
+          {primaryAreas.map((area) => (
+            area.lat && area.lng && (
+              <AdvancedMarker key={area.name} position={{lat: area.lat, lng: area.lng}} title={area.name}>
+                <Pin background="#059669" glyphColor="#fff" />
+              </AdvancedMarker>
+            )
+          ))}
+        </Map>
+      </APIProvider>
     </div>
   );
 }
