@@ -142,36 +142,6 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     localStorage.setItem("whatsapp_muted", String(isMuted));
   }, [isMuted]);
   const [showScrollTop, setShowScrollTop] = useState(false);
-
-  const tooltipMessage = useMemo(() => {
-    const h = new Date().getHours();
-    const greetings = {
-      nightEarly: [
-        "Selamat Malam! Butuh bantuan darurat untuk sedot WC? Tim kami tetap siaga.",
-        "Malam-malam septic tank penuh? Kami siap membantu!"
-      ],
-      morning: [
-        "Selamat Pagi! Siap melayani kebutuhan sedot WC Anda dengan cepat.",
-        "Pagi! Sedot WC Karawang melayani Anda hari ini dengan penuh semangat."
-      ],
-      day: [
-        "Selamat Siang! Layanan sedot WC Karawang profesional & bergaransi. Ada yang bisa dibantu?",
-        "Halo! Sedot WC Karawang hadir untuk solusi saluran mampet Anda."
-      ],
-      nightLate: [
-        "Selamat Malam! Sedot WC Karawang siap membantu masalah Anda kapan saja.",
-        "Butuh bantuan sedot WC di malam hari? Silakan klik tombol ini."
-      ]
-    };
-
-    let options: string[] = [];
-    if (h >= 0 && h < 5) options = greetings.nightEarly;
-    else if (h >= 5 && h < 12) options = greetings.morning;
-    else if (h >= 12 && h < 18) options = greetings.day;
-    else options = greetings.nightLate;
-
-    return options[Math.floor(Math.random() * options.length)];
-  }, []);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -274,6 +244,58 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const copyTooltipTimeoutRef = useRef<NodeJS.Timeout>();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [coverageSearch, setCoverageSearch] = useState("");
+  const tooltipMessage = useMemo(() => {
+    const h = new Date().getHours();
+    const isKarawang = coverageSearch.toLowerCase().includes('karawang');
+    const isBekasi = coverageSearch.toLowerCase().includes('bekasi');
+    
+    const greetings = {
+      nightEarly: [
+        "Selamat Malam! Butuh bantuan darurat untuk sedot WC? Tim kami tetap siaga.",
+        "Malam-malam septic tank penuh? Kami siap membantu!"
+      ],
+      morning: [
+        "Selamat Pagi! Siap melayani kebutuhan sedot WC Anda dengan cepat.",
+        "Pagi! Sedot WC Karawang melayani Anda hari ini dengan penuh semangat."
+      ],
+      day: [
+        "Selamat Siang! Layanan sedot WC Karawang profesional & bergaransi. Ada yang bisa dibantu?",
+        "Halo! Sedot WC Karawang hadir untuk solusi saluran mampet Anda."
+      ],
+      nightLate: [
+        "Selamat Malam! Sedot WC Karawang siap membantu masalah Anda kapan saja.",
+        "Butuh bantuan sedot WC di malam hari? Silakan klik tombol ini."
+      ]
+    };
+
+    const areaSpecific = {
+        karawang: [
+            "Halo warga Karawang! Butuh solusi WC mampet cepat & bersih?",
+            "Sedang di Karawang? Jasa sedot WC profesional siap meluncur."
+        ],
+        bekasi: [
+            "Halo warga Bekasi! Siap melayani sedot WC mampet di area Bekasi.",
+            "Area Bekasi butuh sedot WC? Kami ahlinya!"
+        ],
+        default: [
+            "Halo! Ada masalah sedot WC yang perlu dibantu hari ini?",
+            "Layanan sedot WC profesional, cepat, dan bergaransi untuk Anda."
+        ]
+    };
+
+    let options: string[] = [];
+    if (h >= 0 && h < 5) options = greetings.nightEarly;
+    else if (h >= 5 && h < 12) options = greetings.morning;
+    else if (h >= 12 && h < 18) options = greetings.day;
+    else options = greetings.nightLate;
+
+    // Mix in area specific if relevant
+    if (isKarawang) options = [...options, ...areaSpecific.karawang];
+    if (isBekasi) options = [...options, ...areaSpecific.bekasi];
+    if (!isKarawang && !isBekasi) options = [...options, ...areaSpecific.default];
+
+    return options[Math.floor(Math.random() * options.length)];
+  }, [coverageSearch]);
   const [selectedCategory, setSelectedCategory] = useState<string>("Semua");
   const [isSortedAZ, setIsSortedAZ] = useState(false);
   const [detectedLocation, setDetectedLocation] = useState<{lat: number, lng: number} | null>(null);
@@ -449,7 +471,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
       return;
     }
     setShowTooltip(false);
-    setIsMenuOpen(!isMenuOpen);
+    executeWhatsApp();
   };
 
   const executeWhatsApp = (customMessage?: string) => {
@@ -472,7 +494,6 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     const timestamp = `${dd}/${mm} ${hh}:${min}`;
     setLastContacted(timestamp);
     localStorage.setItem("whatsapp_last_contacted", timestamp);
-    setIsMenuOpen(false);
   };
 
   const handleCopyPhoneNumber = () => {
@@ -638,398 +659,6 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 className="absolute -top-12 right-0 bg-white text-emerald-800 text-xs px-3 py-1.5 rounded-lg shadow-xl border border-emerald-100 whitespace-nowrap pointer-events-none font-medium"
               >
                 Click & Tahan untuk Salin No
-              </motion.div>
-            )}
-          </AnimatePresence>
-          <AnimatePresence>
-            {isMenuOpen && (
-              <motion.div 
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-                exit="hidden"
-                onKeyDown={handleMenuKeyDown}
-                className="relative bg-white rounded-2xl shadow-xl p-2 flex flex-col gap-2 border border-slate-100 pointer-events-auto min-w-[160px]"
-              >
-                <button 
-                  onClick={() => setIsMenuOpen(false)} 
-                  className="absolute top-2 right-2 p-1 rounded-full hover:bg-slate-100 text-slate-500 z-10"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-                <div className="px-3 py-2 bg-amber-50 rounded-lg border border-amber-100">
-                    <p className="text-[10px] font-bold text-amber-800 italic leading-snug">"{testimonials[testimonialIndex].text}"</p>
-                    <p className="text-[9px] text-amber-600 font-bold mt-1">— {testimonials[testimonialIndex].name}</p>
-                </div>
-                
-                {/* FAQ Section */}
-                <div className="px-3 py-2">
-                    <h4 className="font-bold text-slate-800 text-[11px] mb-2">FAQ Jasa Sedot WC Karawang</h4>
-                    <div className="space-y-1">
-                        {faqs.map((faq, i) => (
-                            <div key={i} className="border border-slate-100 rounded-lg overflow-hidden">
-                                <button onClick={() => setOpenFaqIndex(openFaqIndex === i ? null : i)} className="w-full flex items-center justify-between p-2 text-[10px] font-bold text-slate-700">
-                                    {faq.question}
-                                    <ChevronDown className={`w-3 h-3 transition-transform ${openFaqIndex === i ? 'rotate-180' : ''}`} />
-                                </button>
-                                {openFaqIndex === i && (
-                                    <p className="px-2 pb-2 text-[9px] text-slate-600 bg-slate-50">{faq.answer}</p>
-                                )}
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                <motion.button 
-                  variants={itemVariants}
-                  ref={el => menuButtonsRef.current[0] = el}
-                  onClick={() => { window.location.href = `tel:${whatsappNumber}`; setIsMenuOpen(false); }}
-                  className="relative flex items-center gap-3 px-4 py-2 hover:bg-slate-50 rounded-lg text-slate-700 font-medium text-sm transition-colors outline-none focus:bg-slate-100 border border-transparent focus:border-emerald-600"
-                >
-                  {focusedIndex === 0 && <span className="absolute left-1 w-1.5 h-1.5 bg-emerald-600 rounded-full" />}
-                  <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ repeat: Infinity, duration: 2 }}>
-                    <Phone className="w-4 h-4 text-emerald-600" />
-                  </motion.div>
-                  Telepon
-                </motion.button>
-                <motion.button 
-                  variants={itemVariants}
-                  ref={el => menuButtonsRef.current[1] = el}
-                  onClick={() => { window.open('https://maps.google.com', '_blank'); setIsMenuOpen(false); }}
-                  className="relative flex items-center gap-3 px-4 py-2 hover:bg-slate-50 rounded-lg text-slate-700 font-medium text-sm transition-colors outline-none focus:bg-slate-100 border border-transparent focus:border-emerald-600"
-                >
-                  {focusedIndex === 1 && <span className="absolute left-1 w-1.5 h-1.5 bg-emerald-600 rounded-full" />}
-                  <MapPin className="w-4 h-4 text-emerald-600" />
-                  Lokasi
-                </motion.button>
-                <motion.button 
-                  variants={itemVariants}
-                  ref={el => menuButtonsRef.current[2] = el}
-                  onClick={() => { window.location.href = 'mailto:info@mitrabersih.sedotwckarawang.id'; setIsMenuOpen(false); }}
-                  className="relative flex items-center gap-3 px-4 py-2 hover:bg-slate-50 rounded-lg text-slate-700 font-medium text-sm transition-colors outline-none focus:bg-slate-100 border border-transparent focus:border-emerald-600"
-                >
-                  {focusedIndex === 2 && <span className="absolute left-1 w-1.5 h-1.5 bg-emerald-600 rounded-full" />}
-                  <Mail className="w-4 h-4 text-emerald-600" />
-                  Email
-                </motion.button>
-                <motion.button 
-                  variants={itemVariants}
-                  ref={el => menuButtonsRef.current[3] = el}
-                  onClick={() => executeWhatsApp()}
-                  className="relative flex items-center gap-3 px-4 py-2 hover:bg-slate-50 rounded-lg text-slate-700 font-medium text-sm transition-colors outline-none focus:bg-slate-100 border border-transparent focus:border-emerald-600"
-                >
-                  {focusedIndex === 3 && <span className="absolute left-1 w-1.5 h-1.5 bg-emerald-600 rounded-full" />}
-                  <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 1.5 }}>
-                  <MessageCircle className="w-4 h-4 text-emerald-600" />
-                  </motion.div>
-                  WhatsApp
-                </motion.button>
-                <motion.button 
-                  variants={itemVariants}
-                  ref={el => menuButtonsRef.current[4] = el}
-                  onClick={() => { setShowAllCoverage(true); }}
-                  className="relative flex items-center gap-3 px-4 py-2 hover:bg-slate-50 rounded-lg text-slate-700 font-medium text-sm transition-colors outline-none focus:bg-slate-100 border border-transparent focus:border-emerald-600"
-                >
-                  {focusedIndex === 4 && <span className="absolute left-1 w-1.5 h-1.5 bg-emerald-600 rounded-full" />}
-                  <MapPin className="w-4 h-4 text-emerald-600" />
-                  List All Coverage
-                </motion.button>
-                <motion.button 
-                  variants={itemVariants}
-                  ref={el => menuButtonsRef.current[5] = el}
-                  onClick={() => { setIsTestimonialFormOpen(true); }}
-                  className="relative flex items-center gap-3 px-4 py-2 hover:bg-slate-50 rounded-lg text-slate-700 font-medium text-sm transition-colors outline-none focus:bg-slate-100 border border-transparent focus:border-emerald-600"
-                >
-                  {focusedIndex === 5 && <span className="absolute left-1 w-1.5 h-1.5 bg-emerald-600 rounded-full" />}
-                  <MessageSquareCode className="w-4 h-4 text-emerald-600" />
-                  Kirim Testimoni
-                </motion.button>
-                <motion.button 
-                  variants={itemVariants}
-                  ref={el => menuButtonsRef.current[6] = el}
-                  onClick={() => { setIsPricingModalOpen(true); }}
-                  className="relative flex items-center gap-3 px-4 py-2 hover:bg-slate-50 rounded-lg text-slate-700 font-medium text-sm transition-colors outline-none focus:bg-slate-100 border border-transparent focus:border-emerald-600"
-                >
-                  {focusedIndex === 6 && <span className="absolute left-1 w-1.5 h-1.5 bg-emerald-600 rounded-full" />}
-                  <Calculator className="w-4 h-4 text-emerald-600" />
-                  Estimasi Harga
-                </motion.button>
-                <motion.button 
-                  variants={itemVariants}
-                  ref={el => menuButtonsRef.current[7] = el}
-                  onClick={() => {
-                    if (navigator.geolocation) {
-                      navigator.geolocation.getCurrentPosition(
-                        (position) => {
-                          const { latitude, longitude } = position.coords;
-                          let nearestArea = primaryAreas[0];
-                          let minDistance = Infinity;
-                          
-                          primaryAreas.forEach(area => {
-                            if(area.lat && area.lng) {
-                              const dist = getDistance(latitude, longitude, area.lat, area.lng);
-                              if(dist < minDistance) {
-                                minDistance = dist;
-                                nearestArea = area;
-                              }
-                            }
-                          });
-                          
-                          setShowAllCoverage(true);
-                          setCoverageSearch(nearestArea.name);
-                          setDetectedLocation({ lat: latitude, lng: longitude });
-                          alert(`Lokasi terdeteksi! Area terdekat adalah ${nearestArea.name}.`);
-                        },
-                        () => {
-                          setShowAllCoverage(true);
-                          alert("Gagal mendeteksi lokasi. Menampilkan semua area.");
-                        }
-                      );
-                    } else {
-                      setShowAllCoverage(true);
-                    }
-                    setIsMenuOpen(false);
-                  }}
-                  className="relative flex items-center gap-3 px-4 py-2 hover:bg-slate-50 rounded-lg text-slate-700 font-medium text-sm transition-colors outline-none focus:bg-slate-100 border border-transparent focus:border-emerald-600"
-                >
-                  {focusedIndex === 7 && <span className="absolute left-1 w-1.5 h-1.5 bg-emerald-600 rounded-full" />}
-                  <MapPin className="w-4 h-4 text-emerald-600" />
-                  Cek Lokasi Terdekat
-                </motion.button>
-                <motion.button 
-                  variants={itemVariants}
-                  ref={el => menuButtonsRef.current[8] = el}
-                  onClick={() => { setIsSchedulingModalOpen(true); }}
-                  className="relative flex items-center gap-3 px-4 py-2 hover:bg-slate-50 rounded-lg text-slate-700 font-medium text-sm transition-colors outline-none focus:bg-slate-100 border border-transparent focus:border-emerald-600"
-                >
-                  {focusedIndex === 8 && <span className="absolute left-1 w-1.5 h-1.5 bg-emerald-600 rounded-full" />}
-                  <Calendar className="w-4 h-4 text-emerald-600" />
-                  Jadwalkan Sedot
-                </motion.button>
-                <motion.button 
-                  variants={itemVariants}
-                  ref={el => menuButtonsRef.current[9] = el}
-                  onClick={() => { setIsAskAdminModalOpen(true); }}
-                  className="relative flex items-center gap-3 px-4 py-2 hover:bg-slate-50 rounded-lg text-slate-700 font-medium text-sm transition-colors outline-none focus:bg-slate-100 border border-transparent focus:border-emerald-600"
-                >
-                  {focusedIndex === 9 && <span className="absolute left-1 w-1.5 h-1.5 bg-emerald-600 rounded-full" />}
-                  <MessageCircle className="w-4 h-4 text-emerald-600" />
-                  Tanya Admin
-                </motion.button>
-
-                <AnimatePresence>
-                {isSchedulingModalOpen && (
-                    <motion.div
-                        variants={modalSlideVariants}
-                        initial="hidden"
-                        animate="visible"
-                        exit="exit"
-                        className="fixed inset-0 bg-white/95 z-50 p-6 flex flex-col justify-center gap-4"
-                    >
-                        <h4 className="font-bold text-slate-800 text-lg">Jadwalkan Sedot</h4>
-                        <div className="space-y-4">
-                            <input type="date" className="w-full p-3 border rounded-lg" onChange={(e) => setScheduleDate(e.target.value)} />
-                            <input type="time" className="w-full p-3 border rounded-lg" onChange={(e) => setScheduleTime(e.target.value)} />
-                        </div>
-                        <button onClick={() => {
-                            const message = `Halo Mitra Bersih Karawang, saya ingin menjadwalkan sedot WC pada tanggal ${scheduleDate} pukul ${scheduleTime}.`;
-                            executeWhatsApp(message);
-                            setIsSchedulingModalOpen(false);
-                        }} className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600 rounded-lg text-white font-bold hover:bg-emerald-700 transition-colors">
-                            Kirim Jadwal
-                        </button>
-                        <button onClick={() => setIsSchedulingModalOpen(false)} className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-slate-100 rounded-lg text-slate-800 font-bold hover:bg-slate-200 transition-colors">
-                            <ArrowLeft className="w-5 h-5" /> Kembali
-                        </button>
-                    </motion.div>
-                )}
-                </AnimatePresence>
-                <AnimatePresence>
-                {isAskAdminModalOpen && (
-                    <motion.div
-                        variants={modalSlideVariants}
-                        initial="hidden"
-                        animate="visible"
-                        exit="exit"
-                        className="fixed inset-0 bg-white/95 z-50 p-6 flex flex-col justify-center gap-4"
-                    >
-                        <h4 className="font-bold text-slate-800 text-lg">Tanya Admin</h4>
-                        <textarea
-                            className="w-full p-3 border rounded-lg h-32"
-                            placeholder="Apa yang ingin Anda tanyakan?"
-                            onChange={(e) => setAskAdminQuestion(e.target.value)}
-                        />
-                        <button onClick={() => {
-                            const message = `Halo Admin, saya ingin bertanya: ${askAdminQuestion}`;
-                            executeWhatsApp(message);
-                            setIsAskAdminModalOpen(false);
-                        }} className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600 rounded-lg text-white font-bold hover:bg-emerald-700 transition-colors">
-                            Kirim Pertanyaan
-                        </button>
-                        <button onClick={() => setIsAskAdminModalOpen(false)} className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-slate-100 rounded-lg text-slate-800 font-bold hover:bg-slate-200 transition-colors">
-                            <ArrowLeft className="w-5 h-5" /> Kembali
-                        </button>
-                    </motion.div>
-                )}
-                </AnimatePresence>
-                
-                <AnimatePresence>
-                {isPricingModalOpen && (
-                    <motion.div
-                        variants={modalSlideVariants}
-                        initial="hidden"
-                        animate="visible"
-                        exit="exit"
-                        className="fixed inset-0 bg-white/95 z-50 p-6 flex flex-col justify-center gap-4"
-                    >
-                        <h4 className="font-bold text-slate-800 text-lg">Estimasi Harga</h4>
-                        <div className="space-y-4">
-                        {pricingData.map((p, i) => (
-                           <div key={i} className="flex justify-between items-center border-b pb-2">
-                                <span className="font-medium text-slate-700">{p.service}</span>
-                                <span className="font-bold text-emerald-600">{p.price}</span>
-                           </div>
-                        ))}
-                        </div>
-                        <button onClick={() => setIsPricingModalOpen(false)} className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-slate-100 rounded-lg text-slate-800 font-bold hover:bg-slate-200 transition-colors">
-                            <ArrowLeft className="w-5 h-5" /> Kembali
-                        </button>
-                    </motion.div>
-                )}
-                </AnimatePresence>
-
-                <AnimatePresence>
-                {isTestimonialFormOpen && (
-                    <motion.div
-                        variants={modalSlideVariants}
-                        initial="hidden"
-                        animate="visible"
-                        exit="exit"
-                        className="fixed inset-0 bg-white/95 z-50 p-6 flex flex-col justify-center gap-4"
-                    >
-                        <h4 className="font-bold text-slate-800 text-lg">Kirim Testimoni Anda</h4>
-                        <input
-                            type="text"
-                            placeholder="Nama Anda"
-                            value={newTestimonial.name}
-                            onChange={(e) => setNewTestimonial({...newTestimonial, name: e.target.value})}
-                            className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 outline-none"
-                        />
-                        <textarea
-                            placeholder="Tulis testimoni Anda di sini..."
-                            value={newTestimonial.text}
-                            onChange={(e) => setNewTestimonial({...newTestimonial, text: e.target.value})}
-                            className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 outline-none h-24"
-                        />
-                        <div className="flex gap-2">
-                             <button onClick={() => setIsTestimonialFormOpen(false)} className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-slate-100 rounded-lg text-slate-800 font-bold hover:bg-slate-200 transition-colors">
-                                 <ArrowLeft className="w-5 h-5" /> Kembali
-                             </button>
-                             <button onClick={() => {
-                                 setTestimonials([...testimonials, newTestimonial]);
-                                 setNewTestimonial({ text: "", name: "" });
-                                 setIsTestimonialFormOpen(false);
-                             }} className="flex-1 px-4 py-2 bg-emerald-600 rounded-lg text-white font-bold">Kirim</button>
-                        </div>
-                    </motion.div>
-                )}
-                </AnimatePresence>
-
-                {showAllCoverage && (
-                    <motion.div
-                        variants={itemVariants}
-                        className="fixed inset-0 bg-white z-50 p-4 flex flex-col gap-2"
-                    >
-                        <button onClick={() => setShowAllCoverage(false)} className="text-sm font-bold text-emerald-600 mb-2">← Back</button>
-                        <div className="flex justify-between items-center mb-2">
-    <h4 className="font-bold text-slate-800 text-sm">Covered Areas:</h4>
-    {detectedLocation && (
-      <button onClick={() => executeWhatsApp(`Saya ingin memesan layanan sedot WC. Lokasi saya: https://www.google.com/maps/search/?api=1&query=${detectedLocation.lat},${detectedLocation.lng}`)} className="text-[10px] bg-emerald-600 text-white px-2 py-1 rounded">Kirim Lokasi via WA</button>
-    )}
-    <div className="flex bg-slate-100 rounded-lg p-0.5">
-        <button onClick={() => setViewMode('list')} className={`text-[10px] px-2 py-1 rounded ${viewMode === 'list' ? 'bg-white shadow text-emerald-700' : 'text-slate-500'}`}>List</button>
-        <button onClick={() => setViewMode('map')} className={`text-[10px] px-2 py-1 rounded ${viewMode === 'map' ? 'bg-white shadow text-emerald-700' : 'text-slate-500'}`}>Map</button>
-    </div>
-</div>
-                        {viewMode === 'list' && (
-                          <>
-                            <input 
-                              type="text"
-                              placeholder="Cari kecamatan/area..."
-                              value={coverageSearch}
-                              onChange={(e) => setCoverageSearch(e.target.value)}
-                              className="w-full text-xs border border-slate-200 rounded-lg px-2 py-1.5 focus:ring-1 focus:ring-emerald-500 outline-none"
-                            />
-                            <div className="flex gap-1 overflow-x-auto pb-1 text-[10px] items-center">
-                               <button 
-                                    onClick={() => setIsSortedAZ(!isSortedAZ)}
-                                    className={`px-2 py-1 rounded-md whitespace-nowrap ${isSortedAZ ? 'bg-amber-600 text-white' : 'bg-slate-200 text-slate-700'}`}
-                               >
-                                    {isSortedAZ ? 'Sorted A-Z' : 'Sort A-Z'}
-                               </button>
-                               {["Semua", "Kecamatan Utama", "Industri", "Umum"].map(cat => (
-                                  <button 
-                                    key={cat}
-                                    onClick={() => setSelectedCategory(cat)}
-                                    className={`px-2 py-1 rounded-md whitespace-nowrap ${selectedCategory === cat ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600'}`}
-                                  >
-                                    {cat}
-                                  </button>
-                               ))}
-                            </div>
-                          </>
-                        )}
-                        <div className="overflow-y-auto flex-1 text-xs text-slate-600 flex flex-col gap-2">
-                            {viewMode === 'list' ? (
-                                primaryAreas.filter(area => (selectedCategory === "Semua" || area.category === selectedCategory) && (area.name.toLowerCase().includes(coverageSearch.toLowerCase()) || area.suburbs.toLowerCase().includes(coverageSearch.toLowerCase()))).sort((a,b) => isSortedAZ ? a.name.localeCompare(b.name) : 0).map(area => (
-                                <div key={area.name} className="border-b pb-1 flex justify-between items-start">
-                                    <div>
-                                        <span className="font-bold">{area.name}</span>
-                                        <p>{area.suburbs}</p>
-                                        <DistanceDisplay name={area.name} />
-                                    </div>
-                                    <button 
-                                        onClick={() => {
-                                            navigator.clipboard.writeText(area.name);
-                                            setCopiedSuccess(true);
-                                            setTimeout(() => setCopiedSuccess(false), 2000);
-                                        }}
-                                        className="p-1 hover:bg-slate-100 rounded"
-                                        title="Copy area name"
-                                    >
-                                        <Copy className="w-3 h-3 text-slate-500" />
-                                    </button>
-                                </div>
-                                ))
-                            ) : (
-                                <CoverageMap />
-                            )}
-                        </div>
-                    </motion.div>
-                )}
-
-                {/* End of Coverage Modal */}
-                
-                <div className="px-2 py-2 border-t border-slate-100 mt-1">
-                  <p className="text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-wider px-2">Quick Reply (Pertanyaan Umum)</p>
-                  <div className="grid grid-cols-1 gap-1.5">
-                    {[
-                      { text: "Berapa harga sedot per tangki?", message: "Halo, bisa info berapa harga untuk jasa sedot WC per tangki?" },
-                      { text: "Berapa lama pengerjaannya?", message: "Halo, kira-kira berapa lama durasi pengerjaan untuk sedot WC ya?" },
-                      { text: "Apakah ada garansi?", message: "Halo, apakah layanan sedot WC ini bergaransi?" }
-                    ].map((reply, idx) => (
-                      <button 
-                        key={idx}
-                        onClick={() => executeWhatsApp(reply.message)} 
-                        className="text-left w-full hover:bg-emerald-50 rounded-lg text-emerald-800 font-medium text-[11px] transition-colors outline-none focus:bg-emerald-100 px-3 py-1.5 border border-emerald-100"
-                      >
-                        {reply.text}
-                      </button>
-                    ))}
-                    <button onClick={() => executeWhatsApp("Halo, saya butuh Bantuan Darurat Malam untuk sedot WC.")} className="text-left w-full hover:bg-emerald-50 rounded-lg text-emerald-800 font-medium text-[11px] transition-colors outline-none focus:bg-emerald-100 px-3 py-1.5 border border-emerald-100">Bantuan Darurat</button>
-                  </div>
-                </div>
-                
-
               </motion.div>
             )}
           </AnimatePresence>
