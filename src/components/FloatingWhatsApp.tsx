@@ -132,6 +132,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [isShaking, setIsShaking] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [isActionsOpen, setIsActionsOpen] = useState(false);
+  const [mouseDist, setMouseDist] = useState(100);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(true);
   const [currentTime, setCurrentTime] = useState("");
@@ -578,6 +579,8 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     const distanceY = clientY - centerY;
     const distance = Math.sqrt(distanceX ** 2 + distanceY ** 2);
     
+    setMouseDist(distance);
+
     // Magnetic snap effect
     const range = 100;
     if (distance < range) {
@@ -863,9 +866,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               rotate: isLongPress ? 0 : (isShaking ? [0, -10, 10, -10, 10, 0] : 0),
               boxShadow: isLongPress 
                 ? "0 0 20px 10px rgba(255, 255, 255, 0.8)" 
-                : (isHovered 
-                    ? ["0 0 15px 5px rgba(16, 185, 129, 0.6)", "0 0 35px 20px rgba(16, 185, 129, 0.8)", "0 0 15px 5px rgba(16, 185, 129, 0.6)"]
-                    : "0 10px 15px -3px rgba(16, 185, 129, 0.5)"),
+                : `0 0 ${10 + (100 - Math.min(mouseDist, 100)) * 0.3}px ${2 + (100 - Math.min(mouseDist, 100)) * 0.1}px rgba(16, 185, 129, ${0.4 + (100 - Math.min(mouseDist, 100)) * 0.005})`,
               opacity: 1,
               backgroundColor: isFeedbackActive ? "#34d399" : "#059669"
             }}

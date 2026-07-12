@@ -15,10 +15,10 @@ export default function Hero({ whatsappNumber, imageSrc }: HeroProps) {
   };
 
   const checklistItems = [
-    "Sedot WC / Septic Tank",
-    "WC Mampet",
-    "Saluran Mampet",
-    "Limbah Industri",
+    "Sedot WC Karawang, Cikarang, Cikampek",
+    "Jasa Sedot WC Murah",
+    "WC Mampet & Saluran Mampet",
+    "Limbah Industri & Sedot WC",
   ];
 
   return (

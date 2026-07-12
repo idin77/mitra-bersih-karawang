@@ -1,7 +1,7 @@
 {
   "name": "Mitra Bersih Karawang",
-  "description": "Website profesional modern Jasa Sedot WC Mitra Bersih Karawang dengan desain premium, responsif mobile, dan terpercaya.",
-  "keywords": "sedot wc karawang, jasa sedot wc terdekat, ahli saluran mampet karawang, kuras septic tank karawang, layanan kebersihan karawang",
+  "description": "Layanan Jasa Sedot WC Karawang, Cikampek, dan Cikarang profesional. Kami melayani sedot WC murah, cepat, dan bergaransi. Solusi ahli untuk saluran mampet & septic tank penuh.",
+  "keywords": "jasa sedot wc, jasa sedot wc karawang, sedot wc, sedot wc cikampek, sedot wc cikarang, sedot wc karawang, sedot wc murah",
   "requestFramePermissions": ["camera"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
