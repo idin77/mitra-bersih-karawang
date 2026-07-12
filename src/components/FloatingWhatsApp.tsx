@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, MouseEvent, KeyboardEvent, useMemo } from "react";
-import { MessageSquareCode, MessageCircle, X, Volume2, VolumeX, ArrowUp, Phone, MapPin, Mail, Battery, Copy, Calculator, ArrowLeft, ChevronDown, Calendar, Clock, GripHorizontal } from "lucide-react";
+import { MessageSquareCode, MessageCircle, X, Volume2, VolumeX, ArrowUp, Phone, MapPin, Mail, Battery, Copy, Calculator, ArrowLeft, ChevronDown, Calendar, Clock, GripHorizontal, Plus } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { ConfettiBurst } from "./ConfettiBurst";
 
@@ -86,6 +86,25 @@ const EtaDisplay = ({ minutes }: { minutes: number }) => {
 };
 
 export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
+  const [currentAlert, setCurrentAlert] = useState<string | null>(null);
+  
+  useEffect(() => {
+    const names = ["Budi", "Siti", "Andi", "Dewi", "Rian", "Putri", "Dedi", "Fajar", "Lina"];
+    const areas = ["Karawang", "Bekasi", "Cikarang", "Tambun", "Klari"];
+    const actions = ["baru saja memesan jasa", "sedang menanyakan harga", "berhasil dibantu masalah WC-nya", "baru saja memberikan testimoni", "telah memesan layanan"];
+    
+    const interval = setInterval(() => {
+      if (Math.random() > 0.4) { // 60% chance to show an alert
+        const name = names[Math.floor(Math.random() * names.length)];
+        const area = areas[Math.floor(Math.random() * areas.length)];
+        const action = actions[Math.floor(Math.random() * actions.length)];
+        setCurrentAlert(`${name} di ${area} ${action}`);
+        setTimeout(() => setCurrentAlert(null), 4000);
+      }
+    }, 12000); // Trigger every 12 seconds
+    return () => clearInterval(interval);
+  }, []);
+
   const [testimonials, setTestimonials] = useState([
     { text: "Pengerjaan cuma 35 menit, langsung lancar kembali. Sangat puas!", name: "Ibu Rahmawati" },
     { text: "Pelayanan profesional, harganya jujur transparan di awal.", name: "Bpk. Hendra" },
@@ -112,6 +131,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [typedText, setTypedText] = useState("");
   const [isShaking, setIsShaking] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [isActionsOpen, setIsActionsOpen] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(true);
   const [currentTime, setCurrentTime] = useState("");
@@ -607,6 +627,23 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 </div>
               )}
               <h4 className="font-display font-extrabold text-xs sm:text-sm text-zinc-950">Customer Support</h4>
+              
+              {/* Testimonial Carousel */}
+              <div className="relative h-20 overflow-hidden bg-emerald-50 rounded-lg p-2 mb-2 border border-emerald-100">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={testimonialIndex}
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -5 }}
+                    className="absolute inset-0 p-2 flex flex-col justify-center"
+                  >
+                    <p className="text-[10px] font-bold text-emerald-800 italic leading-snug">"{testimonials[testimonialIndex].text}"</p>
+                    <p className="text-[9px] text-emerald-600 font-bold mt-1">— {testimonials[testimonialIndex].name}</p>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+
               <div className="max-h-24 overflow-y-auto pr-1" ref={chatContainerRef}>
                 <p className="text-[11px] sm:text-xs text-slate-500 leading-snug">
                   {typedText}
@@ -641,6 +678,19 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
 
         {/* Primary Floating WhatsApp Pulse-Button Container */}
         <div className="flex flex-col items-end space-y-2 relative">                
+          <AnimatePresence>
+            {currentAlert && (
+              <motion.div
+                initial={{ opacity: 0, y: 10, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 10, scale: 0.9 }}
+                className="absolute bottom-20 right-0 bg-white p-3 rounded-lg shadow-xl border border-emerald-100 z-[60] flex items-center gap-2 pointer-events-auto w-max mb-2"
+              >
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                  <p className="text-[10px] text-zinc-800 font-bold">{currentAlert}</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
           {particles.map(p => (
              <motion.div
                key={p.id}
@@ -723,18 +773,49 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             }}
           />
 
-           <AnimatePresence>
-            {isMobile && !isMenuOpen && (
-              <motion.div 
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="absolute -top-10 right-0 flex items-center justify-center p-1 bg-white/20 backdrop-blur-sm rounded-full text-white pointer-events-none"
+          <AnimatePresence>
+            {isActionsOpen && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.8, y: 20 }}
+                className="absolute -top-60 right-0 bg-white p-3 rounded-2xl shadow-2xl border border-emerald-100 z-[55] flex flex-col gap-2 pointer-events-auto w-48"
               >
-                <GripHorizontal className="w-4 h-4" />
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 px-1">Quick Actions</h4>
+                  <button onClick={() => { window.open('tel:+6281234567890'); setIsActionsOpen(false); }} className="flex items-center gap-3 w-full p-2 hover:bg-emerald-50 rounded-lg text-sm font-bold text-slate-700">
+                    <Phone className="w-4 h-4 text-emerald-600" /> Call Us
+                  </button>
+                  <button onClick={() => { executeWhatsApp(); setIsActionsOpen(false); }} className="flex items-center gap-3 w-full p-2 hover:bg-emerald-50 rounded-lg text-sm font-bold text-slate-700">
+                    <MessageCircle className="w-4 h-4 text-emerald-600" /> Chat WhatsApp
+                  </button>
+                  <button onClick={() => { setIsPricingModalOpen(true); setIsActionsOpen(false); }} className="flex items-center gap-3 w-full p-2 hover:bg-emerald-50 rounded-lg text-sm font-bold text-slate-700">
+                    <Calculator className="w-4 h-4 text-emerald-600" /> See Pricing
+                  </button>
+                  <button onClick={() => { setShowAllCoverage(true); setIsActionsOpen(false); }} className="flex items-center gap-3 w-full p-2 hover:bg-emerald-50 rounded-lg text-sm font-bold text-slate-700">
+                    <MapPin className="w-4 h-4 text-emerald-600" /> Check Coverage
+                  </button>
               </motion.div>
             )}
           </AnimatePresence>
+
+          <motion.button
+            className="absolute -top-20 right-0 w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white shadow-lg z-[60] pointer-events-auto"
+            onClick={() => setIsActionsOpen(!isActionsOpen)}
+            whileTap={{ scale: 0.9 }}
+          >
+              {isActionsOpen ? <X className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
+          </motion.button>
+
+          {isMobile && !isMenuOpen && (
+            <motion.div 
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="absolute -top-10 right-0 flex items-center justify-center p-1 bg-white/20 backdrop-blur-sm rounded-full text-white pointer-events-none"
+            >
+              <GripHorizontal className="w-4 h-4" />
+            </motion.div>
+          )}
 
           <motion.button
             ref={buttonRef}
