@@ -125,7 +125,9 @@ export default function SEOArticles() {
                 
                 <div className="w-full h-px bg-slate-100"></div>
 
-                {activeArticleObj.content}
+                <p className="text-slate-600 mt-4 leading-relaxed">
+                  {activeArticleObj.short}
+                </p>
 
               </motion.article>
             </AnimatePresence>
