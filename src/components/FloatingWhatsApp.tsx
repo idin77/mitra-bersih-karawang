@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, MouseEvent, KeyboardEvent, useMemo } from "react";
-import { MessageSquareCode, MessageCircle, X, Volume2, VolumeX, ArrowUp, Phone, MapPin, Mail, Battery, Copy, Calculator, ArrowLeft, ChevronDown, Calendar, Clock, GripHorizontal, Plus } from "lucide-react";
+import { MessageSquareCode, MessageCircle, X, Volume2, VolumeX, ArrowUp, Phone, MapPin, Mail, Battery, Copy, Calculator, ArrowLeft, ChevronDown, Calendar, Clock, GripHorizontal, Plus, Moon, Sun } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { ConfettiBurst } from "./ConfettiBurst";
 
@@ -74,12 +74,32 @@ const EtaDisplay = ({ minutes }: { minutes: number }) => {
         <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-emerald-50 border border-emerald-200 p-3 rounded-xl mt-2"
+            className="bg-emerald-50 border border-emerald-200 p-3 rounded-xl mt-2 overflow-hidden relative"
         >
             <p className="text-[10px] text-emerald-800 font-bold uppercase tracking-wider mb-1">Estimasi Kedatangan</p>
             <div className="flex items-baseline gap-1">
                 <span className="text-2xl font-black text-emerald-600">{displayMinutes}</span>
                 <span className="text-xs font-bold text-emerald-700">menit</span>
+            </div>
+            
+            {/* Progress Bar with Vehicle Animation */}
+            <div className="h-1.5 w-full bg-emerald-100 rounded-full mt-2 relative">
+                <motion.div
+                    className="h-full bg-emerald-500 rounded-full"
+                    initial={{ width: "0%" }}
+                    animate={{ width: "100%" }}
+                    transition={{ duration: 2, ease: "linear" }}
+                />
+                <motion.div
+                    className="absolute top-1/2 -mt-2 -ml-2 text-emerald-600"
+                    initial={{ left: "0%" }}
+                    animate={{ left: "100%" }}
+                    transition={{ duration: 2, ease: "linear" }}
+                >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
+                    </svg>
+                </motion.div>
             </div>
         </motion.div>
     );
@@ -135,6 +155,8 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [mouseDist, setMouseDist] = useState(100);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [ripples, setRipples] = useState<{ id: number }[]>([]);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isUiSoundEnabled, setIsUiSoundEnabled] = useState(true);
 
   const addRipple = () => {
     const id = Date.now();
@@ -220,7 +242,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
 
   useEffect(() => {
 	  // Play subtle "pop" on mount
-      if (!isMuted) {
+      if (!isMuted && isUiSoundEnabled) {
         try {
           const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
           const oscillator = audioContext.createOscillator();
@@ -508,6 +530,10 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   };
 
   const executeWhatsApp = (customMessage?: string) => {
+    if (!isMuted && typeof navigator !== 'undefined' && navigator.vibrate) {
+      navigator.vibrate(50);
+    }
+    
     if (typeof (window as any).gtag === 'function') {
       (window as any).gtag('event', 'whatsapp_click', {
         event_category: 'contact',
@@ -516,6 +542,11 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     }
 
     let message = customMessage || "Halo Mitra Bersih Karawang, toilet saya bermasalah/penuh. Saya butuh respon cepat sekarang.";
+    
+    const selectedKecamatan = localStorage.getItem('selectedKecamatan');
+    if (selectedKecamatan) {
+      message = `*Info Lokasi: ${selectedKecamatan}*\n\n${message}`;
+    }
 
     const text = encodeURIComponent(message);
     window.open(`https://wa.me/62${whatsappNumber.substring(1)}?text=${text}`, "_blank");
@@ -639,7 +670,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             initial={{ opacity: 0, scale: 0.85, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.85 }}
-            className="bg-white text-slate-850 px-4 py-3 rounded-2xl shadow-2xl border border-slate-100 flex items-start space-x-3 max-w-xs relative pointer-events-auto"
+            className={`${isDarkMode ? 'bg-slate-900 text-slate-100 border-slate-700' : 'bg-white text-slate-850 border-slate-100'} px-4 py-3 rounded-2xl shadow-2xl border flex items-start space-x-3 max-w-xs relative pointer-events-auto`}
           >
             {/* Small Green Online dot */}
             <div className="absolute top-2 left-2 w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></div>
@@ -657,7 +688,25 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                   </button>
                 </div>
               )}
-              <h4 className="font-display font-extrabold text-xs sm:text-sm text-zinc-950">Customer Support</h4>
+              <div className="flex items-center justify-between">
+                <h4 className="font-display font-extrabold text-xs sm:text-sm text-zinc-950">Customer Support</h4>
+                <div className="flex gap-1">
+                  <button
+                    onClick={() => setIsDarkMode(!isDarkMode)}
+                    className="p-1 rounded-full hover:bg-slate-200 transition-colors"
+                    title="Toggle Dark Mode"
+                  >
+                    {isDarkMode ? <Sun className="w-4 h-4 text-slate-600" /> : <Moon className="w-4 h-4 text-slate-600" />}
+                  </button>
+                  <button
+                    onClick={() => setIsUiSoundEnabled(!isUiSoundEnabled)}
+                    className="p-1 rounded-full hover:bg-slate-200 transition-colors"
+                    title="Toggle UI Sound"
+                  >
+                    {isUiSoundEnabled ? <Volume2 className="w-4 h-4 text-slate-600" /> : <VolumeX className="w-4 h-4 text-slate-600" />}
+                  </button>
+                </div>
+              </div>
               
               {/* Testimonial Carousel */}
               <div className="relative h-20 overflow-hidden bg-emerald-50 rounded-lg p-2 mb-2 border border-emerald-100">
@@ -679,6 +728,23 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 <p className="text-[11px] sm:text-xs text-slate-500 leading-snug">
                   {typedText}
                 </p>
+              </div>
+
+              {/* Quick Questions */}
+              <div className="flex flex-wrap gap-1.5 mt-2">
+                {['Berapa harga?', 'Bisa malam ini?', 'Area mana saja?'].map((q) => (
+                  <button
+                    key={q}
+                    onClick={() => executeWhatsApp(q)}
+                    className={`text-[10px] px-2 py-1 rounded-full transition-colors font-medium ${
+                      isDarkMode
+                        ? 'bg-emerald-900/50 text-emerald-200 hover:bg-emerald-800'
+                        : 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200'
+                    }`}
+                  >
+                    {q}
+                  </button>
+                ))}
               </div>
             </div>
 
@@ -872,7 +938,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 setIsHovered(true);
                 copyTooltipTimeoutRef.current = setTimeout(() => setShowCopyTooltip(true), 1500);
                 
-                if (!isMuted) {
+                if (!isMuted && isUiSoundEnabled) {
                   const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
                   const oscillator = audioContext.createOscillator();
                   const gainNode = audioContext.createGain();

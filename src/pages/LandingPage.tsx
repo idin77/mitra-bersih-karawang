@@ -9,6 +9,7 @@ import TestimonialForm from "../components/TestimonialForm";
 import ServiceAreas from "../components/ServiceAreas";
 import KeywordsSection from "../components/KeywordsSection";
 import ContactForm from "../components/ContactForm";
+import PriceEstimator from "../components/PriceEstimator";
 import Footer from "../components/Footer";
 import FAQ from "../components/FAQ";
 import SEOArticles from "../components/SEOArticles";
@@ -117,6 +118,7 @@ export default function LandingPage() {
       <KeywordsSection />
 
       {/* 9. Kontak Kami & Kalkulator Estimasi (Contact & Calculator) */}
+      <PriceEstimator />
       <ContactForm whatsappNumber={WHATSAPP_NUMBER} />
 
       {/* 10. Footer info */}
