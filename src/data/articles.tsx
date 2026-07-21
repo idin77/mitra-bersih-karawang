@@ -33,6 +33,7 @@ export const articles = [
     icon: <Sparkles className="w-5 h-5 text-amber-500" />,
     tag: "Rekomendasi Utama",
     readTime: "10 Menit Baca",
+    externalLink: "https://murah.sedotwckarawang.id/",
   },
   {
     title: "Penyebab Septic Tank Cepat Penuh & Solusinya",
