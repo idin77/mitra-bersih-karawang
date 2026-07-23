@@ -529,7 +529,32 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     executeWhatsApp();
   };
 
-  const executeWhatsApp = (customMessage?: string) => {
+  const detectLocation = async (): Promise<string | null> => {
+    return new Promise((resolve) => {
+      if (typeof navigator === 'undefined' || !navigator.geolocation) {
+        resolve(null);
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          try {
+             const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+             const data = await response.json();
+             const city = data.address.city || data.address.town || data.address.municipality || data.address.village;
+             resolve(city);
+          } catch(e) {
+             console.error("Geocoding failed:", e);
+             resolve(null);
+          }
+        },
+        () => resolve(null),
+        { timeout: 5000 }
+      );
+    });
+  };
+
+  const executeWhatsApp = async (customMessage?: string) => {
     if (!isMuted && typeof navigator !== 'undefined' && navigator.vibrate) {
       navigator.vibrate(50);
     }
@@ -543,9 +568,13 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
 
     let message = customMessage || "Halo Mitra Bersih Karawang, toilet saya bermasalah/penuh. Saya butuh respon cepat sekarang.";
     
-    const selectedKecamatan = localStorage.getItem('selectedKecamatan');
-    if (selectedKecamatan) {
-      message = `*Info Lokasi: ${selectedKecamatan}*\n\n${message}`;
+    let location = localStorage.getItem('selectedKecamatan');
+    if (!location) {
+      location = await detectLocation();
+    }
+    
+    if (location) {
+      message = `*Info Lokasi: ${location}*\n\n${message}`;
     }
 
     const text = encodeURIComponent(message);
