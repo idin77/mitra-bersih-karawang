@@ -3,11 +3,13 @@ import Hero from "../components/Hero";
 import Features from "../components/Features";
 import About from "../components/About";
 import Services from "../components/Services";
+import HorizontalServicesCarousel from "../components/HorizontalServicesCarousel";
 import Gallery from "../components/Gallery";
 import TestimonialsCarousel from "../components/TestimonialsCarousel";
 import TestimonialForm from "../components/TestimonialForm";
 import ServiceAreas from "../components/ServiceAreas";
 import KeywordsSection from "../components/KeywordsSection";
+import { StepCostEstimator } from "../components/StepCostEstimator";
 import ContactForm from "../components/ContactForm";
 import Footer from "../components/Footer";
 import FAQ from "../components/FAQ";
@@ -87,6 +89,7 @@ export default function LandingPage() {
         transition={{ duration: 0.7, ease: "easeOut" }}
       >
         <Services whatsappNumber={WHATSAPP_NUMBER} />
+        <HorizontalServicesCarousel whatsappNumber={WHATSAPP_NUMBER} />
       </motion.div>
 
       {/* 6. Section Keunggulan (Features) */}
@@ -115,6 +118,19 @@ export default function LandingPage() {
       <ServiceAreas />
 
       <KeywordsSection />
+
+      {/* 8.5 Cost Estimator Tool */}
+      <div className="max-w-4xl mx-auto px-4 -mt-16 mb-16 relative z-10">
+        <StepCostEstimator onSendMessage={(data) => {
+          const message = `Halo Jasa Sedot WC Mitra Bersih, saya ingin menanyakan estimasi berikut:\n` +
+            `- Layanan: ${data.service}\n` +
+            `- Volume: ${data.volume}\n` +
+            `- Wilayah: ${data.location}\n` +
+            `- Estimasi Harga: ${data.price}\n\nMohon konfirmasi ketersediaan teknisi secepatnya, terima kasih!`;
+          const rawLink = `https://wa.me/62${WHATSAPP_NUMBER.substring(1)}?text=${encodeURIComponent(message)}`;
+          window.open(rawLink, "_blank");
+        }} />
+      </div>
 
       {/* 9. Kontak Kami (Contact) */}
       <ContactForm whatsappNumber={WHATSAPP_NUMBER} />

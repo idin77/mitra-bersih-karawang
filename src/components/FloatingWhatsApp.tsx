@@ -139,6 +139,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [newTestimonial, setNewTestimonial] = useState({ text: "", name: "" });
   const [isTestimonialFormOpen, setIsTestimonialFormOpen] = useState(false);
   const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
+  const [isCoverageMapOpen, setIsCoverageMapOpen] = useState(false);
   const [isSchedulingModalOpen, setIsSchedulingModalOpen] = useState(false);
   const pricingData = [
     { service: "Sedot WC", price: "Rp 500.000 - Rp 900.000" },
@@ -300,7 +301,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [coverageSearch, setCoverageSearch] = useState("");
   const tooltipMessage = useMemo(() => {
-    const h = new Date().getHours();
+    const h = hour;
     const isKarawang = coverageSearch.toLowerCase().includes('karawang');
     const isBekasi = coverageSearch.toLowerCase().includes('bekasi');
     
@@ -350,7 +351,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     if (!isKarawang && !isBekasi) options = [...options, ...areaSpecific.default];
 
     return options[Math.floor(Math.random() * options.length)];
-  }, [coverageSearch]);
+  }, [coverageSearch, hour]);
   const [selectedCategory, setSelectedCategory] = useState<string>("Semua");
   const [isSortedAZ, setIsSortedAZ] = useState(false);
   const [detectedLocation, setDetectedLocation] = useState<{lat: number, lng: number} | null>(null);
@@ -440,7 +441,8 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
-      setHour(now.getHours());
+      const jakartaDate = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Jakarta" }));
+      setHour(jakartaDate.getHours());
       const time = now.toLocaleTimeString("id-ID", {
         timeZone: "Asia/Jakarta",
         hour: "2-digit",
@@ -738,19 +740,39 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               </div>
               
               {/* Testimonial Carousel */}
-              <div className="relative h-20 overflow-hidden bg-emerald-50 rounded-lg p-2 mb-2 border border-emerald-100">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={testimonialIndex}
-                    initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -5 }}
-                    className="absolute inset-0 p-2 flex flex-col justify-center"
-                  >
-                    <p className="text-[10px] font-bold text-emerald-800 italic leading-snug">"{testimonials[testimonialIndex].text}"</p>
-                    <p className="text-[9px] text-emerald-600 font-bold mt-1">— {testimonials[testimonialIndex].name}</p>
-                  </motion.div>
-                </AnimatePresence>
+              <div className="relative h-24 overflow-hidden bg-emerald-50 rounded-lg p-2 mb-2 border border-emerald-100 touch-pan-x">
+                <motion.div
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  onDragEnd={(e, { offset }) => {
+                    if (offset.x < -50) {
+                      setTestimonialIndex((prev) => (prev + 1) % testimonials.length);
+                    } else if (offset.x > 50) {
+                      setTestimonialIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+                    }
+                  }}
+                  className="w-full h-full cursor-grab active:cursor-grabbing"
+                >
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={testimonialIndex}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      className="absolute inset-0 p-2 flex flex-col justify-center"
+                    >
+                      <p className="text-[10px] font-bold text-emerald-800 italic leading-snug">"{testimonials[testimonialIndex].text}"</p>
+                      <p className="text-[9px] text-emerald-600 font-bold mt-1">— {testimonials[testimonialIndex].name}</p>
+                    </motion.div>
+                  </AnimatePresence>
+                </motion.div>
+                
+                {/* Indicators */}
+                <div className="absolute bottom-1 left-0 right-0 flex justify-center gap-1">
+                  {testimonials.map((_, idx) => (
+                    <div key={idx} className={`w-1.5 h-1.5 rounded-full transition-colors ${idx === testimonialIndex ? 'bg-emerald-600' : 'bg-emerald-300'}`} />
+                  ))}
+                </div>
               </div>
 
               <div className="max-h-24 overflow-y-auto pr-1" ref={chatContainerRef}>
@@ -900,6 +922,52 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
           />
 
           <AnimatePresence>
+            {isPricingModalOpen && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="absolute -top-[400px] right-0 bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-2xl border border-emerald-100 z-[55] flex flex-col gap-4 pointer-events-auto w-80"
+              >
+                  <div className="flex justify-between items-center">
+                      <h4 className="text-lg font-bold text-slate-800">Pricing List</h4>
+                      <button onClick={() => setIsPricingModalOpen(false)} className="text-slate-500 hover:text-slate-700">
+                        <X className="w-5 h-5" />
+                      </button>
+                  </div>
+                  {pricingData.map((p, i) => (
+                      <div key={i} className="flex justify-between py-2 border-b border-emerald-50">
+                          <span className="text-sm font-medium text-slate-700">{p.service}</span>
+                          <span className="text-sm font-bold text-emerald-600">{p.price}</span>
+                      </div>
+                  ))}
+                  <button onClick={() => setIsPricingModalOpen(false)} className="w-full mt-2 bg-emerald-600 text-white p-2 rounded-lg text-sm font-bold">Close</button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <AnimatePresence>
+            {isCoverageMapOpen && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                className="absolute -top-[500px] right-0 bg-white/90 backdrop-blur-sm p-3 rounded-2xl shadow-2xl border border-emerald-100 z-[55] flex flex-col gap-2 pointer-events-auto w-80 h-96"
+              >
+                <div className="flex justify-between items-center px-1 mb-1">
+                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Coverage Map</h4>
+                    <button onClick={() => setIsCoverageMapOpen(false)} className="text-slate-500 hover:text-slate-700">
+                      <X className="w-4 h-4" />
+                    </button>
+                </div>
+                <div className="flex-1 w-full h-full">
+                  <CoverageMap />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <AnimatePresence>
             {isActionsOpen && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.8, y: 20 }}
@@ -917,9 +985,51 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                   <button onClick={() => { setIsPricingModalOpen(true); setIsActionsOpen(false); }} className="flex items-center gap-3 w-full p-2 hover:bg-emerald-50 rounded-lg text-sm font-bold text-slate-700">
                     <Calculator className="w-4 h-4 text-emerald-600" /> See Pricing
                   </button>
-                  <button onClick={() => { setShowAllCoverage(true); setIsActionsOpen(false); }} className="flex items-center gap-3 w-full p-2 hover:bg-emerald-50 rounded-lg text-sm font-bold text-slate-700">
+                  <button onClick={() => { setIsSchedulingModalOpen(true); setIsActionsOpen(false); }} className="flex items-center gap-3 w-full p-2 hover:bg-emerald-50 rounded-lg text-sm font-bold text-slate-700">
+                    <Calendar className="w-4 h-4 text-emerald-600" /> Schedule Appointment
+                  </button>
+                  <button onClick={() => { setIsCoverageMapOpen(true); setIsActionsOpen(false); }} className="flex items-center gap-3 w-full p-2 hover:bg-emerald-50 rounded-lg text-sm font-bold text-slate-700">
                     <MapPin className="w-4 h-4 text-emerald-600" /> Check Coverage
                   </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <AnimatePresence>
+            {isSchedulingModalOpen && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                className="absolute -top-[350px] right-0 bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-2xl border border-emerald-100 z-[55] flex flex-col gap-4 pointer-events-auto w-80"
+              >
+                <div className="flex justify-between items-center">
+                    <h4 className="text-lg font-bold text-slate-800">Schedule Appointment</h4>
+                    <button onClick={() => setIsSchedulingModalOpen(false)} className="text-slate-500 hover:text-slate-700">
+                      <X className="w-5 h-5" />
+                    </button>
+                </div>
+                
+                <div className="flex flex-col gap-2">
+                    <label className="text-sm font-bold text-slate-700">Date</label>
+                    <input type="date" className="p-2 border border-slate-200 rounded-lg" value={scheduleDate} onChange={(e) => setScheduleDate(e.target.value)} />
+                </div>
+                
+                <div className="flex flex-col gap-2">
+                    <label className="text-sm font-bold text-slate-700">Time</label>
+                    <input type="time" className="p-2 border border-slate-200 rounded-lg" value={scheduleTime} onChange={(e) => setScheduleTime(e.target.value)} />
+                </div>
+                
+                <button 
+                  onClick={() => {
+                    const message = `Halo, saya ingin menjadwalkan layanan pada tanggal ${scheduleDate} jam ${scheduleTime}.`;
+                    executeWhatsApp(message);
+                    setIsSchedulingModalOpen(false);
+                  }}
+                  className="w-full bg-emerald-600 text-white p-3 rounded-xl font-bold hover:bg-emerald-700 transition-colors"
+                >
+                  Confirm & Chat
+                </button>
               </motion.div>
             )}
           </AnimatePresence>
@@ -1003,7 +1113,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               backgroundColor: isFeedbackActive ? "#34d399" : "#059669"
             }}
             style={{ perspective: 500 }}
-            className="relative overflow-hidden backdrop-blur-md bg-white/10 border border-white/20"
+            className="relative overflow-hidden backdrop-blur-md bg-white/10 border border-white/20 w-14 h-14 text-white rounded-full shadow-lg shadow-emerald-700/50 flex items-center justify-center relative select-none pointer-events-auto cursor-pointer focus:outline-none transition-shadow duration-300 ease-in-out"
             id="btn-floating-wa"
             data-nosnippet
             onClick={() => {
@@ -1042,7 +1152,6 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               backgroundColor: { duration: 0.3 }
             }}
             whileTap={{ scale: 0.9 }}
-            className="w-14 h-14 text-white rounded-full shadow-lg shadow-emerald-700/50 flex items-center justify-center relative select-none pointer-events-auto cursor-pointer focus:outline-none transition-shadow duration-300 ease-in-out"
             title="Hubungi Kami Melalui WhatsApp"
             aria-label="Buka WhatsApp untuk layanan Sedot WC"
           >
