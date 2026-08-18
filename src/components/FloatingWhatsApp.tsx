@@ -641,6 +641,13 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     }
     setHoldProgress(0);
     setIsLongPress(false);
+    
+    // Trigger multi-stage vibration if displaced (dragged)
+    if (!isMuted && typeof navigator !== 'undefined' && navigator.vibrate && isMobile) {
+        if (Math.abs(position.x) > 5 || Math.abs(position.y) > 5) {
+             navigator.vibrate([50, 30, 100]); // Multi-stage vibration pattern
+        }
+    }
   };
 
   const handleMouseMove = (e: MouseEvent) => {
@@ -1135,8 +1142,8 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               stiffness: 260,
               damping: 20,
               delay: randomDelay,
-              x: { type: "spring", stiffness: 100, damping: 5 },
-              y: { type: "spring", stiffness: 100, damping: 5 },
+              x: { type: "spring", stiffness: 400, damping: 15 },
+              y: { type: "spring", stiffness: 400, damping: 15 },
               rotate: { type: "tween", duration: 0.6 },
               scale: {
                   repeat: Infinity,
@@ -1245,8 +1252,12 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               />
             ))}
             <motion.div
-              animate={{ rotate: isHovered ? 15 : 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
+              animate={{ 
+                rotate: isHovered ? 15 : 0,
+                x: tilt.y * -0.2,
+                y: tilt.x * 0.2
+              }}
+              transition={{ duration: 0.1, ease: "linear" }}
             >
               <MessageCircle className="w-8 h-8 fill-current" />
             </motion.div>
