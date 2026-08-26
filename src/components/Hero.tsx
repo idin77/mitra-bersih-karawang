@@ -110,7 +110,7 @@ export default function Hero({ whatsappNumber, imageSrc }: HeroProps) {
                 className="flex items-center justify-center space-x-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 px-8 rounded-xl shadow-xl shadow-emerald-600/20 active:scale-95 transition-all text-base cursor-pointer"
               >
                 <PhoneCall className="w-5 h-5 animate-bounce" />
-                <span>Hubungi WhatsApp (0858-8244-8632)</span>
+                <span>Hubungi WhatsApp (085715654183)</span>
               </button>
 
               <a

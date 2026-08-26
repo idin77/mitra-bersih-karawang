@@ -24,7 +24,7 @@ import { CheckSquare, ShieldCheck, HeartPulse, Award } from "lucide-react";
 import { motion } from "motion/react";
 
 export default function LandingPage() {
-  const WHATSAPP_NUMBER = "085882448632";
+  const WHATSAPP_NUMBER = "085715654183";
   const HERO_IMAGE_SRC = heroImage;
 
   return (

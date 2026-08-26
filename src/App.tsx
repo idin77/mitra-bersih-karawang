@@ -7,7 +7,7 @@ import BlogArticlePage from "./pages/BlogArticlePage";
 import FloatingWhatsApp from "./components/FloatingWhatsApp";
 
 export default function App() {
-  const WHATSAPP_NUMBER = "085882448632";
+  const WHATSAPP_NUMBER = "085715654183";
   return (
       <BrowserRouter>
         <Routes>

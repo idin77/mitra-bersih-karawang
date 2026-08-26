@@ -5,7 +5,7 @@ import FloatingWhatsApp from "../components/FloatingWhatsApp";
 import ContactForm from "../components/ContactForm";
 
 export default function BekasiPage() {
-  const WHATSAPP_NUMBER = "085882448632";
+  const WHATSAPP_NUMBER = "085715654183";
 
   return (
     <div id="mitra-bersih-bekasi-app" className="relative text-slate-800 bg-white">

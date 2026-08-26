@@ -677,8 +677,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     lastTime.current = currentTime;
 
     // Magnetic snap effect
-    const baseRange = 150;
-    const range = baseRange + Math.min(velocity * 50, 150); // Dynamic range: 150 - 300px
+    const range = 100; // Static 100px range
     if (distance < range) {
        // Gently snap towards cursor
        const strength = 0.2;

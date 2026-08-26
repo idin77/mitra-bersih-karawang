@@ -16,7 +16,7 @@ import { ShieldCheck, CheckSquare, HeartPulse, Award } from "lucide-react";
 import { motion } from "motion/react";
 
 export default function CikampekPage() {
-  const WHATSAPP_NUMBER = "085882448632";
+  const WHATSAPP_NUMBER = "085715654183";
   const HERO_IMAGE_SRC = "/src/assets/images/armada_karawang_asli_1779610538314.png";
 
   return (
