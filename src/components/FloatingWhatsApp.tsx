@@ -133,7 +133,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   ]);
   const [faqs] = useState([
     { question: "Mengapa pilih jasa sedot WC Karawang kami?", answer: "Kami menyediakan tenaga profesional, peralatan modern, pengerjaan cepat, dan harga yang transparan untuk semua masalah sanitasi di Karawang." },
-    { question: "Berapa harga jasa sedot WC Karawang?", answer: "Harga jasa sedot WC Karawang kami sangat kompetitif, mulai dari Rp350.000 tergantung pada volume tangki dan lokasi Anda. Kami menjamin tidak ada biaya tambahan tersembunyi." },
+    { question: "Berapa harga jasa sedot WC Karawang?", answer: "Harga jasa sedot WC Karawang kami sangat kompetitif, mulai dari Rp500.000 tergantung pada volume tangki dan lokasi Anda. Kami menjamin tidak ada biaya tambahan tersembunyi." },
   ]);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const [newTestimonial, setNewTestimonial] = useState({ text: "", name: "" });
@@ -143,7 +143,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [isSchedulingModalOpen, setIsSchedulingModalOpen] = useState(false);
   const pricingData = [
     { service: "Sedot WC", price: "Rp 500.000 - Rp 900.000" },
-    { service: "Saluran Mampet", price: "Rp 350.000 - Rp 600.000" },
+    { service: "Saluran Mampet", price: "Rp 500.000 - Rp 750.000" },
     { service: "Service Tangki", price: "Rp 700.000 - Rp 1.500.000" },
   ];
   const [showTooltip, setShowTooltip] = useState(false);

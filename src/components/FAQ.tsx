@@ -8,7 +8,7 @@ export default function FAQ() {
   const faqs = [
     {
       question: "Berapa harga sedot WC di Karawang?",
-      answer: "Harga jasa sedot WC murah Karawang di Mitra Bersih sangat transparan dan kompetitif. Tarif bervariasi mulai dari Rp350.000 tergantung pada ukuran volume tangki septic tank, panjang selang penarikan di lokasi, serta tingkat keparahan sumbatan. Kami menjamin bebas biaya biaya tambahan tersembunyi (free ongkos kirim armada untuk area utama Karawang)."
+      answer: "Harga jasa sedot WC murah Karawang di Mitra Bersih sangat transparan dan kompetitif. Tarif bervariasi mulai dari Rp500.000 tergantung pada ukuran volume tangki septic tank, panjang selang penarikan di lokasi, serta tingkat keparahan sumbatan. Kami menjamin bebas biaya biaya tambahan tersembunyi (free ongkos kirim armada untuk area utama Karawang)."
     },
     {
       question: "Apakah tersedia layanan 25 jam / 24 jam penuh?",
