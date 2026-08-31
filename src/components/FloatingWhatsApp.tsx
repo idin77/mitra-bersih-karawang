@@ -142,9 +142,9 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [isCoverageMapOpen, setIsCoverageMapOpen] = useState(false);
   const [isSchedulingModalOpen, setIsSchedulingModalOpen] = useState(false);
   const pricingData = [
-    { service: "Sedot WC", price: "Rp 500.000 - Rp 900.000" },
-    { service: "Saluran Mampet", price: "Rp 500.000 - Rp 750.000" },
-    { service: "Service Tangki", price: "Rp 700.000 - Rp 1.500.000" },
+    { service: "Sedot WC" },
+    { service: "Saluran Mampet" },
+    { service: "Service Tangki" },
   ];
   const [showTooltip, setShowTooltip] = useState(false);
   const [showPinnedMessage, setShowPinnedMessage] = useState(true);
@@ -944,7 +944,6 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                   {pricingData.map((p, i) => (
                       <div key={i} className="flex justify-between py-2 border-b border-emerald-50">
                           <span className="text-sm font-medium text-slate-700">{p.service}</span>
-                          <span className="text-sm font-bold text-emerald-600">{p.price}</span>
                       </div>
                   ))}
                   <button onClick={() => setIsPricingModalOpen(false)} className="w-full mt-2 bg-emerald-600 text-white p-2 rounded-lg text-sm font-bold">Close</button>
