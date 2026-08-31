@@ -18,9 +18,9 @@ export function StepCostEstimator({ onSendMessage }: StepEstimatorProps) {
   const getPrice = () => {
     // Simplified price estimation logic based on Volume & Service
     if (service === "Sedot WC / Septic Tank") {
-      if (volume === "Kecil (< 2m3)") return "Rp 500.000";
-      if (volume === "Sedang (2-4m3)") return "Rp 500.000";
-      return "Rp 750.000+";
+      if (volume === "Kecil (< 2m3)") return "Rp 700.000";
+      if (volume === "Sedang (2-4m3)") return "Rp 700.000";
+      return "Rp 950.000+";
     }
     return "Nego (Hubungi Kami)";
   };

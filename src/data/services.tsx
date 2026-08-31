@@ -6,7 +6,7 @@ export const services = [
     icon: <Toilet className="w-8 h-8" />,
     title: "Sedot WC / Septic Tank",
     shortDesc: "Kuras septic tank penuh secara berkala guna mencegah pencemaran udara dan air tanah.",
-    priceStart: "Harga Mulai Dari Rp 350RB-an",
+    priceStart: "Harga Mulai Dari Rp 550RB-an",
     points: [
       "Pengosongan septic tank hingga bersih tuntas",
       "Pemberisihan lumpur mengendap (Kuras Lumpur)",
@@ -21,7 +21,7 @@ export const services = [
     icon: <Wrench className="w-8 h-8" />,
     title: "WC Mampet",
     shortDesc: "Pembersihan sumbatan toilet dengan cepat tanpa harus melakukan pembongkaran lantai / pipa.",
-    priceStart: "Harga Mulai Dari Rp 250RB-an",
+    priceStart: "Harga Mulai Dari Rp 450RB-an",
     points: [
       "Metode pengerjaan modern tanpa bongkar paksa",
       "Menghilangkan sumbatan tisu, mainan, pembalut, dll.",
@@ -36,7 +36,7 @@ export const services = [
     icon: <ShowerHead className="w-8 h-8" />,
     title: "Saluran Mampet",
     shortDesc: "Pelancaran wastafel, cuci piring, pembuangan kamar mandi, talang air, dan pipa air kotor.",
-    priceStart: "Harga Mulai Dari Rp 200RB-an",
+    priceStart: "Harga Mulai Dari Rp 400RB-an",
     points: [
       "Pelancaran saluran wastafel dapur tersumbat lemak",
       "Mengatasi pipa kamar mandi mampet akibat rambut/sabun",

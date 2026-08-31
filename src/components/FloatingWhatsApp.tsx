@@ -133,7 +133,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   ]);
   const [faqs] = useState([
     { question: "Mengapa pilih jasa sedot WC Karawang kami?", answer: "Kami menyediakan tenaga profesional, peralatan modern, pengerjaan cepat, dan harga yang transparan untuk semua masalah sanitasi di Karawang." },
-    { question: "Berapa harga jasa sedot WC Karawang?", answer: "Harga jasa sedot WC Karawang kami sangat kompetitif, mulai dari Rp500.000 tergantung pada volume tangki dan lokasi Anda. Kami menjamin tidak ada biaya tambahan tersembunyi." },
+    { question: "Berapa harga jasa sedot WC Karawang?", answer: "Harga jasa sedot WC Karawang kami sangat kompetitif, mulai dari Rp700.000 tergantung pada volume tangki dan lokasi Anda. Kami menjamin tidak ada biaya tambahan tersembunyi." },
   ]);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const [newTestimonial, setNewTestimonial] = useState({ text: "", name: "" });
