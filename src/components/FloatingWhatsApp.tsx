@@ -677,7 +677,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     lastTime.current = currentTime;
 
     // Magnetic snap effect
-    const range = 100; // Static 100px range
+    const range = 150; // Static 150px range
     if (distance < range) {
        // Gently snap towards cursor
        const strength = 0.2;
@@ -1117,8 +1117,11 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               opacity: 1,
               backgroundColor: isFeedbackActive ? "#34d399" : "#059669"
             }}
-            style={{ perspective: 500 }}
-            className="relative overflow-hidden backdrop-blur-md bg-white/10 border border-white/20 w-14 h-14 text-white rounded-full shadow-lg shadow-emerald-700/50 flex items-center justify-center relative select-none pointer-events-auto cursor-pointer focus:outline-none transition-shadow duration-300 ease-in-out"
+            style={{ 
+                perspective: 500,
+                boxShadow: `${-position.x * 0.5}px ${-position.y * 0.5}px ${20 + (1 - Math.sqrt(position.x ** 2 + position.y ** 2) / 150) * 30}px rgba(16, 185, 129, ${0.4 + (1 - Math.sqrt(position.x ** 2 + position.y ** 2) / 150) * 0.2})`
+            }}
+            className="relative overflow-hidden backdrop-blur-md bg-white/10 border border-white/20 w-14 h-14 text-white rounded-full flex items-center justify-center relative select-none pointer-events-auto cursor-pointer focus:outline-none transition-shadow duration-300 ease-in-out"
             id="btn-floating-wa"
             data-nosnippet
             onClick={() => {
@@ -1140,8 +1143,8 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               stiffness: 260,
               damping: 20,
               delay: randomDelay,
-              x: { type: "spring", stiffness: 400, damping: 15 },
-              y: { type: "spring", stiffness: 400, damping: 15 },
+              x: { type: "spring", stiffness: 100, damping: 20 },
+              y: { type: "spring", stiffness: 100, damping: 20 },
               rotate: { type: "tween", duration: 0.6 },
               scale: {
                   repeat: Infinity,

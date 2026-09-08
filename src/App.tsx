@@ -5,6 +5,7 @@ import BekasiPage from "./pages/BekasiPage";
 import KarawangBaratPage from "./pages/KarawangBaratPage";
 import BlogArticlePage from "./pages/BlogArticlePage";
 import FloatingWhatsApp from "./components/FloatingWhatsApp";
+import GeminiChatbot from "./components/GeminiChatbot";
 
 export default function App() {
   const WHATSAPP_NUMBER = "085715654183";
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="/tips-mengatasi-wc-mampet-karawang" element={<BlogArticlePage />} />
         </Routes>
         <FloatingWhatsApp whatsappNumber={WHATSAPP_NUMBER} />
+        <GeminiChatbot />
       </BrowserRouter>
   );
 }
