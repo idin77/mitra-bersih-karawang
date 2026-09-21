@@ -173,6 +173,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [showAllCoverage, setShowAllCoverage] = useState(false);
   const lastMousePos = useRef({ x: 0, y: 0 });
   const lastTime = useRef(Date.now());
+  const isMouseInRangeRef = useRef(false); // Add ref to track proximity
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
   const [helpCount, setHelpCount] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -206,7 +207,8 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [testimonialIndex, setTestimonialIndex] = useState(0);
   const [serviceStatus, setServiceStatus] = useState<'Active' | 'Busy'>('Active');
   const [isMobile, setIsMobile] = useState(false);
-  const [particles, setParticles] = useState<{id: number}[]>([]);
+  const [particles, setParticles] = useState<{id: number, x: number, y: number}[]>([]);
+  const [velocity, setVelocity] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -235,9 +237,9 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     return () => clearInterval(interval);
   }, []);
 
-  const triggerParticles = () => {
+  const triggerParticles = (x: number = 0, y: number = 0) => {
     const id = Date.now();
-    setParticles(prev => [...prev, { id }]);
+    setParticles(prev => [...prev, { id, x, y }]);
     setTimeout(() => setParticles(prev => prev.filter(p => p.id !== id)), 600);
   };
 
@@ -662,6 +664,14 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     
     setMouseDist(distance);
     
+    // Ripple proximity check
+    if (distance < range && !isMouseInRangeRef.current) {
+      addRipple();
+      isMouseInRangeRef.current = true;
+    } else if (distance >= range) {
+      isMouseInRangeRef.current = false;
+    }
+    
     // Tilt calculation
     const relativeX = (clientX - left) / width - 0.5;
     const relativeY = (clientY - top) / height - 0.5;
@@ -672,6 +682,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     const deltaTime = Math.max(currentTime - lastTime.current, 1);
     const deltaDist = Math.sqrt((clientX - lastMousePos.current.x) ** 2 + (clientY - lastMousePos.current.y) ** 2);
     const velocity = deltaDist / deltaTime; // pixels per ms
+    setVelocity(velocity);
     
     lastMousePos.current = { x: clientX, y: clientY };
     lastTime.current = currentTime;
@@ -679,11 +690,38 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     // Magnetic snap effect
     const range = 150; // Static 150px range
     if (distance < range) {
-       // Gently snap towards cursor
-       const strength = 0.2;
-       setPosition({ x: distanceX * strength, y: distanceY * strength });
+       // Repel force when very close
+       const repelRange = 30;
+       let repelX = 0;
+       let repelY = 0;
+       if (distance < repelRange) {
+         const repelStrength = 0.5;
+         repelX = -distanceX * repelStrength;
+         repelY = -distanceY * repelStrength;
+       }
+
+       // Elastic resistance: friction increases (movement decreases) as distance from anchor increases
+       const baseFriction = serviceStatus === 'Busy' ? 0.08 : 0.2;
+       const currentDistFromCenter = Math.sqrt(position.x ** 2 + position.y ** 2);
+       const friction = baseFriction * (1 - Math.min(0.7, currentDistFromCenter / range));
+       
+       // Acceleration pull factor based on distance
+       const pullFactor = Math.pow(1 - distance / range, 2); // Accelerates as distance decreases
+       const targetPos = { x: (distanceX * 0.5 + repelX) * (1 + pullFactor), y: (distanceY * 0.5 + repelY) * (1 + pullFactor) };
+       const newPos = { 
+          x: position.x + (targetPos.x - position.x) * friction, 
+          y: position.y + (targetPos.y - position.y) * friction 
+       };
+       setPosition(newPos);
+       if (Math.random() > 0.6) {
+          triggerParticles(newPos.x, newPos.y);
+       }
     } else {
-       setPosition({ x: 0, y: 0 });
+       // Return to center with friction
+       setPosition(prev => ({
+          x: prev.x * 0.9,
+          y: prev.y * 0.9
+       }));
        setTilt({ x: 0, y: 0 });
     }
   };
@@ -849,8 +887,8 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
              <motion.div
                key={p.id}
                className="absolute w-2 h-2 bg-emerald-400 rounded-full z-[60] pointer-events-none"
-               initial={{ opacity: 1, scale: 0, bottom: 20, right: 20 }}
-               animate={{ opacity: 0, scale: 2, bottom: 100, right: 100 }}
+               initial={{ opacity: 1, scale: 0, x: p.x, y: p.y }}
+               animate={{ opacity: 0, scale: 2, x: p.x + (Math.random() - 0.5) * 50, y: p.y + (Math.random() - 0.5) * 50 }}
                transition={{ duration: 0.6 }}
              />
           ))}
@@ -1109,17 +1147,28 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               y: position.y,
               rotateX: tilt.x,
               rotateY: tilt.y,
+              skewX: velocity * 2,
+              skewY: velocity * 2,
               scale: isLongPress ? 1.15 : (isHovered ? [1.1, 1.15, 1.1] : [1, 1.05, 1]),
               rotate: isLongPress ? 0 : (isShaking ? [0, -10, 10, -10, 10, 0] : 0),
               boxShadow: isLongPress 
                 ? "0 0 20px 10px rgba(255, 255, 255, 0.8)" 
-                : `0 0 ${10 + (100 - Math.min(mouseDist, 100)) * 0.3}px ${2 + (100 - Math.min(mouseDist, 100)) * 0.1}px rgba(16, 185, 129, ${0.4 + (100 - Math.min(mouseDist, 100)) * 0.005})`,
+                : [
+                    `0 0 ${10 + (100 - Math.min(mouseDist, 100)) * 0.3}px ${2 + (100 - Math.min(mouseDist, 100)) * 0.1}px rgba(${serviceStatus === 'Active' ? '16, 185, 129' : '245, 158, 11'}, ${0.4 + (100 - Math.min(mouseDist, 100)) * 0.005 + Math.min(0.5, Math.sqrt(position.x ** 2 + position.y ** 2) * 0.01)})`,
+                    `0 0 ${15 + (100 - Math.min(mouseDist, 100)) * 0.4}px ${5 + (100 - Math.min(mouseDist, 100)) * 0.2}px rgba(${serviceStatus === 'Active' ? '16, 185, 129' : '245, 158, 11'}, ${0.2 + (100 - Math.min(mouseDist, 100)) * 0.005 + Math.min(0.5, Math.sqrt(position.x ** 2 + position.y ** 2) * 0.01)})`,
+                    `0 0 ${10 + (100 - Math.min(mouseDist, 100)) * 0.3}px ${2 + (100 - Math.min(mouseDist, 100)) * 0.1}px rgba(${serviceStatus === 'Active' ? '16, 185, 129' : '245, 158, 11'}, ${0.4 + (100 - Math.min(mouseDist, 100)) * 0.005 + Math.min(0.5, Math.sqrt(position.x ** 2 + position.y ** 2) * 0.01)})`
+                  ],
               opacity: 1,
               backgroundColor: isFeedbackActive ? "#34d399" : "#059669"
             }}
+            transition={{
+              type: "spring",
+              stiffness: 150,
+              damping: 15,
+            }}
             style={{ 
                 perspective: 500,
-                boxShadow: `${-position.x * 0.5}px ${-position.y * 0.5}px ${20 + (1 - Math.sqrt(position.x ** 2 + position.y ** 2) / 150) * 30}px rgba(16, 185, 129, ${0.4 + (1 - Math.sqrt(position.x ** 2 + position.y ** 2) / 150) * 0.2})`
+                boxShadow: `${-position.x * 0.5}px ${-position.y * 0.5}px ${20 + (1 - Math.sqrt(position.x ** 2 + position.y ** 2) / 150) * 30}px rgba(${serviceStatus === 'Active' ? '16, 185, 129' : '245, 158, 11'}, ${0.4 + (1 - Math.sqrt(position.x ** 2 + position.y ** 2) / 150) * 0.2})`
             }}
             className="relative overflow-hidden backdrop-blur-md bg-white/10 border border-white/20 w-14 h-14 text-white rounded-full flex items-center justify-center relative select-none pointer-events-auto cursor-pointer focus:outline-none transition-shadow duration-300 ease-in-out"
             id="btn-floating-wa"
@@ -1153,8 +1202,8 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               },
               borderRadius: { duration: 0.6, ease: "easeOut" },
               boxShadow: {
-                  repeat: isHovered ? Infinity : 0,
-                  duration: 1.5,
+                  repeat: Infinity,
+                  duration: 2.5,
                   ease: "easeInOut"
               },
               backgroundColor: { duration: 0.3 }
@@ -1163,6 +1212,12 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             title="Hubungi Kami Melalui WhatsApp"
             aria-label="Buka WhatsApp untuk layanan Sedot WC"
           >
+            <motion.div 
+               className="absolute inset-0 rounded-full pointer-events-none"
+               animate={{ 
+                 background: `radial-gradient(circle, rgba(255,255,255,${Math.max(0, 0.4 - mouseDist/150)}) 0%, rgba(255,255,255,0) 70%)` 
+               }}
+            />
             {hasUnread && (
               <motion.div
                 initial={{ scale: 0 }}
