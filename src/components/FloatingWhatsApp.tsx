@@ -1448,8 +1448,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             }}
             style={{ 
                 perspective: 500,
-                boxShadow: `${-position.x * 0.5}px ${-position.y * 0.5}px ${20 + (1 - Math.sqrt(position.x ** 2 + position.y ** 2) / 150) * 30}px rgba(${serviceStatus === 'Active' ? '16, 185, 129' : '245, 158, 11'}, ${0.4 + (1 - Math.sqrt(position.x ** 2 + position.y ** 2) / 150) * 0.2})`,
-                filter: `blur(${Math.min(velocity * 8, 8)}px)`
+                boxShadow: `${-position.x * 0.2}px ${-position.y * 0.2}px ${20 + (1 - Math.min(1, mouseDist / 200)) * 40}px rgba(${serviceStatus === 'Active' ? '16, 185, 129' : '245, 158, 11'}, ${0.3 + (1 - Math.min(1, mouseDist / 200)) * 0.4})`,
             }}
             className="relative overflow-hidden backdrop-blur-md bg-white/10 border border-white/20 w-14 h-14 text-white rounded-full flex items-center justify-center relative select-none pointer-events-auto cursor-pointer focus:outline-none transition-shadow duration-300 ease-in-out"
             id="btn-floating-wa"
@@ -1499,15 +1498,23 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                  background: `radial-gradient(circle, rgba(255,255,255,${Math.max(0, 0.4 - mouseDist/150)}) 0%, rgba(255,255,255,0) 70%)` 
                }}
             />
-            {isNearProximity && (
-              <motion.div
-                className="absolute -inset-1 rounded-full border-2 border-white/50 pointer-events-none"
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: 1, opacity: 1, rotate: 360 }}
-                transition={{ duration: 1.5, ease: "linear", repeat: Infinity }}
-                style={{ strokeDasharray: "10, 10" }}
+            {/* Magnetic Range Indicator */}
+            <svg className="absolute -inset-8 w-[calc(100%+64px)] h-[calc(100%+64px)] pointer-events-none" viewBox="0 0 100 100">
+              <motion.circle
+                cx="50"
+                cy="50"
+                r="45"
+                fill="none"
+                stroke={polarity === 'attract' ? '#3b82f6' : '#f43f5e'}
+                strokeWidth="2"
+                strokeDasharray="283"
+                animate={{
+                    strokeDashoffset: 283 - (magneticRange / 200) * 283,
+                    opacity: isNearProximity ? 0.8 : 0
+                }}
+                className="filter drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]"
               />
-            )}
+            </svg>
             {hasUnread && (
               <motion.div
                 initial={{ scale: 0 }}
@@ -1540,39 +1547,57 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 )}
             </AnimatePresence>
 
-            {/* Battery Indicator */}
+            {/* Battery/Status Indicator */}
             <motion.div 
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="absolute bottom-0 -left-1 w-5 h-5 bg-white text-emerald-800 rounded-full border border-emerald-200 flex items-center justify-center z-50 shadow-sm"
+                className={`absolute bottom-0 -left-1 w-6 h-6 bg-white ${serviceStatus === 'Active' ? 'text-emerald-600' : 'text-amber-500'} rounded-full border ${serviceStatus === 'Active' ? 'border-emerald-200' : 'border-amber-200'} flex items-center justify-center z-50 shadow-sm`}
             >
-                {(() => {
-                    const hour = new Date().getHours();
-                    if (hour >= 9 && hour < 18) return <Battery className="w-3 h-3" />;
-                    if (hour >= 22 || hour < 6) return <BatteryCharging className="w-3 h-3" />;
-                    return <BatteryLow className="w-3 h-3" />;
-                })()}
+                <motion.div
+                    animate={{ 
+                        scale: serviceStatus === 'Active' ? [1, 1.2, 1] : [1, 0.8, 1],
+                        rotate: serviceStatus === 'Active' ? 0 : [0, -10, 10, -10, 0]
+                    }}
+                    transition={{ repeat: Infinity, duration: serviceStatus === 'Active' ? 2 : 0.5 }}
+                >
+                    {serviceStatus === 'Active' ? <Battery className="w-3.5 h-3.5" /> : <BatteryLow className="w-3.5 h-3.5" />}
+                </motion.div>
             </motion.div>
 
             {/* Physical-style Toggle Switch */}
-            <motion.div 
-                className={`absolute -top-12 left-1/2 -translate-x-1/2 w-14 h-7 ${polarity === 'attract' ? 'bg-blue-600' : 'bg-rose-600'} rounded-full p-1 cursor-pointer shadow-md flex items-center ${polarity === 'attract' ? 'justify-start' : 'justify-end'} transition-colors duration-300`}
-                onClick={(e) => {
-                    e.stopPropagation();
-                    setPolarity(prev => prev === 'attract' ? 'repel' : 'attract');
-                }}
-                whileHover={{ scale: 1.05 }}
-                title={`Magnetic Mode: ${polarity.toUpperCase()}`}
-            >
+            <div className="absolute -top-12 left-1/2 -translate-x-1/2 flex items-center gap-1">
+                <div className="flex flex-col items-center gap-0.5">
+                    <Magnet className={`w-4 h-4 rotate-180 transition-colors duration-300 ${polarity === 'attract' ? 'text-blue-600' : 'text-gray-400'}`} />
+                    <motion.span 
+                        className="text-[8px] font-bold text-gray-500"
+                        animate={{ opacity: polarity === 'attract' ? [0.5, 1, 0.5] : 0.5 }}
+                        transition={{ repeat: Infinity, duration: 1.5 }}
+                    >ATTRACT</motion.span>
+                </div>
                 <motion.div 
-                    className="w-5 h-5 bg-white rounded-full shadow-sm"
-                    layout
-                    transition={{ type: "spring", stiffness: 700, damping: 30 }}
-                />
-                <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-gray-700 whitespace-nowrap bg-white/80 px-1 rounded">
-                    {polarity.toUpperCase()}
-                </span>
-            </motion.div>
+                    className={`w-14 h-7 ${polarity === 'attract' ? 'bg-blue-600' : 'bg-rose-600'} rounded-full p-1 cursor-pointer shadow-md flex items-center ${polarity === 'attract' ? 'justify-start' : 'justify-end'} transition-colors duration-300`}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setPolarity(prev => prev === 'attract' ? 'repel' : 'attract');
+                    }}
+                    whileHover={{ scale: 1.05 }}
+                    title={`Magnetic Mode: ${polarity.toUpperCase()}`}
+                >
+                    <motion.div 
+                        className="w-5 h-5 bg-white rounded-full shadow-sm"
+                        layout
+                        transition={{ type: "spring", stiffness: 700, damping: 30 }}
+                    />
+                </motion.div>
+                <div className="flex flex-col items-center gap-0.5">
+                    <Magnet className={`w-4 h-4 transition-colors duration-300 ${polarity === 'repel' ? 'text-rose-600' : 'text-gray-400'}`} />
+                    <motion.span 
+                        className="text-[8px] font-bold text-gray-500"
+                        animate={{ opacity: polarity === 'repel' ? [0.5, 1, 0.5] : 0.5 }}
+                        transition={{ repeat: Infinity, duration: 1.5 }}
+                    >REPEL</motion.span>
+                </div>
+            </div>
             {/* Ripple Animation */}
             {ripples.map((ripple) => (
               <motion.div
