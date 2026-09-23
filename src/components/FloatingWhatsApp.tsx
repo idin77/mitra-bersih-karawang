@@ -832,7 +832,9 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     
     // Magnetic spring-based attraction/repulsion effect
     if (distance < 100 && !isDragging) {
-      const strength = polarity === 'repel' ? 0.5 : -0.5; // Repulsion or Attraction strength
+      // Calculate variable friction: higher friction near the center
+      const friction = 1 - (distance / 100); 
+      const strength = (polarity === 'repel' ? 0.5 : -0.5) * (1 + friction * 2); // Apply friction/weight
       const forceX = (distanceX / distance) * (100 - distance) * strength;
       const forceY = (distanceY / distance) * (100 - distance) * strength;
       
@@ -841,11 +843,25 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
         y: prev.y - forceY,
       }));
     } else if (!isDragging && !isOrbital) {
-      // Gentle return to origin when out of range
-      setPosition((prev) => ({
-        x: prev.x * 0.9,
-        y: prev.y * 0.9,
-      }));
+      // Gentle return to origin with momentum-based overshoot when just exiting
+      if (isMouseInRangeRef.current) {
+        // Calculate velocity based on last position
+        const velX = (position.x) * 0.2; 
+        const velY = (position.y) * 0.2;
+        
+        // Add overshoot momentum
+        setPosition((prev) => ({
+            x: (prev.x * 0.9) + (velX * 0.5),
+            y: (prev.y * 0.9) + (velY * 0.5),
+        }));
+        isMouseInRangeRef.current = false;
+      } else {
+        // Gentle return to origin
+        setPosition((prev) => ({
+            x: prev.x * 0.9,
+            y: prev.y * 0.9,
+        }));
+      }
     }
 
     // Orbit proximity check
@@ -1506,6 +1522,24 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               </motion.div>
             )}
             
+            {/* Repel Zone Indicators */}
+            <AnimatePresence>
+                {isNearProximity && (
+                    <motion.div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        {[...Array(8)].map((_, i) => (
+                            <motion.div
+                                key={i}
+                                initial={{ opacity: 0, scale: 0 }}
+                                animate={{ opacity: 0.6, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0 }}
+                                className={`absolute w-2 h-2 ${polarity === 'repel' ? 'bg-rose-400' : 'bg-emerald-400'} rounded-full`}
+                                style={{ transform: `rotate(${i * 45}deg) translateY(-40px)` }}
+                            />
+                        ))}
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             {/* Battery Indicator */}
             <motion.div 
                 initial={{ scale: 0, opacity: 0 }}
@@ -1520,27 +1554,35 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 })()}
             </motion.div>
 
-            {/* Magnetic Mode Indicator */}
+            {/* Physical-style Toggle Switch */}
             <motion.div 
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className={`absolute bottom-0 -right-1 w-5 h-5 ${polarity === 'attract' ? 'bg-emerald-500' : 'bg-rose-500'} text-white rounded-full border border-white flex items-center justify-center z-50 shadow-sm cursor-pointer`}
+                className={`absolute -top-12 left-1/2 -translate-x-1/2 w-14 h-7 ${polarity === 'attract' ? 'bg-blue-600' : 'bg-rose-600'} rounded-full p-1 cursor-pointer shadow-md flex items-center ${polarity === 'attract' ? 'justify-start' : 'justify-end'} transition-colors duration-300`}
                 onClick={(e) => {
                     e.stopPropagation();
                     setPolarity(prev => prev === 'attract' ? 'repel' : 'attract');
                 }}
+                whileHover={{ scale: 1.05 }}
+                title={`Magnetic Mode: ${polarity.toUpperCase()}`}
             >
-                <Magnet className="w-3 h-3" />
+                <motion.div 
+                    className="w-5 h-5 bg-white rounded-full shadow-sm"
+                    layout
+                    transition={{ type: "spring", stiffness: 700, damping: 30 }}
+                />
+                <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-gray-700 whitespace-nowrap bg-white/80 px-1 rounded">
+                    {polarity.toUpperCase()}
+                </span>
             </motion.div>
             {/* Ripple Animation */}
-            {isRepelling && (
+            {ripples.map((ripple) => (
               <motion.div
-                className="absolute inset-0 rounded-full border-4 border-white pointer-events-none"
-                initial={{ scale: 1, opacity: 1 }}
-                animate={{ scale: 2.5, opacity: 0 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
+                key={ripple.id}
+                className={`absolute inset-0 rounded-full border-2 ${polarity === 'attract' ? 'border-blue-300' : 'border-rose-300'} pointer-events-none`}
+                initial={{ scale: 0.5, opacity: 1 }}
+                animate={{ scale: 3, opacity: 0 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
               />
-            )}
+            ))}
             
             {isHovered && (
               <motion.div
