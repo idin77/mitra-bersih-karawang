@@ -21,12 +21,19 @@ async function startServer() {
   app.post("/api/chat", async (req, res) => {
     try {
       const { messages } = req.body;
+      // Convert front-end messages to the format expected by the Gemini chat history
+      const history = messages.slice(0, -1).map((m: any) => ({
+        role: m.role === 'user' ? 'user' : 'model',
+        parts: [{ text: m.text }]
+      }));
+      
       const chat = ai.chats.create({
-        model: "gemini-3.8-flash",
+        model: "gemini-3.5-flash",
+        history: history,
         config: { systemInstruction: "You are a helpful assistant for Mitra Bersih, a company that provides septic tank cleaning and plumbing services in Karawang." },
       });
-      const lastMessage = messages[messages.length - 1];
-      const response = await chat.sendMessage({ message: lastMessage.text });
+      
+      const response = await chat.sendMessage({ message: messages[messages.length - 1].text });
       res.json({ text: response.text });
     } catch (error) {
       res.status(500).json({ error: "Failed to communicate with Gemini" });
