@@ -48,73 +48,80 @@ const getDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => 
   return R * c;
 };
 
-const EtaDisplay = ({ minutes }: { minutes: number }) => {
-    const [displayMinutes, setDisplayMinutes] = useState(0);
-
-    useEffect(() => {
-        let start = 0;
-        const duration = 1500;
-        const frameRate = 30;
-        const totalSteps = duration / frameRate;
-        const increment = minutes / totalSteps;
-        
-        const timer = setInterval(() => {
-            start += increment;
-            if (start >= minutes) {
-                setDisplayMinutes(minutes);
-                clearInterval(timer);
-            } else {
-                setDisplayMinutes(Math.floor(start));
-            }
-        }, frameRate);
-        
-        return () => clearInterval(timer);
-    }, [minutes]);
-
-    return (
-        <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-emerald-50 border border-emerald-200 p-3 rounded-xl mt-2 overflow-hidden relative"
-        >
-            <p className="text-[10px] text-emerald-800 font-bold uppercase tracking-wider mb-1">Estimasi Kedatangan</p>
-            <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-black text-emerald-600">{displayMinutes}</span>
-                <span className="text-xs font-bold text-emerald-700">menit</span>
-            </div>
-            
-            {/* Progress Bar with Vehicle Animation */}
-            <div className="h-1.5 w-full bg-emerald-100 rounded-full mt-2 relative">
-                <motion.div
-                    className="h-full bg-emerald-500 rounded-full"
-                    initial={{ width: "0%" }}
-                    animate={{ width: "100%" }}
-                    transition={{ duration: 2, ease: "linear" }}
-                />
-                <motion.div
-                    className="absolute top-1/2 -mt-2 -ml-2 text-emerald-600"
-                    initial={{ left: "0%" }}
-                    animate={{ left: "100%" }}
-                    transition={{ duration: 2, ease: "linear" }}
-                >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
-                    </svg>
-                </motion.div>
-                <div className="flex flex-col items-center gap-0.5">
-                    <Magnet className={`w-4 h-4 transition-colors duration-300 ${polarity === 'repel' ? 'text-rose-600' : 'text-gray-400'}`} />
-                    <motion.span 
-                        className={`text-[8px] font-bold ${polarity === 'repel' ? 'text-rose-600' : 'text-gray-400'}`}
-                        animate={{ opacity: polarity === 'repel' ? 1 : 0.3 }}
-                        transition={{ duration: 0.3 }}
-                    >REPEL</motion.span>
-                </div>
-            </div>
-        </motion.div>
-    );
-};
+// ... after component state declarations ...
+  
+  const EtaDisplay = ({ minutes }: { minutes: number }) => {
+      const [displayMinutes, setDisplayMinutes] = useState(0);
+  
+      useEffect(() => {
+          let start = 0;
+          const duration = 1500;
+          const frameRate = 30;
+          const totalSteps = duration / frameRate;
+          const increment = minutes / totalSteps;
+          
+          const timer = setInterval(() => {
+              start += increment;
+              if (start >= minutes) {
+                  setDisplayMinutes(minutes);
+                  clearInterval(timer);
+              } else {
+                  setDisplayMinutes(Math.floor(start));
+              }
+          }, frameRate);
+          
+          return () => clearInterval(timer);
+      }, [minutes]);
+  
+      return (
+          <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-emerald-50 border border-emerald-200 p-3 rounded-xl mt-2 overflow-hidden relative"
+          >
+              <p className="text-[10px] text-emerald-800 font-bold uppercase tracking-wider mb-1">Estimasi Kedatangan</p>
+              <div className="flex items-baseline gap-1">
+                  <span className="text-2xl font-black text-emerald-600">{displayMinutes}</span>
+                  <span className="text-xs font-bold text-emerald-700">menit</span>
+              </div>
+              
+              {/* Progress Bar with Vehicle Animation */}
+              <div className="h-1.5 w-full bg-emerald-100 rounded-full mt-2 relative">
+                  <motion.div
+                      className="h-full bg-emerald-500 rounded-full"
+                      initial={{ width: "0%" }}
+                      animate={{ width: "100%" }}
+                      transition={{ duration: 2, ease: "linear" }}
+                  />
+                  <motion.div
+                      className="absolute top-1/2 -mt-2 -ml-2 text-emerald-600"
+                      initial={{ left: "0%" }}
+                      animate={{ left: "100%" }}
+                      transition={{ duration: 2, ease: "linear" }}
+                  >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
+                      </svg>
+                  </motion.div>
+                  <div className="flex flex-col items-center gap-0.5">
+                      <Magnet className={`w-4 h-4 transition-colors duration-300 ${polarity === 'repel' ? 'text-rose-600' : 'text-gray-400'}`} />
+                      <motion.span 
+                          className={`text-[8px] font-bold ${polarity === 'repel' ? 'text-rose-600' : 'text-gray-400'}`}
+                          animate={{ opacity: polarity === 'repel' ? 1 : 0.3 }}
+                          transition={{ duration: 0.3 }}
+                      >REPEL</motion.span>
+                  </div>
+              </div>
+          </motion.div>
+      );
+  };
 
 export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
+  
+  const EtaDisplay = ({ minutes }: { minutes: number }) => {
+      // ... (rest of EtaDisplay code) ...
+  };
+
   const [dragRipples, setDragRipples] = useState<{id: number, x: number, y: number}[]>([]);
   const [currentAlert, setCurrentAlert] = useState<string | null>(null);
   const [alertHistory, setAlertHistory] = useState<string[]>([]);
@@ -174,6 +181,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [ripples, setRipples] = useState<{ id: number }[]>([]);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isUiSoundEnabled, setIsUiSoundEnabled] = useState(true);
+  const [trail, setTrail] = useState<{x: number, y: number}[]>([]);
 
   const addRipple = () => {
     const id = Date.now();
@@ -1459,10 +1467,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                     }
                 }
             }}
-            style={{ 
-                filter: "url(#distortionFilter)",
-                boxShadow: dragForce > 0 ? `0 0 ${Math.min(dragForce / 5, 30)}px rgba(16, 185, 129, ${Math.min(dragForce / 200, 0.8)})` : 'none'
-            }}
+            style={{ filter: "url(#distortionFilter)" }}
             drag={isMobile}
             dragSnapToOrigin={true}
             dragConstraints={{ left: -300, right: 0, top: -600, bottom: 0 }}
@@ -1553,10 +1558,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               y: isDragging ? position.y + (Math.random() - 0.5) * 5 : (isSlamming ? [position.y - 10, position.y + 5, position.y] : position.y),
               rotateX: tilt.x,
               rotateY: tilt.y,
-              skewX: velocity * 2,
-              skewY: velocity * 2,
               scale: isDragging ? [1, 1.05, 0.95, 1] : (isSlamming ? [1, 0.8, 1.2, 1] : (isLongPress ? 1.15 : (isHovered ? [1.1, 1.15, 1.1] : [1, 1.05, 1]))),
-              y: isSlamming ? [position.y - 10, position.y + 5, position.y] : position.y,
               skewX: mouseDist < 100 ? (position.x / 10) : (velocity * 2),
               skewY: mouseDist < 100 ? (position.y / 10) : (velocity * 2),
               rotate: wobble ? [0, -10, 10, -5, 5, 0] : (isLongPress ? 0 : (isShaking ? [0, -10, 10, -10, 10, 0] : 0)),
@@ -1577,7 +1579,9 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             }}
             style={{ 
                 perspective: 500,
-                boxShadow: `${-position.x * 0.2}px ${-position.y * 0.2}px ${20 + (1 - Math.min(1, mouseDist / 200)) * 40}px rgba(${serviceStatus === 'Active' ? '16, 185, 129' : '245, 158, 11'}, ${0.3 + (1 - Math.min(1, mouseDist / 200)) * 0.4})`,
+                boxShadow: dragForce > 0 
+                    ? `0 0 ${Math.min(dragForce / 5, 30)}px rgba(16, 185, 129, ${Math.min(dragForce / 200, 0.8)})`
+                    : `${-position.x * 0.2}px ${-position.y * 0.2}px ${20 + (1 - Math.min(1, mouseDist / 200)) * 40}px rgba(${serviceStatus === 'Active' ? '16, 185, 129' : '245, 158, 11'}, ${0.3 + (1 - Math.min(1, mouseDist / 200)) * 0.4})`,
             }}
             className="relative overflow-hidden backdrop-blur-md bg-white/10 border border-white/20 w-14 h-14 text-white rounded-full flex items-center justify-center relative select-none pointer-events-auto cursor-pointer focus:outline-none transition-shadow duration-300 ease-in-out"
             id="btn-floating-wa"
