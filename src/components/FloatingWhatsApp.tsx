@@ -182,6 +182,8 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isUiSoundEnabled, setIsUiSoundEnabled] = useState(true);
   const [trail, setTrail] = useState<{x: number, y: number}[]>([]);
+  const [velocityHistory, setVelocityHistory] = useState<number[]>(Array(50).fill(0));
+  const [particles, setParticles] = useState<{id: number, x: number, y: number, speed: number}[]>([]);
 
   const addRipple = () => {
     const id = Date.now();
@@ -206,6 +208,8 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const lastTime = useRef(Date.now());
   const isMouseInRangeRef = useRef(false); // Add ref to track proximity
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
+  const [isStressTesting, setIsStressTesting] = useState(false);
+  const [maxMagneticForce, setMaxMagneticForce] = useState(0);
   const [helpCount, setHelpCount] = useState(() => {
     if (typeof window !== 'undefined') {
         return parseInt(localStorage.getItem("whatsapp_help_count") || "2450", 10);
@@ -279,11 +283,11 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [isNearProximity, setIsNearProximity] = useState(false);
   const [polarity, setPolarity] = useState<'attract' | 'repel'>('attract');
   const [magneticForce, setMagneticForce] = useState(0.5);
+  const [magneticDamping, setMagneticDamping] = useState(15);
   const [dragForce, setDragForce] = useState(0);
   const [wobble, setWobble] = useState(0);
   const [isSlamming, setIsSlamming] = useState(false);
   const [isRepelling, setIsRepelling] = useState(false);
-  const [particles, setParticles] = useState<{ id: number; x: number; y: number }[]>([]);
 
   const [magneticWaves, setMagneticWaves] = useState<{id: number, velocity: number}[]>([]);
   const [velocity, setVelocity] = useState(0);
@@ -983,6 +987,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     const deltaDist = Math.sqrt((clientX - lastMousePos.current.x) ** 2 + (clientY - lastMousePos.current.y) ** 2);
     const velocity = deltaDist / deltaTime; // pixels per ms
     setVelocity(velocity);
+    setVelocityHistory(prev => [...prev.slice(1), velocity]);
     
     if (velocity > 0.5) {
       setTrail((prev) => [...prev, { id: Date.now(), x: clientX, y: clientY }]);
@@ -1446,10 +1451,38 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             </motion.div>
           )}
 
-          <motion.button
-            ref={buttonRef}
-            onMouseMove={(e) => {
+          <motion.div
+            animate={{
+                x: position.x,
+                y: position.y
+            }}
+            transition={{
+                type: "spring",
+                stiffness: 250,
+                damping: 25,
+                mass: 0.5
+            }}
+          >
+            <motion.button
+              ref={buttonRef}
+              onMouseMove={(e) => {
                 if (!isMobile) handleMouseMove(e);
+                
+                // Magnetic Attraction Logic
+                if (buttonRef.current) {
+                    const rect = buttonRef.current.getBoundingClientRect();
+                    const btnCenterX = rect.left + rect.width / 2;
+                    const btnCenterY = rect.top + rect.height / 2;
+                    const distX = e.clientX - btnCenterX;
+                    const distY = e.clientY - btnCenterY;
+                    const dist = Math.sqrt(distX * distX + distY * distY);
+
+                    if (dist < 100) {
+                        setPosition({ x: distX * 0.5, y: distY * 0.5 });
+                    } else if (position.x !== 0 || position.y !== 0) {
+                        setPosition({ x: 0, y: 0 });
+                    }
+                }
                 
                 if (polarity === 'repel') {
                     const id = Date.now();
@@ -1475,9 +1508,47 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 const { x, y } = info.offset;
                 const distance = Math.sqrt(x * x + y * y);
                 setDragForce(distance);
+                
+                // Collision detection
+                const rect = buttonRef.current?.getBoundingClientRect();
+                if (rect) {
+                    const elements = document.querySelectorAll('button, a, input, p, h1, h2, h3, h4, h5, h6');
+                    elements.forEach(el => {
+                        if (el === buttonRef.current) return;
+                        const elRect = el.getBoundingClientRect();
+                        if (
+                            rect.left < elRect.right &&
+                            rect.right > elRect.left &&
+                            rect.top < elRect.bottom &&
+                            rect.bottom > elRect.top
+                        ) {
+                            // Simple bounce: push away
+                            // In a real scenario, we might want to adjust constraints or position,
+                            // but framer-motion controls the position via drag constraints.
+                            // We can just add a small visual bounce effect by updating state
+                            setIsShaking(true);
+                            setTimeout(() => setIsShaking(false), 200);
+                        }
+                    });
+                }
+                
+                if (isStressTesting) {
+                    const currentForce = Math.min(distance / 300, 1);
+                    if (currentForce > maxMagneticForce) {
+                        setMaxMagneticForce(currentForce);
+                    }
+                }
+
                 const { x: vx, y: vy } = info.velocity;
                 const speed = Math.sqrt(vx * vx + vy * vy);
                 
+                // Add particle if moving
+                if (speed > 100) {
+                    const id = Date.now();
+                    setParticles(prev => [...prev.slice(-20), { id, x, y, speed }]);
+                    setTimeout(() => setParticles(prev => prev.filter(p => p.id !== id)), 400);
+                }
+
                 // Add ripple if moving fast enough
                 if (speed > 500) {
                     const id = Date.now();
@@ -1493,7 +1564,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 if (isNear !== isNearEdge) setIsNearEdge(isNear);
             }}
             onDragStart={() => setIsDragging(true)}
-            onDragEnd={() => {
+            onDragEnd={(e, info) => {
                 setWobble(prev => prev + 1);
                 setIsSlamming(true);
                 addMagneticWave(velocity);
@@ -1501,13 +1572,37 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 setDragRipples([]); // Clear ripples on end
                 setDragForce(0);
                 setIsDragging(false);
+
+                // Calculate Inertia Drift
+                const { velocity: { x: vx, y: vy } } = info;
+                const inertiaFactor = 0.15; // Controls how long it drifts
+                const driftX = vx * inertiaFactor;
+                const driftY = vy * inertiaFactor;
+
+                // Snap to edge logic, including drift
+                const constraints = { left: -300, right: 0, top: -600, bottom: 0 };
+                let targetX = position.x + driftX;
+                let targetY = position.y + driftY;
+
+                // Clamp to constraints
+                targetX = Math.max(constraints.left, Math.min(constraints.right, targetX));
+                targetY = Math.max(constraints.top, Math.min(constraints.bottom, targetY));
+
+                // Snap logic
+                if (targetX < constraints.left + 50) targetX = constraints.left;
+                else if (targetX > constraints.right - 50) targetX = constraints.right;
+                
+                if (targetY < constraints.top + 50) targetY = constraints.top;
+                else if (targetY > constraints.bottom - 50) targetY = constraints.bottom;
+
+                setPosition({ x: targetX, y: targetY });
             }}
             dragElastic={isNearEdge ? 0.05 : 0.2}
             dragTransition={{
               power: 0.1,
               timeConstant: 250,
               bounceStiffness: 150,
-              bounceDamping: 15
+              bounceDamping: magneticDamping
             }}
             onMouseLeave={(e) => { 
                 handlePointerUp(); 
@@ -1580,8 +1675,8 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             style={{ 
                 perspective: 500,
                 boxShadow: dragForce > 0 
-                    ? `0 0 ${Math.min(dragForce / 5, 30)}px rgba(16, 185, 129, ${Math.min(dragForce / 200, 0.8)})`
-                    : `${-position.x * 0.2}px ${-position.y * 0.2}px ${20 + (1 - Math.min(1, mouseDist / 200)) * 40}px rgba(${serviceStatus === 'Active' ? '16, 185, 129' : '245, 158, 11'}, ${0.3 + (1 - Math.min(1, mouseDist / 200)) * 0.4})`,
+                    ? `0 0 ${Math.min(dragForce / 5, 30)}px rgba(${polarity === 'attract' ? '59, 130, 246' : '225, 29, 72'}, ${Math.min(dragForce / 200, 0.8)})`
+                    : `${-position.x * 0.2}px ${-position.y * 0.2}px ${20 + (1 - Math.min(1, mouseDist / 200)) * 40}px rgba(${polarity === 'attract' ? '59, 130, 246' : '225, 29, 72'}, ${0.3 + (1 - Math.min(1, mouseDist / 200)) * 0.4})`,
             }}
             className="relative overflow-hidden backdrop-blur-md bg-white/10 border border-white/20 w-14 h-14 text-white rounded-full flex items-center justify-center relative select-none pointer-events-auto cursor-pointer focus:outline-none transition-shadow duration-300 ease-in-out"
             id="btn-floating-wa"
@@ -1796,6 +1891,73 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                     onChange={(e) => setMagneticForce(parseFloat(e.target.value))}
                     className="w-full h-1 bg-white/30 rounded-lg appearance-none cursor-pointer accent-white"
                 />
+                {/* Velocity Gauge */}
+                <div className="mt-2 h-2 flex items-end gap-[1px]">
+                    {[...Array(10)].map((_, i) => (
+                        <motion.div
+                            key={i}
+                            className="flex-1 bg-white"
+                            animate={{ 
+                                height: `${Math.min((velocity / 2000) * 100, 100)}%`,
+                                opacity: velocity > (i * 200) ? 1 : 0.2
+                            }}
+                        />
+                    ))}
+                </div>
+                {/* Attract/Repel Toggle */}
+                <button
+                    onClick={() => setPolarity(prev => prev === 'attract' ? 'repel' : 'attract')}
+                    className="mt-2 w-full h-6 flex items-center bg-black/40 rounded-full p-1 relative transition-colors"
+                >
+                    <motion.div 
+                        className={`absolute top-1 bottom-1 w-1/2 rounded-full ${polarity === 'attract' ? 'bg-blue-500' : 'bg-rose-500'}`}
+                        animate={{ x: polarity === 'attract' ? 0 : '100%' }}
+                        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                    />
+                    <span className="flex-1 text-[8px] font-bold text-white z-10">AT</span>
+                    <span className="flex-1 text-[8px] font-bold text-white z-10">RP</span>
+                </button>
+
+                {/* Velocity Sparkline */}
+                <div className="mt-2 h-8 w-full bg-black/20 rounded overflow-hidden">
+                    <svg className="w-full h-full" viewBox="0 0 50 10" preserveAspectRatio="none">
+                        <path
+                            d={`M 0 10 ${velocityHistory.map((v, i) => `L ${i} ${10 - Math.min(v * 50, 10)}`).join(' ')} L 50 10 Z`}
+                            fill="rgba(255, 255, 255, 0.3)"
+                        />
+                        <path
+                            d={velocityHistory.map((v, i) => `${i === 0 ? 'M' : 'L'} ${i} ${10 - Math.min(v * 50, 10)}`).join(' ')}
+                            stroke="white"
+                            strokeWidth="0.5"
+                            fill="none"
+                        />
+                    </svg>
+                </div>
+                {/* Stress Test Button */}
+                <button
+                    onClick={() => {
+                        setIsStressTesting(true);
+                        setMaxMagneticForce(0);
+                    }}
+                    className={`mt-2 w-full text-[8px] font-bold py-1 rounded-sm uppercase transition-colors ${isStressTesting ? 'bg-amber-500 text-white' : 'bg-white/20 text-white hover:bg-white/40'}`}
+                >
+                    {isStressTesting ? `Max Force: ${Math.round(maxMagneticForce * 100)}` : 'Magnetic Stress Test'}
+                </button>
+                {/* Damping Slider */}
+                <div className="mt-3">
+                    <label className="text-[8px] text-white/80 uppercase font-bold mb-1 block text-center">
+                        Damping: {Math.round(magneticDamping)}
+                    </label>
+                    <input
+                        type="range"
+                        min="5"
+                        max="50"
+                        step="1"
+                        value={magneticDamping}
+                        onChange={(e) => setMagneticDamping(parseFloat(e.target.value))}
+                        className="w-full h-1 bg-white/30 rounded-lg appearance-none cursor-pointer accent-white"
+                    />
+                </div>
             </div>
 
             {/* Magnetic Polarity Toggle Switch */}
@@ -1947,6 +2109,18 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               />
             )}
 
+            {/* Exclusion Zone Ring */}
+            {polarity === 'repel' && (
+              <motion.div
+                className="absolute inset-0 rounded-full border-2 border-rose-500/50 bg-rose-500/10 pointer-events-none"
+                animate={{
+                  scale: isNearProximity ? 2 : 1,
+                  opacity: isNearProximity ? 0.6 : 0,
+                }}
+                transition={{ duration: 0.2 }}
+              />
+            )}
+
             {/* Progress Ring */}
             <svg className="absolute -inset-1 w-[64px] h-[64px] -rotate-90 pointer-events-none">
               <circle
@@ -1968,6 +2142,23 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               />
             </svg>
 
+            {/* Magnetic Field Halos */}
+            <motion.div
+                className="absolute inset-0 rounded-full pointer-events-none"
+                animate={{
+                    boxShadow: [
+                        `0 0 ${20 * magneticForce}px ${10 * magneticForce}px rgba(${polarity === 'attract' ? '59, 130, 246' : '225, 29, 72'}, 0.4)`,
+                        `0 0 ${40 * magneticForce}px ${20 * magneticForce}px rgba(${polarity === 'attract' ? '59, 130, 246' : '225, 29, 72'}, 0.2)`,
+                        `0 0 ${20 * magneticForce}px ${10 * magneticForce}px rgba(${polarity === 'attract' ? '59, 130, 246' : '225, 29, 72'}, 0.4)`
+                    ],
+                }}
+                transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                }}
+            />
+
             {(isFocused && isKeyboardFocus) && (
                 <>
                 <motion.span 
@@ -1985,6 +2176,21 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 </>
             )}
             {showConfetti && <ConfettiBurst onComplete={() => setShowConfetti(false)} />}
+            {/* Magnetic Intensity Ring */}
+            <motion.div
+                className="absolute -inset-2 rounded-full border-2 border-blue-400 pointer-events-none"
+                animate={{
+                    scale: [1 + magneticForce * 0.2, 1 + magneticForce * 0.5, 1 + magneticForce * 0.2],
+                    opacity: [0.3 + magneticForce * 0.3, 0.1, 0.3 + magneticForce * 0.3],
+                    borderColor: `rgba(59, 130, 246, ${0.4 + magneticForce * 0.4})`
+                }}
+                transition={{
+                    duration: 2 / magneticForce,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                }}
+            />
+
             {/* Operational Availability Wave Effect */}
             {[0, 1.5].map((delay) => (
                 <motion.span
@@ -2105,9 +2311,22 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               {helpCount}+ terbantu
             </motion.div>
           </motion.button>
+          </motion.div>
         </div>
       </div>
       
+    <div className="fixed inset-0 z-[-1] pointer-events-none">
+        {isDragging && (
+            <svg className="w-full h-full opacity-20">
+                <defs>
+                    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="1"/>
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#grid)" />
+            </svg>
+        )}
+    </div>
     </motion.div>
   );
 }
