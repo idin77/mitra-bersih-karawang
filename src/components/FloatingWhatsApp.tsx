@@ -183,8 +183,50 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [isUiSoundEnabled, setIsUiSoundEnabled] = useState(true);
   const [trail, setTrail] = useState<{x: number, y: number}[]>([]);
   const [velocityHistory, setVelocityHistory] = useState<number[]>(Array(50).fill(0));
-  const [particles, setParticles] = useState<{id: number, x: number, y: number, speed: number}[]>([]);
+  const [particles, setParticles] = useState<{id: number, x: number, y: number, vx: number, vy: number}[]>(
+    Array.from({ length: 25 }, (_, i) => ({ id: i, x: 0, y: 0, vx: (Math.random() - 0.5) * 5, vy: (Math.random() - 0.5) * 5 }))
+  );
+  const [dragPosition, setDragPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
 
+  // Flocking swarm animation
+  useEffect(() => {
+    let animationFrame: number;
+    const animate = () => {
+      setParticles(prev => prev.map(p => {
+        let { x, y, vx, vy } = p;
+        const targetX = isDragging ? dragPosition.x : 0;
+        const targetY = isDragging ? dragPosition.y : 0;
+        
+        // Seek behavior (cluster or stream)
+        const dx = targetX - x;
+        const dy = targetY - y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const strength = isDragging ? 0.2 : 0.05;
+        
+        vx += (dx / (dist + 1)) * strength;
+        vy += (dy / (dist + 1)) * strength;
+        
+        // Friction
+        vx *= 0.95;
+        vy *= 0.95;
+        
+        return { ...p, x: x + vx, y: y + vy, vx, vy };
+      }));
+      animationFrame = requestAnimationFrame(animate);
+    };
+    animate();
+    return () => cancelAnimationFrame(animationFrame);
+  }, [isDragging, dragPosition]);
+
+  const addToggleBurst = () => {
+    const id = Date.now();
+    setRipples((prev) => [...prev, { id }]);
+    setTimeout(() => {
+      setRipples((prev) => prev.filter((r) => r.id !== id));
+    }, 1000); // Longer duration for the burst
+  };
+  
   const addRipple = () => {
     const id = Date.now();
     setRipples((prev) => [...prev, { id }]);
@@ -294,7 +336,6 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
       osc.stop(now + 0.5);
   };
   const [isMobile, setIsMobile] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
   const [isNearEdge, setIsNearEdge] = useState(false);
   const [isNearProximity, setIsNearProximity] = useState(false);
   const [dragForce, setDragForce] = useState(0);
@@ -316,6 +357,22 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const animationFrameRef = useRef<number | null>(null);
   const stationaryTimer = useRef<NodeJS.Timeout | null>(null);
   const dockingTimer = useRef<NodeJS.Timeout | null>(null);
+
+  const [pulses, setPulses] = useState<{ id: number }[]>([]);
+
+  // Pulse effect based on magnetic force
+  useEffect(() => {
+    if (!isHovered && !isDragging) return;
+
+    const intervalTime = Math.max(100, 1000 - (maxMagneticForce * 800)); // Frequency increases with force
+    const timer = setInterval(() => {
+      const id = Date.now();
+      setPulses(prev => [...prev, { id }]);
+      setTimeout(() => setPulses(prev => prev.filter(p => p.id !== id)), 1000);
+    }, intervalTime);
+
+    return () => clearInterval(timer);
+  }, [isHovered, isDragging, maxMagneticForce]);
 
   // Shake animation trigger
   useEffect(() => {
@@ -1545,6 +1602,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             dragSnapToOrigin={true}
             dragConstraints={{ left: -300, right: 0, top: -600, bottom: 0 }}
             onDrag={(e, info) => {
+                setDragPosition(info.offset);
                 const { x, y } = info.offset;
                 const distance = Math.sqrt(x * x + y * y);
                 setDragForce(distance);
@@ -1582,13 +1640,6 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 const { x: vx, y: vy } = info.velocity;
                 const speed = Math.sqrt(vx * vx + vy * vy);
                 
-                // Add particle if moving
-                if (speed > 100) {
-                    const id = Date.now();
-                    setParticles(prev => [...prev.slice(-20), { id, x, y, speed }]);
-                    setTimeout(() => setParticles(prev => prev.filter(p => p.id !== id)), 400);
-                }
-
                 // Add ripple if moving fast enough
                 if (speed > 500) {
                     const id = Date.now();
@@ -1605,6 +1656,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             }}
             onDragStart={() => setIsDragging(true)}
             onDragEnd={(e, info) => {
+                setDragPosition({ x: 0, y: 0 });
                 setWobble(prev => prev + 1);
                 setIsSlamming(true);
                 addMagneticWave(velocity);
@@ -1628,18 +1680,22 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 targetX = Math.max(constraints.left, Math.min(constraints.right, targetX));
                 targetY = Math.max(constraints.top, Math.min(constraints.bottom, targetY));
 
-                // Snap logic
-                if (targetX < constraints.left + 50) targetX = constraints.left;
-                else if (targetX > constraints.right - 50) targetX = constraints.right;
-                
-                if (targetY < constraints.top + 50) targetY = constraints.top;
-                else if (targetY > constraints.bottom - 50) targetY = constraints.bottom;
+                // Snap logic to corners
+                const midX = (constraints.left + constraints.right) / 2;
+                const midY = (constraints.top + constraints.bottom) / 2;
 
-                // Viscous snapping: progressively increase damping when close to edge
-                const isNearFinalEdge = 
-                    Math.abs(targetX - constraints.left) < 10 || Math.abs(targetX - constraints.right) < 10 ||
-                    Math.abs(targetY - constraints.top) < 10 || Math.abs(targetY - constraints.bottom) < 10;
+                if (targetX < midX) targetX = constraints.left;
+                else targetX = constraints.right;
                 
+                if (targetY < midY) targetY = constraints.top;
+                else targetY = constraints.bottom;
+
+                // Animate snap
+                setPosition({ x: targetX, y: targetY });
+                // Trigger locking animation (wobble/scale)
+                setWobble(prev => prev + 1);
+                setIsSlamming(true);
+                setTimeout(() => setIsSlamming(false), 300);
                 setFinalDamping(isNearFinalEdge ? magneticDamping * 2 : magneticDamping);
 
                 setPosition({ x: targetX, y: targetY });
@@ -1767,6 +1823,78 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             title="Hubungi Kami Melalui WhatsApp"
             aria-label="Buka WhatsApp untuk layanan Sedot WC"
           >
+            {/* Magnetic Field Flux Lines */}
+             <svg className="absolute inset-0 -z-10 w-full h-full opacity-40 pointer-events-none overflow-hidden rounded-full" viewBox="0 0 100 100">
+                {[...Array(3)].map((_, i) => (
+                    <motion.circle
+                        key={i}
+                        cx="50" cy="50" r="15"
+                        fill="none"
+                        stroke={polarity === 'attract' ? '#60a5fa' : '#fb7185'}
+                        strokeWidth="1"
+                        initial={{ scale: 0, opacity: 1 }}
+                        animate={{ scale: 3, opacity: 0 }}
+                        transition={{ duration: 2, repeat: Infinity, delay: i * 0.6, ease: "linear" }}
+                    />
+                ))}
+            </svg>
+            {/* Spotlight Effect */}
+            <motion.div
+              className="absolute inset-0 rounded-full pointer-events-none z-10"
+              animate={{
+                background: isHovered 
+                  ? "radial-gradient(circle 50px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.4), transparent)"
+                  : "radial-gradient(circle 0px at 50% 50%, rgba(255,255,255,0), transparent)"
+              }}
+              onMouseMove={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                e.currentTarget.style.setProperty('--mouse-x', `${x}%`);
+                e.currentTarget.style.setProperty('--mouse-y', `${y}%`);
+              }}
+            />
+
+            {/* Magnetic Polarity Toggle Icon */}
+            <motion.div
+              className="absolute -top-5 -left-5 w-10 h-10 z-20 cursor-pointer flex items-center justify-center text-white font-bold text-sm bg-black/70 backdrop-blur-md rounded-full border-2 border-white/30 shadow-lg"
+              onClick={(e) => {
+                e.stopPropagation();
+                setPolarity(prev => prev === 'attract' ? 'repel' : 'attract');
+              }}
+              animate={{
+                rotate: polarity === 'attract' ? 0 : 180,
+                color: polarity === 'attract' ? '#60a5fa' : '#fb7185',
+                borderColor: polarity === 'attract' ? '#60a5fa' : '#fb7185',
+                scale: [1, 1.05, 1]
+              }}
+              transition={{
+                scale: { repeat: Infinity, duration: 2, ease: "easeInOut" }
+              }}
+              whileHover={{ scale: 1.2 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              {polarity === 'attract' ? 'N' : 'S'}
+            </motion.div>
+
+            {/* Visual Guide Lines */}
+            {isDragging && (
+                <svg className="fixed inset-0 pointer-events-none z-[45]">
+                    <motion.line
+                        x1={200 + dragPosition.x}
+                        y1={200 + dragPosition.y}
+                        x2={200 + (dragPosition.x < -150 ? -300 : 0)}
+                        y2={200 + (dragPosition.y < -300 ? -600 : 0)}
+                        stroke={polarity === 'attract' ? '#60a5fa' : '#fb7185'}
+                        strokeWidth="2"
+                        strokeDasharray="4 4"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 0.5 }}
+                        exit={{ opacity: 0 }}
+                    />
+                </svg>
+            )}
+
             {/* Repel Boundary Ring */}
             {polarity === 'repel' && (
                 <motion.div
@@ -1803,6 +1931,17 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                     style={{ borderColor: polarity === 'attract' ? '#3b82f6' : '#f43f5e' }}
                 />
             ))}
+            {/* Pulse Effects */}
+            {pulses.map((pulse) => (
+                <motion.div
+                    key={pulse.id}
+                    className="absolute inset-0 rounded-full border-2 border-white/40"
+                    initial={{ scale: 1, opacity: 0.8 }}
+                    animate={{ scale: 3, opacity: 0 }}
+                    transition={{ duration: 1, ease: "easeOut" }}
+                />
+            ))}
+            
             {/* N/S Polar Labels */}
             <motion.div
                 className="absolute inset-0 z-[15] pointer-events-none flex items-center justify-center text-[10px] font-bold text-gray-500"
@@ -1819,7 +1958,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               onClick={(e) => {
                 e.stopPropagation();
                 playClickSound();
-                addRipple();
+                addToggleBurst();
                 setPolarity(prev => prev === 'attract' ? 'repel' : 'attract');
               }}
               animate={{
@@ -1861,22 +2000,22 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 {particles.map(p => (
                     <motion.div
                         key={p.id}
-                        initial={{ scale: 1.5, opacity: 0.8 }}
+                        initial={{ scale: 0.8, opacity: 0.8 }}
                         animate={{ 
-                            scale: 0, 
-                            opacity: 0,
-                            x: p.x + (Math.random() - 0.5) * 150, 
-                            y: p.y + (Math.random() - 0.5) * 150 
+                            x: p.x, 
+                            y: p.y,
+                            opacity: 0.8
                         }}
-                        transition={{ duration: 0.5, ease: "easeOut" }}
-                        className="absolute w-3 h-3 rounded-full"
+                        transition={{ type: "spring", stiffness: 100, damping: 20 }}
+                        className="absolute w-2 h-2 rounded-full z-[49]"
                         style={{ 
-                            left: p.x, 
-                            top: p.y,
-                            backgroundColor: p.speed > 1.5 ? '#f59e0b' : '#3b82f6',
-                            boxShadow: `0 0 10px ${p.speed > 1.5 ? 'rgba(245, 158, 11, 0.8)' : 'rgba(59, 130, 246, 0.8)'}`
+                            left: '50%', 
+                            top: '50%',
+                            background: polarity === 'attract'
+                                ? `radial-gradient(circle, #60a5fa, #3b82f6)`
+                                : `radial-gradient(circle, #fb7185, #e11d48)`,
+                            boxShadow: `0 0 5px ${polarity === 'attract' ? 'rgba(96, 165, 250, 0.8)' : 'rgba(251, 113, 133, 0.8)'}`
                         }}
-                        style={{ left: p.x, top: p.y }}
                     />
                 ))}
             </div>
@@ -2316,6 +2455,27 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                     ease: "easeInOut"
                 }}
             />
+
+            {/* Vortex Background */}
+            <motion.div
+                className="absolute -inset-4 z-[-1] opacity-60 pointer-events-none"
+                animate={{ rotate: 360 }}
+                transition={{
+                    duration: Math.max(0.5, 5 - (velocity / 200)),
+                    repeat: Infinity,
+                    ease: "linear"
+                }}
+            >
+                <svg viewBox="0 0 100 100" className="w-full h-full">
+                    <defs>
+                        <linearGradient id="vortexGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stopColor={polarity === 'attract' ? "#60a5fa" : "#fb7185"} stopOpacity="0" />
+                            <stop offset="100%" stopColor={polarity === 'attract' ? "#3b82f6" : "#e11d48"} stopOpacity="0.8" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M 50 50 m -40 0 a 40 40 0 1 0 80 0 a 40 40 0 1 0 -80 0" fill="none" stroke="url(#vortexGradient)" strokeWidth="4" strokeDasharray="10 10" />
+                </svg>
+            </motion.div>
 
             {/* Operational Availability Wave Effect */}
             {[0, 1.5].map((delay) => (
