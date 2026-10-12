@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, MouseEvent, KeyboardEvent, useMemo } from "react";
-import { MessageSquareCode, MessageCircle, X, Volume2, VolumeX, ArrowUp, Phone, MapPin, Mail, Battery, BatteryCharging, BatteryLow, Magnet, Copy, Calculator, ArrowLeft, ChevronDown, Calendar, Clock, GripHorizontal, Plus, Moon, Sun, Bot } from "lucide-react";
+import { MessageSquareCode, MessageCircle, X, Volume2, VolumeX, ArrowUp, Phone, MapPin, Mail, Battery, BatteryCharging, BatteryLow, Magnet, Copy, Calculator, ArrowLeft, ChevronDown, Calendar, Clock, GripHorizontal, Plus, Moon, Sun, Bot, Search } from "lucide-react";
 import GeminiChat from './GeminiChat';
 import { motion, AnimatePresence } from "motion/react";
 import { ConfettiBurst } from "./ConfettiBurst";
@@ -102,7 +102,26 @@ const getDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => 
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                           <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
                       </svg>
-                  </motion.button>
+                   {/* Animated Orbiting Labels */}
+             <motion.div
+                className="absolute inset-0 z-50 pointer-events-none"
+                animate={{ rotate: polarity === 'attract' ? 0 : 180 }}
+                transition={{ duration: 0.5 }}
+            >
+                <motion.span className="absolute -top-2 left-1/2 -translate-x-1/2 text-white font-bold text-xs" animate={{ opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 2 }}>N</motion.span>
+                <motion.span className="absolute -bottom-2 left-1/2 -translate-x-1/2 text-white font-bold text-xs" animate={{ opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 2 }}>S</motion.span>
+            </motion.div>
+            </motion.button>
+
+            {/* Animated Orbiting Labels */}
+            <motion.div
+                className="absolute -top-10 -left-10 w-32 h-32 z-50 pointer-events-none"
+                animate={{ rotate: polarity === 'attract' ? 0 : 180 }}
+                transition={{ duration: 0.5 }}
+            >
+                <motion.span className="absolute top-0 left-1/2 -translate-x-1/2 text-white font-bold text-xs" animate={{ opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 2 }}>N</motion.span>
+                <motion.span className="absolute bottom-0 left-1/2 -translate-x-1/2 text-white font-bold text-xs" animate={{ opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 2 }}>S</motion.span>
+            </motion.div>
                   <div className="flex flex-col items-center gap-0.5">
                       <Magnet className={`w-4 h-4 transition-colors duration-300 ${polarity === 'repel' ? 'text-rose-600' : 'text-gray-400'}`} />
                       <motion.span 
@@ -326,8 +345,9 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     return false;
   });
 
-  const playClickSound = () => {
+  const playClickSound = (polarity: 'attract' | 'repel') => {
     if (!isMuted && isUiSoundEnabled) {
+        // Audio
         const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
         const osc = audioContext.createOscillator();
         const gain = audioContext.createGain();
@@ -339,6 +359,15 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
         gain.connect(audioContext.destination);
         osc.start();
         osc.stop(audioContext.currentTime + 0.05);
+
+        // Haptic Feedback
+        if (navigator.vibrate) {
+            if (polarity === 'repel') {
+                navigator.vibrate(200); // Longer vibration for repulsion
+            } else {
+                navigator.vibrate([50, 50, 50]); // Sharper, shorter pulses for attraction
+            }
+        }
     }
   };
 
@@ -402,9 +431,18 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [velocity, setVelocity] = useState(0);
   const [isOrbital, setIsOrbital] = useState(false);
   const [magneticForce, setMagneticForce] = useState(0.5);
+  const [magneticCharge, setMagneticCharge] = useState(0);
   const isMagneticForceMax = magneticForce >= 0.95;
+  
+  useEffect(() => {
+      const interval = setInterval(() => {
+          setMagneticCharge(prev => Math.max(0, prev - 1));
+      }, 50);
+      return () => clearInterval(interval);
+  }, []);
   const [magneticDamping, setMagneticDamping] = useState(15);
   const [polarity, setPolarity] = useState<'attract' | 'repel'>('attract');
+  const [isScanning, setIsScanning] = useState(false);
   const [magneticRange, setMagneticRange] = useState(150);
   const [cursorTrail, setCursorTrail] = useState<{x: number, y: number, id: number, intensity: number}[]>([]);
   const [dustParticles, setDustParticles] = useState<{id: number, x: number, y: number}[]>([]);
@@ -417,6 +455,8 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
     setDischargeRipples(prev => [...prev, { id, color }]);
     setTimeout(() => setDischargeRipples(prev => prev.filter(r => r.id !== id)), 1000);
   };
+
+
 
   useEffect(() => {
       // Periodic discharge
@@ -1271,7 +1311,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
       
       <AnimatePresence>
         {showTooltip && (
-          <motion.button
+          <motion.div
             initial={{ opacity: 0, scale: 0.85, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.85 }}
@@ -1298,7 +1338,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 <div className="flex gap-1">
                   <button
                     onClick={() => {
-                        playClickSound();
+                        playClickSound(polarity);
                         setPolarity(prev => prev === 'attract' ? 'repel' : 'attract');
                     }}
                     className={`w-10 h-5 rounded-full p-1 cursor-pointer flex items-center transition-colors duration-300 ${polarity === 'attract' ? 'bg-blue-500' : 'bg-rose-500'}`}
@@ -1394,7 +1434,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             >
               <X className="w-3.5 h-3.5" />
             </button>
-          </motion.button>
+          </motion.div>
         )}
       </AnimatePresence>
 
@@ -1842,6 +1882,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             }}
             onMouseEnter={() => {
                 setIsHovered(true);
+                setMagneticCharge(prev => Math.min(100, prev + 10));
                 copyTooltipTimeoutRef.current = setTimeout(() => setShowCopyTooltip(true), 1500);
                 
                 if (!isMuted && isUiSoundEnabled) {
@@ -2179,7 +2220,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               className="absolute top-2 left-2 w-6 h-6 z-20 cursor-pointer flex items-center justify-center text-white font-bold text-sm bg-black/30 backdrop-blur-sm rounded-full border border-white/20 shadow-sm"
               onClick={(e) => {
                 e.stopPropagation();
-                playClickSound();
+                playClickSound(polarity);
                 addToggleBurst();
                 setPolarity(prev => prev === 'attract' ? 'repel' : 'attract');
               }}
@@ -2401,18 +2442,30 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                     ))}
                 </div>
                 {/* Attract/Repel Toggle */}
-                <button
-                    onClick={() => setPolarity(prev => prev === 'attract' ? 'repel' : 'attract')}
-                    className="mt-2 w-full h-6 flex items-center bg-black/40 rounded-full p-1 relative transition-colors"
-                >
-                    <motion.div 
-                        className={`absolute top-1 bottom-1 w-1/2 rounded-full ${polarity === 'attract' ? 'bg-blue-500' : 'bg-rose-500'}`}
-                        animate={{ x: polarity === 'attract' ? 0 : '100%' }}
-                        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                    />
-                    <span className="flex-1 text-[8px] font-bold text-white z-10">AT</span>
-                    <span className="flex-1 text-[8px] font-bold text-white z-10">RP</span>
-                </button>
+                <div className="mt-2 flex gap-2">
+                    <button
+                        onClick={() => {
+                            setPolarity(prev => prev === 'attract' ? 'repel' : 'attract');
+                            playClickSound(polarity);
+                        }}
+                        className="flex-1 h-6 flex items-center bg-black/40 rounded-full p-1 relative transition-colors"
+                    >
+                        <motion.div 
+                            className={`absolute top-1 bottom-1 w-1/2 rounded-full ${polarity === 'attract' ? 'bg-blue-500' : 'bg-rose-500'}`}
+                            animate={{ x: polarity === 'attract' ? 0 : '100%' }}
+                            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                        />
+                        <span className="flex-1 text-[8px] font-bold text-white z-10">AT</span>
+                        <span className="flex-1 text-[8px] font-bold text-white z-10">RP</span>
+                    </button>
+                    {/* Scan Toggle */}
+                    <button
+                        onClick={() => setIsScanning(!isScanning)}
+                        className={`w-8 h-6 flex items-center justify-center rounded-full transition-colors ${isScanning ? 'bg-emerald-500' : 'bg-black/40'}`}
+                    >
+                        <Search size={12} className={isScanning ? 'text-white' : 'text-slate-400'} />
+                    </button>
+                </div>
 
                 {/* Velocity Sparkline */}
                 <div className="mt-2 h-8 w-full bg-black/20 rounded overflow-hidden">
@@ -2568,6 +2621,44 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               }}
               transition={{ duration: 0.5, ease: "easeInOut" }}
             />
+            {/* Liquid Magnet Filter */}
+            <svg className="absolute w-0 h-0">
+                <defs>
+                    <filter id="liquidMagnetFilter">
+                        <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" result="noise" />
+                        <feDisplacementMap in="SourceGraphic" in2="noise" scale={velocity / 5} xChannelSelector="R" yChannelSelector="G" />
+                    </filter>
+                </defs>
+            </svg>
+            <motion.div
+                className="absolute inset-0 rounded-full z-0 pointer-events-none"
+                style={{ filter: "url(#liquidMagnetFilter)" }}
+            />
+            {/* Magnetic Charge Gauge */}
+            <motion.svg
+                className="absolute -inset-2 w-[calc(100%+16px)] h-[calc(100%+16px)] z-20 pointer-events-none -rotate-90"
+                viewBox="0 0 100 100"
+            >
+                <circle
+                    cx="50" cy="50" r="48"
+                    fill="none"
+                    strokeWidth="4"
+                    stroke="rgba(255,255,255,0.1)"
+                />
+                <motion.circle
+                    cx="50" cy="50" r="48"
+                    fill="none"
+                    strokeWidth="4"
+                    strokeDasharray="301.6"
+                    strokeDashoffset={301.6 * (1 - magneticCharge / 100)}
+                    strokeLinecap="round"
+                    animate={{
+                        stroke: polarity === 'attract' 
+                            ? `hsl(${220 - (magneticCharge / 100) * 40}, 100%, 60%)` 
+                            : `hsl(${0 + (magneticCharge / 100) * 30}, 100%, 60%)`
+                    }}
+                />
+            </motion.svg>
             {/* Polarity Flash */}
             <motion.button
               className={`absolute -inset-1 border-4 rounded-full pointer-events-none z-20 ${polarity === 'attract' ? 'border-blue-500' : 'border-rose-500'}`}
@@ -2753,6 +2844,17 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 />
             ))}
 
+            {/* Scan Pulse */}
+            {isScanning && (
+                <motion.div
+                    className="absolute inset-0 rounded-full border-4 z-50 pointer-events-none"
+                    initial={{ scale: 1, opacity: 1 }}
+                    animate={{ scale: 8, opacity: 0 }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
+                    style={{ borderColor: polarity === 'attract' ? '#60a5fa' : '#fb7185' }}
+                />
+            )}
+
             {/* Energy Discharge Ripples */}
             {dischargeRipples.map(ripple => (
                 <motion.div
@@ -2800,7 +2902,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               {/* Magnetic Streamer */}
               {mouseDist < 400 && (
                 <motion.path
-                   d={`M ${window.innerWidth / 2} ${window.innerHeight / 2} Q ${window.innerWidth / 2 + (position.x - window.innerWidth / 2) / 2} ${window.innerHeight / 2 + (position.y - window.innerHeight / 2) / 2} ${position.x + 28} ${position.y + 28}`}
+                   d={`M ${window.innerWidth / 2} ${window.innerHeight / 2} Q ${window.innerWidth / 2 + (position.x - window.innerWidth / 2) / 2 + (velocity / 2)} ${window.innerHeight / 2 + (position.y - window.innerHeight / 2) / 2 + (velocity / 2)} ${position.x + 28} ${position.y + 28}`}
                    stroke={polarity === 'attract' ? '#60a5fa' : '#fb7185'}
                    strokeWidth={1 + (300 - mouseDist) / 30}
                    fill="none"
@@ -2812,18 +2914,15 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               )}
               {/* Magnetic Field Lines */}
               <motion.path
-                d="M -50 -50 Q 0 -100 50 -50 T 0 0"
+                d={`M 0 0 Q ${position.x/2} ${position.y/2} ${position.x} ${position.y}`}
                 stroke={polarity === 'attract' ? '#60a5fa' : '#fb7185'}
-                strokeWidth="2"
+                strokeWidth={2 + Math.abs(velocity) / 50}
                 fill="none"
                 animate={{
-                    d: polarity === 'attract' 
-                        ? "M -50 -50 Q 0 -100 50 -50 T 0 0" 
-                        : "M 0 0 Q -50 50 0 100 T 50 50",
+                    d: `M 0 0 Q ${position.x/2} ${position.y/2} ${position.x} ${position.y}`,
                     stroke: polarity === 'attract' ? '#60a5fa' : '#fb7185'
                 }}
-                transition={{ duration: 0.5 }}
-                className="opacity-50"
+                className="opacity-70"
               />
               <path
                 d={trail.length > 1 ? `M ${trail.map(t => `${t.x} ${t.y}`).join(" L ")}` : ""}
@@ -2940,7 +3039,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             </svg>
         )}
         {cursorTrail.map((p) => (
-            <motion.button
+            <motion.div
                 key={p.id}
                 className="absolute w-2 h-2 rounded-full"
                 initial={{ scale: 0, opacity: 1 }}
@@ -2948,7 +3047,9 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 style={{ 
                     left: p.x, 
                     top: p.y,
-                    background: `rgb(${Math.round(p.intensity * 255)}, 0, ${Math.round((1 - p.intensity) * 255)})`
+                    background: polarity === 'attract' 
+                        ? `rgba(59, 130, 246, ${p.intensity})` 
+                        : `rgba(244, 63, 94, ${p.intensity})`
                 }}
             />
         ))}
