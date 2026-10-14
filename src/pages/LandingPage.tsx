@@ -1,6 +1,8 @@
 import Header from "../components/Header";
 import Hero from "../components/Hero";
 import Features from "../components/Features";
+import PriceCalculator from "../components/PriceCalculator";
+import ArticlesSection from "../components/ArticlesSection";
 import About from "../components/About";
 import Services from "../components/Services";
 import HorizontalServicesCarousel from "../components/HorizontalServicesCarousel";
@@ -94,6 +96,8 @@ export default function LandingPage() {
 
       {/* 6. Section Keunggulan (Features) */}
       <Features />
+      <PriceCalculator />
+      <ArticlesSection />
 
       {/* 6b. Galeri Dokumentasi (Gallery) */}
       <Gallery />
