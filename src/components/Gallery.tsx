@@ -38,7 +38,7 @@ export default function Gallery() {
       title: "Barisan Truk Vacuum Siap Meluncur",
       category: "Armada",
       image: trukVacuum,
-      description: "Dukungan armada tangki kuning dan orange modern milik Mitra Bersih Karawang."
+      description: "Dukungan armada tangki kuning dan orange modern milik PT MITRA BERSIH 24 JAM."
     },
     {
       id: 4,
@@ -235,7 +235,7 @@ export default function Gallery() {
                     <div className="flex items-center space-x-2 shrink-0 bg-zinc-800/40 border border-zinc-700/20 px-4 py-3 rounded-2xl">
                       <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
                       <div className="text-left">
-                        <h4 className="text-white text-xs font-bold leading-none">Mitra Bersih</h4>
+                        <h4 className="text-white text-xs font-bold leading-none">PT Mitra Bersih 24 Jam</h4>
                         <p className="text-[10px] text-slate-400 mt-0.5 leading-none">Garansi Profesional</p>
                       </div>
                     </div>

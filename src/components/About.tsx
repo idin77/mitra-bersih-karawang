@@ -47,7 +47,7 @@ export default function About({ location = "Karawang" }: { location?: string }) 
             <div className="w-20 h-1.5 bg-amber-400 rounded-full"></div>
             
             <p className="text-slate-600 text-base sm:text-lg leading-relaxed pt-2">
-              <strong className="text-zinc-950 font-semibold">Mitra Bersih {location}</strong> merupakan jasa sedot WC profesional yang melayani rumah tangga, perusahaan, perkantoran, dan industri dengan pelayanan cepat, aman, dan terpercaya.
+              <strong className="text-zinc-950 font-semibold">PT Mitra Bersih 24 Jam {location}</strong> merupakan jasa sedot WC profesional yang melayani rumah tangga, perusahaan, perkantoran, dan industri dengan pelayanan cepat, aman, dan terpercaya.
             </p>
             
             <p className="text-slate-600 text-sm sm:text-base leading-relaxed">

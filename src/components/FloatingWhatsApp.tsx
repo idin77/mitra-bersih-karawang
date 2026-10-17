@@ -364,9 +364,9 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
         // Haptic Feedback
         if (navigator.vibrate) {
             if (polarity === 'repel') {
-                navigator.vibrate(200); // Longer vibration for repulsion
+                navigator.vibrate([100, 50, 100]); // Double-pulse for repulsion
             } else {
-                navigator.vibrate([50, 50, 50]); // Sharper, shorter pulses for attraction
+                navigator.vibrate(50); // Sharp, single pulse for attraction
             }
         }
     }
@@ -1002,7 +1002,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
       });
     }
 
-    let message = customMessage || "Halo Mitra Bersih Karawang, toilet saya bermasalah/penuh. Saya butuh respon cepat sekarang.";
+    let message = customMessage || "Halo PT MITRA BERSIH 24 JAM, toilet saya bermasalah/penuh. Saya butuh respon cepat sekarang.";
     
     let location = localStorage.getItem('selectedKecamatan');
     if (!location) {
@@ -2711,7 +2711,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             />
             {/* Ripple Animation */}
             {ripples.map((ripple) => (
-              <motion.button
+              <motion.div
                 key={ripple.id}
                 className={`absolute inset-0 rounded-full border-2 ${polarity === 'attract' ? 'border-blue-300' : 'border-rose-300'} pointer-events-none`}
                 initial={{ scale: 0.5, opacity: 1 }}
@@ -2722,7 +2722,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             
             {/* Secondary High-Frequency Ripple Effect */}
             {mouseDist < 50 && (
-              <motion.button
+              <motion.div
                 className={`absolute inset-0 rounded-full border ${polarity === 'attract' ? 'border-blue-400' : 'border-rose-400'} pointer-events-none`}
                 initial={{ scale: 1, opacity: 0.8 }}
                 animate={{ scale: 1.5, opacity: 0 }}
@@ -2731,7 +2731,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             )}
             
             {isHovered && (
-              <motion.button
+              <motion.div
                 className="absolute inset-0 rounded-full bg-white/30 pointer-events-none"
                 initial={{ scale: 0.5, opacity: 0.5 }}
                 animate={{ scale: 2, opacity: 0 }}
@@ -2741,7 +2741,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
 
             {/* Exclusion Zone Ring */}
             {polarity === 'repel' && (
-              <motion.button
+              <motion.div
                 className="absolute inset-0 rounded-full border-2 border-rose-500/50 bg-rose-500/10 pointer-events-none"
                 animate={{
                   scale: isNearProximity ? 2 : 1,
@@ -2806,7 +2806,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             </motion.div>
 
             {/* Magnetic Field Halos */}
-            <motion.button
+            <motion.div
                 className="absolute inset-0 rounded-full pointer-events-none"
                 animate={{
                     boxShadow: [
@@ -2956,28 +2956,47 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 />
               )}
               {/* Magnetic Field Lines */}
-              {Array.from({ length: 4 }).map((_, i) => (
-                <motion.path
-                  key={i}
-                  d={polarity === 'attract'
-                    ? `M 0 0 Q ${30 * (i + 1)} ${-50 * (i + 1)} ${60 * (i + 1)} 0`
-                    : `M 0 0 Q ${30 * (i + 1)} ${50 * (i + 1)} ${60 * (i + 1)} 0`
-                  }
-                  stroke={polarity === 'attract' ? '#60a5fa' : '#fb7185'}
-                  strokeWidth="2"
-                  fill="none"
-                  initial={{ pathLength: 0, opacity: 0 }}
-                  animate={{ 
-                    pathLength: 1, 
-                    opacity: 0.6,
-                    d: polarity === 'attract'
-                        ? `M 0 0 Q ${30 * (i + 1)} ${-50 * (i + 1)} ${60 * (i + 1)} 0`
-                        : `M 0 0 Q ${30 * (i + 1)} ${50 * (i + 1)} ${60 * (i + 1)} 0`
-                  }}
-                  transition={{ duration: 1, repeat: Infinity, repeatType: "reverse" }}
-                  className="opacity-70"
-                />
-              ))}
+              {/* Magnetic Field Lines */}
+              <svg className="absolute inset-0 z-0 pointer-events-none" viewBox="-100 -100 200 200">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <motion.path
+                    key={i}
+                    stroke={polarity === 'attract' ? '#60a5fa' : '#fb7185'}
+                    strokeWidth={1.5 + (Math.abs(velocity) / 200) + (magneticForce * 2)}
+                    fill="none"
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{
+                        pathLength: 1,
+                        opacity: 0.5,
+                        d: polarity === 'attract'
+                           ? [
+                             `M 0 0 Q ${50 + Math.sin(i) * 20} -50 ${100 + Math.sin(i) * 10} 0`,
+                             `M 0 0 Q ${70 + Math.sin(i) * 30} -70 ${120 + Math.sin(i) * 20} 0`,
+                             `M 0 0 Q ${50 + Math.sin(i) * 20} -50 ${100 + Math.sin(i) * 10} 0`
+                           ]
+                           : [
+                             `M 0 0 Q ${50 + Math.sin(i) * 20} 50 ${100 + Math.sin(i) * 10} 0`,
+                             `M 0 0 Q ${70 + Math.sin(i) * 30} 70 ${120 + Math.sin(i) * 20} 0`,
+                             `M 0 0 Q ${50 + Math.sin(i) * 20} 50 ${100 + Math.sin(i) * 10} 0`
+                           ]
+                    }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    className="opacity-60"
+                  />
+                ))}
+                <motion.text
+                    x="0" y="-70"
+                    textAnchor="middle"
+                    className="fill-white font-bold text-xs pointer-events-none"
+                    animate={{ rotate: polarity === 'attract' ? 0 : 180 }}
+                >N</motion.text>
+                <motion.text
+                    x="0" y="70"
+                    textAnchor="middle"
+                    className="fill-white font-bold text-xs pointer-events-none"
+                    animate={{ rotate: polarity === 'attract' ? 0 : 180 }}
+                >S</motion.text>
+              </svg>
               <path
                 d={trail.length > 1 ? `M ${trail.map(t => `${t.x} ${t.y}`).join(" L ")}` : ""}
                 stroke="white"
@@ -3058,9 +3077,13 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             )}
             
             {dragForce > 0 && (
-                <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-20 text-center text-[10px] text-white font-mono bg-black/50 rounded p-1 backdrop-blur-sm pointer-events-none z-10">
-                    Force: {Math.round(dragForce)}
-                </div>
+                <motion.div 
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="absolute -top-10 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold text-white bg-black/40 border border-white/30 shadow-[0_0_10px_rgba(255,255,255,0.5)] backdrop-blur-md pointer-events-none z-10"
+                >
+                    {Math.round(magneticForce * 100)}%
+                </motion.div>
             )}
             
             {isDragging && (

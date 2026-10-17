@@ -15,7 +15,7 @@ export default function BekasiPage() {
         <section>
           <h1 className="text-4xl font-extrabold text-blue-950 mb-6">Jasa Sedot WC Bekasi Terpercaya</h1>
           <p className="text-lg text-gray-700 leading-relaxed mb-4">
-            Mitra Bersih hadir melayani kebutuhan sedot WC, pengurasan tangki septik, dan perbaikan saluran air mampet di seluruh wilayah Bekasi. Kami berkomitmen memberikan layanan terbaik dengan harga yang bersahabat dan hasil yang memuaskan.
+            PT Mitra Bersih 24 Jam hadir melayani kebutuhan sedot WC, pengurasan tangki septik, dan perbaikan saluran air mampet di seluruh wilayah Bekasi. Kami berkomitmen memberikan layanan terbaik dengan harga yang bersahabat dan hasil yang memuaskan.
           </p>
         </section>
 

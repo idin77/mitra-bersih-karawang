@@ -126,7 +126,7 @@ export default function LandingPage() {
       {/* 8.5 Cost Estimator Tool */}
       <div className="max-w-4xl mx-auto px-4 -mt-16 mb-16 relative z-10">
         <StepCostEstimator onSendMessage={(data) => {
-          const message = `Halo Jasa Sedot WC Mitra Bersih, saya ingin menanyakan estimasi berikut:\n` +
+          const message = `Halo Jasa Sedot WC PT Mitra Bersih 24 Jam, saya ingin menanyakan estimasi berikut:\n` +
             `- Layanan: ${data.service}\n` +
             `- Volume: ${data.volume}\n` +
             `- Wilayah: ${data.location}\n` +

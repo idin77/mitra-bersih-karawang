@@ -19,8 +19,8 @@ const BlogArticlePage: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Tips Mengatasi WC Mampet di Karawang | Mitra Bersih Karawang</title>
-        <meta name="description" content="Temukan cara efektif mengatasi WC mampet di Karawang dengan panduan dari Mitra Bersih. Solusi cepat, aman, dan profesional untuk hunian Anda." />
+        <title>Tips Mengatasi WC Mampet di Karawang | PT MITRA BERSIH 24 JAM</title>
+        <meta name="description" content="Temukan cara efektif mengatasi WC mampet di Karawang dengan panduan dari PT Mitra Bersih 24 Jam. Solusi cepat, aman, dan profesional untuk hunian Anda." />
       </Helmet>
       
       <main className="min-h-screen bg-gray-50">

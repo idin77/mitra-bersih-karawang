@@ -11,7 +11,7 @@ export default function Services({ whatsappNumber, location = "Karawang" }: { wh
   const [activeTab, setActiveTab] = useState(0);
 
   const handleServiceOrder = (encodedMsg: string) => {
-    const text = encodeURIComponent(`Halo Mitra Bersih ${location}, ${encodedMsg}`);
+    const text = encodeURIComponent(`Halo PT Mitra Bersih 24 Jam ${location}, ${encodedMsg}`);
     window.open(`https://wa.me/62${whatsappNumber.substring(1)}?text=${text}`, "_blank");
   };
 

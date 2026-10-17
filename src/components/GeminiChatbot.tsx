@@ -54,7 +54,7 @@ export default function GeminiChatbot() {
             className="fixed bottom-40 right-6 z-50 w-80 bg-white rounded-2xl shadow-2xl border border-emerald-100 flex flex-col h-[400px]"
           >
             <div className="p-4 border-b border-emerald-100 flex justify-between items-center bg-emerald-50 rounded-t-2xl">
-              <h3 className="font-bold text-emerald-900">Tanya Mitra Bersih</h3>
+              <h3 className="font-bold text-emerald-900">Tanya PT Mitra Bersih 24 Jam</h3>
               <button onClick={() => setIsOpen(false)}><X className="w-5 h-5 text-emerald-600" /></button>
             </div>
             

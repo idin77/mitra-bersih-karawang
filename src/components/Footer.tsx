@@ -10,7 +10,7 @@ export default function Footer({ whatsappNumber }: FooterProps) {
   const currentYear = new Date().getFullYear();
 
   const textEncoded = encodeURIComponent(
-    "Halo Mitra Bersih Karawang, saya butuh bantuan mengenai masalah saluran WC mampet."
+    "Halo PT MITRA BERSIH 24 JAM, saya butuh bantuan mengenai masalah saluran WC mampet."
   );
   const waUrl = `https://wa.me/62${whatsappNumber.substring(1)}?text=${textEncoded}`;
 
@@ -26,7 +26,7 @@ export default function Footer({ whatsappNumber }: FooterProps) {
               <div className="w-10 h-10 bg-zinc-950 p-0.5 rounded-full shadow-md flex items-center justify-center border border-zinc-800">
                 <img 
                   src={logoUrl} 
-                  alt="Logo Mitra Bersih" 
+                  alt="Logo PT Mitra Bersih 24 Jam" 
                   className="w-full h-full object-contain" 
                   referrerPolicy="no-referrer" 
                 />
@@ -43,7 +43,12 @@ export default function Footer({ whatsappNumber }: FooterProps) {
             
             <p className="text-slate-500 text-sm leading-relaxed">
               Jasa sedot WC profesional dan pelancaran saluran tersumbat nomor satu di Karawang. Cepat, bersih, murah dan bergaransi resmi.
-            </p>
+             </p>
+             <div className="text-xs text-slate-500 space-y-1">
+                 <p>NIB: 2605260095769</p>
+                 <p>NPWP: 3215261111840004</p>
+                 <p>KBLI: 37001 – Pengumpulan Air Limbah</p>
+             </div>
             
             <div className="flex items-center space-x-2 bg-slate-900 p-3 rounded-xl border border-slate-850 w-fit">
               <CalendarClock className="w-5 h-5 text-amber-400 shrink-0" />
@@ -169,7 +174,7 @@ export default function Footer({ whatsappNumber }: FooterProps) {
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 className="opacity-70 group-hover:opacity-95 transition-opacity duration-300"
-                title="Peta Lokasi Mitra Bersih Karawang"
+                title="Peta Lokasi PT MITRA BERSIH 24 JAM"
               ></iframe>
               <div className="absolute inset-0 bg-zinc-950/30 pointer-events-none group-hover:opacity-0 transition-opacity"></div>
             </div>
@@ -181,7 +186,7 @@ export default function Footer({ whatsappNumber }: FooterProps) {
         {/* Outer bottom footer area */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
           <p className="text-center sm:text-left">
-            © {currentYear} MITRA BERSIH KARAWANG. <a href="https://murah.sedotwckarawang.id" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-500 transition-colors">Jasa Sedot WC Karawang</a>, <a href="https://mitrabersih24jam.com" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-500 transition-colors">Mitra Bersih 24 Jam</a>. Seluruh Hak Cipta Dilindungi Undang-Undang.
+            © {currentYear} MITRA BERSIH KARAWANG. <a href="https://murah.sedotwckarawang.id" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-500 transition-colors">Jasa Sedot WC Karawang</a>, <a href="https://mitrabersih24jam.com" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-500 transition-colors">PT Mitra Bersih 24 Jam 24 Jam</a>. Seluruh Hak Cipta Dilindungi Undang-Undang.
           </p>
           <div className="flex items-center space-x-4">
             <a href="https://www.instagram.com/mitrabersihkarawang/" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-emerald-500 transition-colors">

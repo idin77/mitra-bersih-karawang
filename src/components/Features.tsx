@@ -60,7 +60,7 @@ export default function Features({ location = "Karawang" }: { location?: string 
             MENGAPA MEMILIH KAMI?
           </span>
           <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-zinc-950 tracking-tight">
-            Keunggulan Layanan Mitra Bersih {location}
+            Keunggulan Layanan PT Mitra Bersih 24 Jam {location}
           </h2>
           <div className="w-20 h-1.5 bg-amber-400 mx-auto rounded-full"></div>
           <p className="text-slate-600 leading-relaxed text-base sm:text-lg">

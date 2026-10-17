@@ -9,7 +9,7 @@ interface HeroProps {
 export default function Hero({ whatsappNumber, imageSrc }: HeroProps) {
   const handleWhatsAppCTA = () => {
     const text = encodeURIComponent(
-      "Halo Mitra Bersih Karawang, saya ingin memesan layanan Sedot WC / Saluran Mampet sekarang."
+      "Halo PT MITRA BERSIH 24 JAM, saya ingin memesan layanan Sedot WC / Saluran Mampet sekarang."
     );
     window.open(`https://wa.me/62${whatsappNumber.substring(1)}?text=${text}`, "_blank");
   };
@@ -30,7 +30,7 @@ export default function Hero({ whatsappNumber, imageSrc }: HeroProps) {
       <div className="absolute inset-0 z-0">
         <img
           src={imageSrc}
-          alt="Armada Sedot WC Profesional Mitra Bersih Karawang"
+          alt="Armada Sedot WC Profesional PT MITRA BERSIH 24 JAM"
           className="w-full h-full object-cover object-center opacity-40 scale-105"
           referrerPolicy="no-referrer"
         />
@@ -74,7 +74,7 @@ export default function Hero({ whatsappNumber, imageSrc }: HeroProps) {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-slate-300 text-sm sm:text-base md:text-lg font-normal leading-relaxed max-w-2xl"
               >
-                Butuh layanan <strong className="text-white font-extrabold">Sedot Septic Tank Karawang</strong> cepat? Mitra Bersih Karawang adalah solusi sigap, bersih tuntas, dan tanpa bongkar paksa. Kami siap siaga meluncur 24 jam dengan tim profesional berpengalaman dan peralatan vacuum mutakhir.
+                Butuh layanan <strong className="text-white font-extrabold">Sedot Septic Tank Karawang</strong> cepat? PT MITRA BERSIH 24 JAM adalah solusi sigap, bersih tuntas, dan tanpa bongkar paksa. Kami siap siaga meluncur 24 jam dengan tim profesional berpengalaman dan peralatan vacuum mutakhir.
               </motion.p>
             </div>
 

@@ -8,7 +8,7 @@ interface Message {
 }
 
 export default function GeminiChat({ onClose }: { onClose: () => void }) {
-  const [messages, setMessages] = useState<Message[]>([{ role: 'assistant', text: "Halo! Ada yang bisa saya bantu dengan layanan Mitra Bersih?" }]);
+  const [messages, setMessages] = useState<Message[]>([{ role: 'assistant', text: "Halo! Ada yang bisa saya bantu dengan layanan PT Mitra Bersih 24 Jam?" }]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);

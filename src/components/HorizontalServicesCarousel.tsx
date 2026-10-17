@@ -8,7 +8,7 @@ interface HorizontalServicesCarouselProps {
 
 export default function HorizontalServicesCarousel({ whatsappNumber }: HorizontalServicesCarouselProps) {
   const handleServiceOrder = (whatsappText: string) => {
-    const message = `Halo Mitra Bersih Karawang, ${whatsappText}`;
+    const message = `Halo PT MITRA BERSIH 24 JAM, ${whatsappText}`;
     const url = `https://wa.me/62${whatsappNumber.substring(1)}?text=${encodeURIComponent(message)}`;
     window.open(url, "_blank");
   };

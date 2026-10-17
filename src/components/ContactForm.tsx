@@ -25,7 +25,7 @@ export default function ContactForm({ whatsappNumber, location = "Karawang" }: {
       return;
     }
 
-    const message = `Halo Jasa Sedot WC Mitra Bersih ${location},\n\nSaya ingin booking layanan pengerjaan secepatnya:\n` +
+    const message = `Halo Jasa Sedot WC PT Mitra Bersih 24 Jam ${location},\n\nSaya ingin booking layanan pengerjaan secepatnya:\n` +
       `- Nama: ${formData.name}\n` +
       `- Alamat: ${formData.address}\n` +
       `- Layanan: ${formData.serviceType}\n` +

@@ -45,7 +45,7 @@ export default function Header({ whatsappNumber }: HeaderProps) {
 
   const handleWhatsAppClick = () => {
     const text = encodeURIComponent(
-      "Halo Mitra Bersih Karawang, saya ingin berkonsultasi mengenai layanan Sedot WC / Saluran Mampet."
+      "Halo PT MITRA BERSIH 24 JAM, saya ingin berkonsultasi mengenai layanan Sedot WC / Saluran Mampet."
     );
     window.open(`https://wa.me/62${whatsappNumber.substring(1)}?text=${text}`, "_blank");
   };
@@ -67,7 +67,7 @@ export default function Header({ whatsappNumber }: HeaderProps) {
               <div className="w-11 h-11 bg-zinc-950 p-0.5 rounded-full group-hover:scale-105 transition-transform shadow-md overflow-hidden flex items-center justify-center border border-zinc-900">
                 <img 
                   src={logoUrl} 
-                  alt="Logo Mitra Bersih" 
+                  alt="Logo PT Mitra Bersih 24 Jam" 
                   className="w-full h-full object-contain" 
                   referrerPolicy="no-referrer" 
                 />

@@ -7,7 +7,7 @@ const testimonials = [
     name: "Ibu Rahmawati",
     location: "Telukjambe, Karawang",
     category: "Rumah Tangga",
-    text: "Toilet di rumah mampet parah padahal ada acara keluarga besoknya. Untung tim Mitra Bersih Karawang merespos cepat. Pengerjaan cuma 35 menit, tanpa bongkar keramik, langsung lancar kembali. Sangat puas!",
+    text: "Toilet di rumah mampet parah padahal ada acara keluarga besoknya. Untung tim PT MITRA BERSIH 24 JAM merespos cepat. Pengerjaan cuma 35 menit, tanpa bongkar keramik, langsung lancar kembali. Sangat puas!",
     rating: 5,
     gender: "f"
   },
