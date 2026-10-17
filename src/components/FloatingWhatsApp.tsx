@@ -447,21 +447,27 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [magneticRange, setMagneticRange] = useState(150);
   const [selectedOption, setSelectedOption] = useState(pricingOptions[0]);
   const [volume, setVolume] = useState(1);
+  const [isDocked, setIsDocked] = useState(false);
   const lastInteractionRef = useRef(Date.now());
 
-  // Field decay mechanic
+  // Magnetic dock mechanic
   useEffect(() => {
-    const decayInterval = setInterval(() => {
+    const dockInterval = setInterval(() => {
         if (Date.now() - lastInteractionRef.current > 5000) {
-            setMagneticRange(prev => Math.max(50, prev - 2));
+            setIsDocked(true);
+        } else {
+            setIsDocked(false);
         }
-    }, 100);
-    return () => clearInterval(decayInterval);
+    }, 500);
+    return () => clearInterval(dockInterval);
   }, []);
 
-  // Track interactions to reset decay timer
+  // Track interactions to reset dock timer
   useEffect(() => {
-      const resetTimer = () => { lastInteractionRef.current = Date.now(); };
+      const resetTimer = () => { 
+          lastInteractionRef.current = Date.now();
+          setIsDocked(false);
+      };
       window.addEventListener('pointermove', resetTimer);
       return () => window.removeEventListener('pointermove', resetTimer);
   }, []);
@@ -910,12 +916,12 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   }, []);
 
   useEffect(() => {
-      const interval = setInterval(() => {
-          setIsShaking(true);
-          setTimeout(() => setIsShaking(false), 600);
-      }, 30000);
-      return () => clearInterval(interval);
-  }, []);
+    const intervalTime = Math.max(200, 3000 - (magneticCharge * 28)); // Faster as charge fills
+    const interval = setInterval(() => {
+        addRipple();
+    }, intervalTime);
+    return () => clearInterval(interval);
+  }, [magneticCharge]);
 
   useEffect(() => {
     if (showTooltip) {
@@ -1327,7 +1333,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
       pointerEvents: isVisible ? 'auto' : 'none' 
     }}
     transition={{ type: "spring", stiffness: 150, damping: 10, delay: randomDelay }}
-    className="fixed bottom-6 right-6 z-50 flex flex-col items-end space-y-2 pointer-events-none"
+    className={`fixed z-50 flex flex-col items-end space-y-2 pointer-events-none transition-all duration-500 ease-in-out ${isDocked ? 'bottom-6 -right-4' : 'bottom-6 right-6'}`}
   >
       
       <AnimatePresence>
@@ -1851,11 +1857,18 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 setDragForce(0);
                 setIsDragging(false);
 
-                // Calculate Inertia Drift
+                // Improved Kinetic Inertia Decay
                 const { velocity: { x: vx, y: vy } } = info;
-                const inertiaFactor = 0.15; // Controls how long it drifts
-                const driftX = vx * inertiaFactor;
-                const driftY = vy * inertiaFactor;
+                const friction = 0.95; // Energy retained per frame (simulated)
+                const steps = 10; // Number of simulation steps
+                let driftX = vx * 0.15;
+                let driftY = vy * 0.15;
+                
+                // Simulate decay
+                for (let i = 0; i < steps; i++) {
+                    driftX *= friction;
+                    driftY *= friction;
+                }
 
                 // Snap to edge logic, including drift
                 const constraints = { left: -300, right: 0, top: -600, bottom: 0 };
@@ -2698,12 +2711,12 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                     animate={{
                         stroke: polarity === 'attract' 
                             ? `hsl(${220 - (magneticCharge / 100) * 40}, 100%, 60%)` 
-                            : `hsl(${0 + (magneticCharge / 100) * 30}, 100%, 60%)`
+                            : `hsl(${300 + (magneticCharge / 100) * 30}, 100%, 60%)`
                     }}
                 />
             </motion.svg>
             {/* Polarity Flash */}
-            <motion.button
+            <motion.div
               className={`absolute -inset-1 border-4 rounded-full pointer-events-none z-20 ${polarity === 'attract' ? 'border-blue-500' : 'border-rose-500'}`}
               initial={{ opacity: 0 }}
               animate={{ opacity: polarityFlash ? [0, 1, 0] : 0 }}
@@ -2840,7 +2853,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             )}
             {showConfetti && <ConfettiBurst onComplete={() => setShowConfetti(false)} />}
             {/* Magnetic Intensity Ring */}
-            <motion.button
+            <motion.div
                 className="absolute -inset-2 rounded-full border-2 border-blue-400 pointer-events-none"
                 animate={{
                     scale: [1 + magneticForce * 0.2, 1 + magneticForce * 0.5, 1 + magneticForce * 0.2],
@@ -2855,7 +2868,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             />
 
             {/* Vortex Background */}
-            <motion.button
+            <motion.div
                 className="absolute -inset-4 z-[-1] opacity-60 pointer-events-none"
                 animate={{ rotate: 360 }}
                 transition={{
@@ -2873,7 +2886,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                     </defs>
                     <path d="M 50 50 m -40 0 a 40 40 0 1 0 80 0 a 40 40 0 1 0 -80 0" fill="none" stroke="url(#vortexGradient)" strokeWidth="4" strokeDasharray="10 10" />
                 </svg>
-            </motion.button>
+            </motion.div>
 
             {/* Proximity Pulse Effect */}
             {proximityPulses.map(pulse => (
@@ -2958,7 +2971,11 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               {/* Magnetic Field Lines */}
               {/* Magnetic Field Lines */}
               <svg className="absolute inset-0 z-0 pointer-events-none" viewBox="-100 -100 200 200">
-                {Array.from({ length: 6 }).map((_, i) => (
+                <motion.g
+                    animate={{ rotate: (100 - Math.min(mouseDist, 100)) * 2 }}
+                    transition={{ type: "spring", stiffness: 50, damping: 10 }}
+                >
+                {Array.from({ length: 8 }).map((_, i) => (
                   <motion.path
                     key={i}
                     stroke={polarity === 'attract' ? '#60a5fa' : '#fb7185'}
@@ -2967,7 +2984,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                     initial={{ pathLength: 0, opacity: 0 }}
                     animate={{
                         pathLength: 1,
-                        opacity: 0.5,
+                        opacity: i < (polarity === 'attract' ? 4 : 8) ? 0.5 : 0,
                         d: polarity === 'attract'
                            ? [
                              `M 0 0 Q ${50 + Math.sin(i) * 20} -50 ${100 + Math.sin(i) * 10} 0`,
@@ -2981,9 +2998,9 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                            ]
                     }}
                     transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                    className="opacity-60"
                   />
                 ))}
+                </motion.g>
                 <motion.text
                     x="0" y="-70"
                     textAnchor="middle"
@@ -3031,7 +3048,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 className="absolute inset-0 bg-white rounded-full pointer-events-none"
               />
             ))}
-            <motion.button
+            <motion.div
               animate={{ 
                 rotate: isHovered ? 15 : 0,
                 x: tilt.y * -0.2,
@@ -3040,7 +3057,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               transition={{ duration: 0.1, ease: "linear" }}
             >
               <MessageCircle className="w-8 h-8 fill-current" />
-            </motion.button>
+            </motion.div>
             
             {isMuted && (
               <motion.span 

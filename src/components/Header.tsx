@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { WeatherWidget } from "./WeatherWidget";
 import { Phone, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import logoUrl from "../assets/images/logo_mitra_bersih_1779896054697.png";
+import logoUrl from "../assets/images/new_logo.jpg";
 
 interface HeaderProps {
   whatsappNumber: string;
@@ -78,7 +78,7 @@ export default function Header({ whatsappNumber }: HeaderProps) {
                     isScrolled ? "text-zinc-950" : "text-white"
                   }`}
                 >
-                  MITRA BERSIH
+                  PT MITRA BERSIH 24 JAM
                 </span>
                 <div className="flex items-center gap-2">
                   <span

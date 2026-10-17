@@ -1,6 +1,6 @@
 import { Phone, MapPin, CalendarClock, Mail, Instagram, Facebook } from "lucide-react";
 
-import logoUrl from "../assets/images/logo_mitra_bersih_1779896054697.png";
+import logoUrl from "../assets/images/new_logo.jpg";
 
 interface FooterProps {
   whatsappNumber: string;
@@ -33,7 +33,7 @@ export default function Footer({ whatsappNumber }: FooterProps) {
               </div>
               <div className="flex flex-col">
                 <span className="font-display font-extrabold text-white text-base tracking-tight leading-none">
-                  MITRA BERSIH
+                  PT MITRA BERSIH 24 JAM
                 </span>
                 <span className="text-xs font-bold font-sans tracking-widest text-amber-300">
                   KARAWANG
@@ -186,7 +186,7 @@ export default function Footer({ whatsappNumber }: FooterProps) {
         {/* Outer bottom footer area */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
           <p className="text-center sm:text-left">
-            © {currentYear} MITRA BERSIH KARAWANG. <a href="https://murah.sedotwckarawang.id" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-500 transition-colors">Jasa Sedot WC Karawang</a>, <a href="https://mitrabersih24jam.com" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-500 transition-colors">PT Mitra Bersih 24 Jam 24 Jam</a>. Seluruh Hak Cipta Dilindungi Undang-Undang.
+            © {currentYear} PT MITRA BERSIH 24 JAM. Seluruh Hak Cipta Dilindungi Undang-Undang.
           </p>
           <div className="flex items-center space-x-4">
             <a href="https://www.instagram.com/mitrabersihkarawang/" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-emerald-500 transition-colors">
