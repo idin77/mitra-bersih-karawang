@@ -15,10 +15,10 @@ export default function Hero({ whatsappNumber, imageSrc }: HeroProps) {
   };
 
   const checklistItems = [
-    "Sedot WC Karawang, Cikarang, Cikampek",
-    "Jasa Sedot WC Murah",
-    "WC Mampet & Saluran Mampet",
-    "Limbah Industri & Sedot WC",
+    "Layanan Sanitasi Industri & Komersial",
+    "Kontrak Perawatan Fasilitas Rutin",
+    "Pengelolaan Limbah Cair Berizin",
+    "Solusi Sanitasi Berkapasitas Tinggi",
   ];
 
   return (
@@ -61,9 +61,9 @@ export default function Hero({ whatsappNumber, imageSrc }: HeroProps) {
                 transition={{ duration: 0.6, delay: 0.1 }}
                 className="font-display text-4xl sm:text-5xl lg:text-6.5xl font-extrabold text-white tracking-tight leading-[1.1]"
               >
-                Sedot WC Karawang{" "}
+                Solusi Sanitasi Industri{" "}
                 <span className="text-amber-300 block">
-                  Jasa Sedot WC Murah &amp; 24 Jam
+                  Profesional &amp; Berizin Resmi
                 </span>
               </motion.h1>
 
@@ -74,7 +74,7 @@ export default function Hero({ whatsappNumber, imageSrc }: HeroProps) {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-slate-300 text-sm sm:text-base md:text-lg font-normal leading-relaxed max-w-2xl"
               >
-                Butuh layanan <strong className="text-white font-extrabold">Sedot Septic Tank Karawang</strong> cepat? PT MITRA BERSIH 24 JAM adalah solusi sigap, bersih tuntas, dan tanpa bongkar paksa. Kami siap siaga meluncur 24 jam dengan tim profesional berpengalaman dan peralatan vacuum mutakhir.
+                PT MITRA BERSIH 24 JAM menyediakan layanan pengelolaan limbah cair dan pemeliharaan sanitasi untuk kawasan industri, perkantoran, dan fasilitas komersial dengan standar profesional tinggi dan kepatuhan regulasi penuh.
               </motion.p>
             </div>
 
