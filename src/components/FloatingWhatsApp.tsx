@@ -205,6 +205,8 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
   const [showLabels, setShowLabels] = useState(true);
   const [trail, setTrail] = useState<{x: number, y: number}[]>([]);
   const [fieldLines, setFieldLines] = useState<{id: number, x: number, y: number, polarity: string}[]>([]);
+  const [snapPulses, setSnapPulses] = useState<{id: number}[]>([]);
+  const [isDiagnosticMode, setIsDiagnosticMode] = useState(false);
   const [velocityHistory, setVelocityHistory] = useState<number[]>(Array(50).fill(0));
   const [particles, setParticles] = useState<{id: number, x: number, y: number, vx: number, vy: number}[]>(
     Array.from({ length: 25 }, (_, i) => ({ id: i, x: 0, y: 0, vx: (Math.random() - 0.5) * 5, vy: (Math.random() - 0.5) * 5 }))
@@ -261,6 +263,12 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
       const id = Date.now();
       setFieldLines(prev => [...prev, { id, x: offset.x, y: offset.y, polarity }]);
       setTimeout(() => setFieldLines(prev => prev.filter(f => f.id !== id)), 2000);
+  };
+
+  const addSnapPulse = () => {
+      const id = Date.now();
+      setSnapPulses(prev => [...prev, { id }]);
+      setTimeout(() => setSnapPulses(prev => prev.filter(p => p.id !== id)), 800);
   };
   const addMagneticWave = (v: number) => {
     const id = Date.now();
@@ -358,14 +366,23 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
         const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
         const osc = audioContext.createOscillator();
         const gain = audioContext.createGain();
+        const filter = audioContext.createBiquadFilter();
+
         osc.type = 'square';
-        osc.frequency.setValueAtTime(polarity === 'attract' ? 600 : 400, audioContext.currentTime);
+        osc.frequency.setValueAtTime(polarity === 'attract' ? 800 : 300, audioContext.currentTime);
+        
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(1000, audioContext.currentTime);
+
         gain.gain.setValueAtTime(0.1, audioContext.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.05);
-        osc.connect(gain);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+
+        osc.connect(filter);
+        filter.connect(gain);
         gain.connect(audioContext.destination);
+        
         osc.start();
-        osc.stop(audioContext.currentTime + 0.05);
+        osc.stop(audioContext.currentTime + 0.1);
 
         // Haptic Feedback
         if (navigator.vibrate) {
@@ -1905,6 +1922,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                 setFinalDamping(isNearFinalEdge ? magneticDamping * 2 : magneticDamping);
 
                 setPosition({ x: targetX, y: targetY });
+                addSnapPulse();
             }}
             dragElastic={isNearEdge ? 0.05 : 0.2}
             dragTransition={{
@@ -1980,13 +1998,13 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             transition={{
               type: "spring",
               stiffness: 150,
-              damping: 15 + Math.min(30, Math.sqrt(position.x ** 2 + position.y ** 2) / 5),
+              damping: 15 + Math.min(40, Math.sqrt(position.x ** 2 + position.y ** 2) / 5 + Math.abs(velocity) / 10),
             }}
             style={{ 
                 perspective: 500,
                 boxShadow: dragForce > 0 
-                    ? `0 0 ${Math.min(dragForce / 5, 30)}px rgba(${polarity === 'attract' ? '59, 130, 246' : '225, 29, 72'}, ${Math.min(dragForce / 200, 0.8)})`
-                    : `${-position.x * 0.2}px ${-position.y * 0.2}px ${20 + (1 - Math.min(1, mouseDist / 200)) * 40}px rgba(${polarity === 'attract' ? '59, 130, 246' : '225, 29, 72'}, ${0.3 + (1 - Math.min(1, mouseDist / 200)) * 0.4})`,
+                    ? `0 0 10px 2px rgba(${polarity === 'attract' ? '59, 130, 246' : '244, 63, 94'}, 0.6), 0 0 ${Math.min(dragForce / 5, 30)}px rgba(${polarity === 'attract' ? '59, 130, 246' : '225, 29, 72'}, ${Math.min(dragForce / 200, 0.8)})`
+                    : `0 0 10px 2px rgba(${polarity === 'attract' ? '59, 130, 246' : '244, 63, 94'}, 0.6), ${-position.x * 0.2}px ${-position.y * 0.2}px ${20 + (1 - Math.min(1, mouseDist / 200)) * 40}px rgba(${polarity === 'attract' ? '59, 130, 246' : '225, 29, 72'}, ${0.3 + (1 - Math.min(1, mouseDist / 200)) * 0.4})`,
             }}
             className="relative overflow-hidden backdrop-blur-md bg-white/10 border border-white/20 w-14 h-14 text-white rounded-full flex items-center justify-center relative select-none pointer-events-auto cursor-pointer focus:outline-none transition-shadow duration-300 ease-in-out"
             id="btn-floating-wa"
@@ -2120,6 +2138,21 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               }}
             />
 
+            {/* Side Polarity Switch */}
+            <motion.button
+              className="absolute top-1/2 -right-4 w-8 h-16 z-20 cursor-pointer flex flex-col items-center justify-between py-2 bg-black/90 backdrop-blur-lg rounded-xl border-2 shadow-2xl"
+              onClick={(e) => {
+                e.stopPropagation();
+                setPolarity(prev => prev === 'attract' ? 'repel' : 'attract');
+              }}
+              style={{
+                borderColor: polarity === 'attract' ? '#60a5fa' : '#fb7185',
+              }}
+            >
+              <div className={`w-3 h-3 rounded-full ${polarity === 'attract' ? 'bg-blue-500' : 'bg-transparent'}`} />
+              <div className={`w-3 h-3 rounded-full ${polarity === 'repel' ? 'bg-rose-500' : 'bg-transparent'}`} />
+            </motion.button>
+            
             {/* Magnetic Polarity Toggle Icon */}
             <motion.button
               className="absolute -top-6 -left-6 w-12 h-12 z-20 cursor-pointer flex items-center justify-center text-white font-bold text-lg bg-black/80 backdrop-blur-lg rounded-full border-4 shadow-2xl"
@@ -2141,6 +2174,18 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
               whileHover={{ scale: 1.3 }}
               whileTap={{ scale: 0.8 }}
            >
+             <motion.div
+               className="absolute inset-0 rounded-full opacity-30 pointer-events-none"
+               style={{
+                 background: `conic-gradient(from 0deg, ${polarity === 'attract' ? '#60a5fa' : '#fb7185'}, transparent)`,
+               }}
+               animate={{ rotate: 360 }}
+               transition={{
+                 duration: Math.max(0.1, mouseDist / 200),
+                 repeat: Infinity,
+                 ease: "linear",
+               }}
+             />
              {/* Magnetic Intensity Arc */}
              <svg className="absolute inset-0 w-full h-full pointer-events-none -z-10" viewBox="0 0 50 50">
                <motion.circle
@@ -2223,6 +2268,7 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             />
             {/* Ripple Effects */}
             {ripples.map(ripple => (
+                <>
                 <motion.button
                     key={ripple.id}
                     className="absolute -inset-4 rounded-full border-2 z-10 pointer-events-none"
@@ -2234,6 +2280,17 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                         borderColor: polarity === 'attract' ? '#3b82f6' : '#f43f5e'
                     }}
                 />
+                <motion.circle
+                  key={`pulse-${ripple.id}`}
+                  cx="25" cy="25" r="21"
+                  fill="none"
+                  stroke="white"
+                  strokeWidth="1"
+                  strokeDasharray="132"
+                  strokeDashoffset={132 * (1 - Math.min(Math.abs(velocity) / 2000, 1))}
+                  style={{ opacity: 0.5 }}
+                />
+                </>
             ))}
             {/* Pulse Effects */}
             {pulses.map((pulse) => (
@@ -2522,10 +2579,11 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                         </span>
                     </button>
                     <button
-                        onClick={() => setShowLabels(!showLabels)}
-                        className={`w-8 h-8 flex items-center justify-center rounded-full transition-colors ${showLabels ? 'bg-amber-500' : 'bg-black/40'}`}
+                        onClick={() => setIsDiagnosticMode(!isDiagnosticMode)}
+                        className={`w-8 h-8 flex items-center justify-center rounded-full transition-colors ${isDiagnosticMode ? 'bg-purple-500' : 'bg-black/40'}`}
+                        title="Toggle Diagnostic Mode"
                     >
-                        <span className="text-[10px] font-bold text-white">N/S</span>
+                        <span className="text-[9px] font-bold text-white">DIA</span>
                     </button>
                     {/* Scan Toggle */}
                     <button
@@ -2976,6 +3034,12 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
             <span className="absolute inset-0 rounded-full bg-emerald-600/40 animate-pulse"></span>
             {/* SVG Path Trail */}
             <svg className="fixed inset-0 w-full h-full pointer-events-none z-0">
+               <defs>
+                 <linearGradient id="trailGradient" gradientUnits="userSpaceOnUse">
+                   <stop offset="0%" stopColor={polarity === 'attract' ? "#60a5fa" : "#fb7185"} stopOpacity="0" />
+                   <stop offset="100%" stopColor={polarity === 'attract' ? "#3b82f6" : "#e11d48"} stopOpacity="0.8" />
+                 </linearGradient>
+               </defs>
               {/* Magnetic Tail Effect */}
               <motion.path
                  d={trail.length > 1 ? `M ${trail.map(t => `${t.x} ${t.y}`).join(" L ")}` : ""}
@@ -3033,6 +3097,39 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                     transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                   />
                 ))}
+                {isDiagnosticMode && (
+                    <g opacity="0.3">
+                        {Array.from({ length: 100 }).map((_, i) => {
+                            const x = (i % 10) * 20 - 90;
+                            const y = Math.floor(i / 10) * 20 - 90;
+                            const angle = polarity === 'attract' 
+                                ? Math.atan2(-y, -x) 
+                                : Math.atan2(y, x);
+                            return (
+                                <line 
+                                    key={i} x1={x} y1={y} x2={x + Math.cos(angle) * 8} y2={y + Math.sin(angle) * 8}
+                                    stroke={polarity === 'attract' ? '#60a5fa' : '#fb7185'}
+                                    strokeWidth="1" markerEnd="url(#arrowhead)"
+                                />
+                            );
+                        })}
+                    </g>
+                )}
+                </motion.g>
+                <motion.g
+                    animate={{ rotate: (100 - Math.min(mouseDist, 100)) * 2 }}
+                    transition={{ type: "spring", stiffness: 50, damping: 10 }}
+                >
+                    {showLabels && (
+                        <>
+                            <text x="0" y={polarity === 'attract' ? -75 : 75} textAnchor="middle" className="fill-white font-black text-[12px] pointer-events-none tracking-tighter">
+                                {polarity === 'attract' ? 'N' : 'S'}
+                            </text>
+                            <text x="0" y={polarity === 'attract' ? 75 : -75} textAnchor="middle" className="fill-white font-black text-[12px] pointer-events-none tracking-tighter">
+                                {polarity === 'attract' ? 'S' : 'N'}
+                            </text>
+                        </>
+                    )}
                 </motion.g>
                 {fieldLines.map(line => (
                     <motion.circle
@@ -3068,7 +3165,32 @@ export default function FloatingWhatsApp({ whatsappNumber }: FloatingProps) {
                   fill="none"
                 />
               ))}
-            </svg>
+
+                {snapPulses.map(pulse => (
+                    <motion.circle
+                        key={pulse.id}
+                        cx="50%" cy="50%" r="50"
+                        fill="none"
+                        stroke={polarity === 'attract' ? '#60a5fa' : '#fb7185'}
+                        strokeWidth="5"
+                        initial={{ opacity: 1, scale: 0.5 }}
+                        animate={{ opacity: 0, scale: 2 }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                    />
+                ))}
+                
+                {/* Strength HUD */}
+                <circle cx="50%" cy="50%" r="55" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="4" />
+                <motion.circle
+                    cx="50%" cy="50%" r="55"
+                    fill="none"
+                    stroke={polarity === 'attract' ? '#60a5fa' : '#fb7185'}
+                    strokeWidth="4"
+                    strokeDasharray="345.5"
+                    strokeDashoffset={345.5 * (1 - magneticForce)}
+                    style={{ rotate: -90, transformOrigin: "50% 50%" }}
+                />
+              </svg>
             
             {ripples.map((ripple) => (
               <motion.span
